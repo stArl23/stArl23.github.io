@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="前言&amp;emsp;&amp;emsp;近期做了下有关xss的一些练习，入手了xss的学习，下面结合题目做一下小结 1.  xss的介绍&amp;emsp;&amp;emsp;xss即跨站脚本的简称，是一种通过注入html代码，并等待受害者加载页面从而实现恶意目的的一种攻击方式。主要有三种形式，反射型xss,存储型xss以及dom型xss。 &amp;emsp;&amp;emsp;反射型xss和存储型xss最大的区别在于存储型xss的恶意代">
+<meta name="description" content="前言&amp;emsp;&amp;emsp;近期做了下有关xss的一些练习，入手了xss的学习，下面结合题目做一下小结 xss的介绍&amp;emsp;&amp;emsp;xss即跨站脚本的简称，是一种通过注入html代码，并等待受害者加载页面从而实现恶意目的的一种攻击方式。主要有三种形式，反射型xss,存储型xss以及dom型xss。 &amp;emsp;&amp;emsp;反射型xss和存储型xss最大的区别在于存储型xss的恶意代码将存入">
 <meta name="keywords" content="web,xss">
 <meta property="og:type" content="article">
 <meta property="og:title" content="xss学习小结">
 <meta property="og:url" content="http://wanghuidi.github.io/2019/06/12/xss学习小结/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="前言&amp;emsp;&amp;emsp;近期做了下有关xss的一些练习，入手了xss的学习，下面结合题目做一下小结 1.  xss的介绍&amp;emsp;&amp;emsp;xss即跨站脚本的简称，是一种通过注入html代码，并等待受害者加载页面从而实现恶意目的的一种攻击方式。主要有三种形式，反射型xss,存储型xss以及dom型xss。 &amp;emsp;&amp;emsp;反射型xss和存储型xss最大的区别在于存储型xss的恶意代">
+<meta property="og:description" content="前言&amp;emsp;&amp;emsp;近期做了下有关xss的一些练习，入手了xss的学习，下面结合题目做一下小结 xss的介绍&amp;emsp;&amp;emsp;xss即跨站脚本的简称，是一种通过注入html代码，并等待受害者加载页面从而实现恶意目的的一种攻击方式。主要有三种形式，反射型xss,存储型xss以及dom型xss。 &amp;emsp;&amp;emsp;反射型xss和存储型xss最大的区别在于存储型xss的恶意代码将存入">
 <meta property="og:locale" content="zh-cn">
-<meta property="og:updated_time" content="2019-06-12T22:59:20.447Z">
+<meta property="og:updated_time" content="2019-06-12T23:04:40.435Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="xss学习小结">
-<meta name="twitter:description" content="前言&amp;emsp;&amp;emsp;近期做了下有关xss的一些练习，入手了xss的学习，下面结合题目做一下小结 1.  xss的介绍&amp;emsp;&amp;emsp;xss即跨站脚本的简称，是一种通过注入html代码，并等待受害者加载页面从而实现恶意目的的一种攻击方式。主要有三种形式，反射型xss,存储型xss以及dom型xss。 &amp;emsp;&amp;emsp;反射型xss和存储型xss最大的区别在于存储型xss的恶意代">
+<meta name="twitter:description" content="前言&amp;emsp;&amp;emsp;近期做了下有关xss的一些练习，入手了xss的学习，下面结合题目做一下小结 xss的介绍&amp;emsp;&amp;emsp;xss即跨站脚本的简称，是一种通过注入html代码，并等待受害者加载页面从而实现恶意目的的一种攻击方式。主要有三种形式，反射型xss,存储型xss以及dom型xss。 &amp;emsp;&amp;emsp;反射型xss和存储型xss最大的区别在于存储型xss的恶意代码将存入">
 
 
 
@@ -301,7 +301,7 @@
 
       
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;&emsp;近期做了下有关xss的一些练习，入手了xss的学习，下面结合题目做一下小结</p>
-<h2 id="1-xss的介绍"><a href="#1-xss的介绍" class="headerlink" title="1.  xss的介绍"></a>1.  xss的介绍</h2><p>&emsp;&emsp;xss即跨站脚本的简称，是一种通过注入html代码，并等待受害者加载页面从而实现恶意目的的一种攻击方式。主要有三种形式，反射型xss,存储型xss以及dom型xss。</p>
+<h2 id="xss的介绍"><a href="#xss的介绍" class="headerlink" title="xss的介绍"></a>xss的介绍</h2><p>&emsp;&emsp;xss即跨站脚本的简称，是一种通过注入html代码，并等待受害者加载页面从而实现恶意目的的一种攻击方式。主要有三种形式，反射型xss,存储型xss以及dom型xss。</p>
 <p>&emsp;&emsp;反射型xss和存储型xss最大的区别在于存储型xss的恶意代码将存入数据库，当每一个用户访问被处理后的页面后都会加载恶意代码。而反射型xss则需要用一些手段诱导用户点击带有恶意代码的链接从而达成目的。</p>
 <p>&emsp;&emsp;dom型xss是通过修改dom节点而形成的xss，举一个推特的dom型xss为例。</p>
 <code>
@@ -309,22 +309,22 @@
 </code>
 
 <p>代码加载后，window.location会被修改为#!后的值，经过处理后可以引发xss。</p>
-<h2 id="2-xss的一些姿势"><a href="#2-xss的一些姿势" class="headerlink" title="2.   xss的一些姿势"></a>2.   xss的一些姿势</h2><h3 id="2-1-常规思路"><a href="#2-1-常规思路" class="headerlink" title="2.1 常规思路"></a>2.1 常规思路</h3><ul>
+<h2 id="xss的一些姿势"><a href="#xss的一些姿势" class="headerlink" title="xss的一些姿势"></a>xss的一些姿势</h2><h3 id="常规思路"><a href="#常规思路" class="headerlink" title="常规思路"></a>常规思路</h3><ul>
 <li>script 标签闭合</li>
 <li>通过标签的属性引发 例如img标签的onerror,onfouse,onmousemove等等</li>
 <li>javascript 伪协议（其中img的src属性伪协议只能在ie中触发xss）</li>
 <li>data协议，base64,url编码等等</li>
-<li>iframe标签, body标签等等<h3 id="2-2-过waf"><a href="#2-2-过waf" class="headerlink" title="2.2 过waf"></a>2.2 过waf</h3></li>
+<li>iframe标签, body标签等等<h3 id="过waf"><a href="#过waf" class="headerlink" title="过waf"></a>过waf</h3></li>
 <li>random case 随机大小写</li>
 <li>过滤空格，考虑/**/,/等等</li>
 <li>html实体编码，包括16进制和10进制的编码&#xx;的形式</li>
 <li>js编码包括16进制，8进制，以及unicode 编码</li>
 <li>利用string.fromCharCode,/xxx/等可以突破双引号的限制</li>
-<li>利用eval和atob函数调用base64编码的代码<h3 id="2-3-css注入"><a href="#2-3-css注入" class="headerlink" title="2.3 css注入"></a>2.3 css注入</h3></li>
+<li>利用eval和atob函数调用base64编码的代码<h3 id="css注入"><a href="#css注入" class="headerlink" title="css注入"></a>css注入</h3></li>
 <li>利用background的url属性</li>
 <li>利用expression()调用js代码，这个仅在ie中生效</li>
 </ul>
-<h2 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h2><p>&emsp;&emsp;由于七牛云还没有过实名，就先不加案例了，以后一起补。xss在不同的浏览器上姿势是可能不同的，这可能是需要补充的部分。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>&emsp;&emsp;由于七牛云还没有过实名，就先不加案例了，以后一起补。xss在不同的浏览器上姿势是可能不同的，这可能是需要补充的部分。</p>
 <h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference:"></a>Reference:</h2><ul>
 <li><p>https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#HTML_entities</p>
 </li>
@@ -490,7 +490,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-xss的介绍"><span class="nav-number">2.</span> <span class="nav-text">1.  xss的介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-xss的一些姿势"><span class="nav-number">3.</span> <span class="nav-text">2.   xss的一些姿势</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-常规思路"><span class="nav-number">3.1.</span> <span class="nav-text">2.1 常规思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-过waf"><span class="nav-number">3.2.</span> <span class="nav-text">2.2 过waf</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-css注入"><span class="nav-number">3.3.</span> <span class="nav-text">2.3 css注入</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-总结"><span class="nav-number">4.</span> <span class="nav-text">3. 总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">5.</span> <span class="nav-text">Reference:</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#xss的介绍"><span class="nav-number">2.</span> <span class="nav-text">xss的介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#xss的一些姿势"><span class="nav-number">3.</span> <span class="nav-text">xss的一些姿势</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#常规思路"><span class="nav-number">3.1.</span> <span class="nav-text">常规思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#过waf"><span class="nav-number">3.2.</span> <span class="nav-text">过waf</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#css注入"><span class="nav-number">3.3.</span> <span class="nav-text">css注入</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">5.</span> <span class="nav-text">Reference:</span></a></li></ol></div>
             
 
           </div>
