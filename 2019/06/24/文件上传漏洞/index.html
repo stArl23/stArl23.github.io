@@ -5,15 +5,20 @@
   
 
   
-  <title>Hexo</title>
+  <title>文件上传漏洞 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://wanghuidi.github.io/index.html">
+  <meta name="description" content="前言&amp;emsp;&amp;emsp;这段时间结合了upload-lab看了下文件上传漏洞，下面我想做一些总结 文件上传漏洞的介绍&amp;emsp;&amp;emsp;文件上传漏洞是一种比较容易获得webshell的漏洞利用方式，多见于有图片上传功能的位置，通过上传一句话木马连接到服务器，以备后续操作。 检验文件上传漏洞的一些思路 客户端校验 禁用或修改js或者不用浏览器上传即可  服务端校验  黑名单 尝试上传.hta">
+<meta name="keywords" content="web,文件上传">
+<meta property="og:type" content="article">
+<meta property="og:title" content="文件上传漏洞">
+<meta property="og:url" content="http://wanghuidi.github.io/2019/06/24/文件上传漏洞/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="前言&amp;emsp;&amp;emsp;这段时间结合了upload-lab看了下文件上传漏洞，下面我想做一些总结 文件上传漏洞的介绍&amp;emsp;&amp;emsp;文件上传漏洞是一种比较容易获得webshell的漏洞利用方式，多见于有图片上传功能的位置，通过上传一句话木马连接到服务器，以备后续操作。 检验文件上传漏洞的一些思路 客户端校验 禁用或修改js或者不用浏览器上传即可  服务端校验  黑名单 尝试上传.hta">
 <meta property="og:locale" content="zh-cn">
+<meta property="og:updated_time" content="2019-06-25T05:33:15.548Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
+<meta name="twitter:title" content="文件上传漏洞">
+<meta name="twitter:description" content="前言&amp;emsp;&amp;emsp;这段时间结合了upload-lab看了下文件上传漏洞，下面我想做一些总结 文件上传漏洞的介绍&amp;emsp;&amp;emsp;文件上传漏洞是一种比较容易获得webshell的漏洞利用方式，多见于有图片上传功能的位置，通过上传一句话木马连接到服务器，以备后续操作。 检验文件上传漏洞的一些思路 客户端校验 禁用或修改js或者不用浏览器上传即可  服务端校验  黑名单 尝试上传.hta">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -60,9 +65,7 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-文件上传漏洞" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-文件上传漏洞" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/06/24/文件上传漏洞/" class="article-date">
   <time datetime="2019-06-24T05:43:31.000Z" itemprop="datePublished">2019-06-24</time>
@@ -75,8 +78,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/24/文件上传漏洞/">文件上传漏洞</a>
+    <h1 class="article-title" itemprop="name">
+      文件上传漏洞
     </h1>
   
 
@@ -184,128 +187,19 @@
     </footer>
   </div>
   
-</article>
-
-
+    
+<nav id="article-nav">
   
-    <article id="post-xss学习小结" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/06/12/xss学习小结/" class="article-date">
-  <time datetime="2019-06-12T12:46:05.000Z" itemprop="datePublished">2019-06-12</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/12/xss学习小结/">xss学习小结</a>
-    </h1>
+    <a href="/2019/06/12/xss学习小结/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">xss学习小结</div>
+    </a>
   
+</nav>
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;&emsp;近期做了下有关xss的一些练习，入手了xss的学习，下面结合题目做一下小结</p>
-<h2 id="xss的介绍"><a href="#xss的介绍" class="headerlink" title="xss的介绍"></a>xss的介绍</h2><p>&emsp;&emsp;xss即跨站脚本的简称，是一种通过注入html代码，并等待受害者加载页面从而实现恶意目的的一种攻击方式。主要有三种形式，反射型xss,存储型xss以及dom型xss。</p>
-<p>&emsp;&emsp;反射型xss和存储型xss最大的区别在于存储型xss的恶意代码将存入数据库，当每一个用户访问被处理后的页面后都会加载恶意代码。而反射型xss则需要用一些手段诱导用户点击带有恶意代码的链接从而达成目的。</p>
-<p>&emsp;&emsp;dom型xss是通过修改dom节点而形成的xss，举一个推特的dom型xss为例。</p>
-<code>
-(function(g){var a=location.href.split("#!")[1];if(a){g.location=g.HBR=a.replace(/:/gi,"");}})(window);
-</code>
-
-<p>代码加载后，window.location会被修改为#!后的值，经过处理后可以引发xss。</p>
-<h2 id="xss的一些姿势"><a href="#xss的一些姿势" class="headerlink" title="xss的一些姿势"></a>xss的一些姿势</h2><h3 id="常规思路"><a href="#常规思路" class="headerlink" title="常规思路"></a>常规思路</h3><ul>
-<li>script 标签闭合</li>
-<li>通过标签的属性引发 例如img标签的onerror,onfouse,onmousemove等等</li>
-<li>javascript 伪协议（其中img的src属性伪协议只能在ie中触发xss）</li>
-<li>data协议，base64,url编码等等</li>
-<li>iframe标签, body标签等等<h3 id="过waf"><a href="#过waf" class="headerlink" title="过waf"></a>过waf</h3></li>
-<li>random case 随机大小写</li>
-<li>过滤空格，考虑/**/,/等等</li>
-<li>html实体编码，包括16进制和10进制的编码&#xx;的形式</li>
-<li>js编码包括16进制，8进制，以及unicode 编码</li>
-<li>利用string.fromCharCode,/xxx/等可以突破双引号的限制</li>
-<li>利用eval和atob函数调用base64编码的代码<h3 id="css注入"><a href="#css注入" class="headerlink" title="css注入"></a>css注入</h3></li>
-<li>利用background的url属性</li>
-<li>利用expression()调用js代码，这个仅在ie中生效</li>
-</ul>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>&emsp;&emsp;由于七牛云还没有过实名，就先不加案例了，以后一起补。xss在不同的浏览器上姿势是可能不同的，这可能是需要补充的部分。</p>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference:"></a>Reference:</h2><ul>
-<li><p>https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#HTML_entities</p>
-</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wanghuidi.github.io/2019/06/12/xss学习小结/" data-id="cjxbdk4lg0001gg64qu2542us" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web-xss/">web,xss</a></li></ul>
-
-    </footer>
-  </div>
   
 </article>
-
-
-  
-    <article id="post-sql注入初步" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/06/05/sql注入初步/" class="article-date">
-  <time datetime="2019-06-05T00:11:21.000Z" itemprop="datePublished">2019-06-05</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/05/sql注入初步/">sql注入初步</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文是这段时间来学习sql注入的一个小结，想分几篇文章来讨论下sql注入的一些内容和在ctf比赛中的具体实例。</p>
-<h2 id="常规sql注入的几个分类"><a href="#常规sql注入的几个分类" class="headerlink" title="常规sql注入的几个分类"></a>常规sql注入的几个分类</h2><h3 id="联合注入"><a href="#联合注入" class="headerlink" title="联合注入"></a>联合注入</h3><p>  联合注入是一种有回显的注入，主要的利用手法是通过union查询结果覆盖合法查询结果以得到数据库中更多内容，常见于搜索框中。类似于 xxx.xxx?id=1’ union select 1,2,3– ，而页面回显包含1，2，3。</p>
-<h3 id="报错注入"><a href="#报错注入" class="headerlink" title="报错注入"></a>报错注入</h3><p>  报错注入也是一种常见的注入方式，主要是利用数据库的某些机制人为地制造出错误条件，使查询结果出现在错误信息中。个人比较常用的主要有两种方式，一种是通过xpath语法错误报错，例如 id=1’ and extractvalue(concat(0x7e,database(),0x7e))–，另外一种是通过几何函数报错（只测试过mysql）id=1’ and ploygon(id)</p>
-<h3 id="延时注入"><a href="#延时注入" class="headerlink" title="延时注入"></a>延时注入</h3><p>  延时注入主要是在页面无回显或者报错联合以及布尔盲注失效的时候考虑的一种做法，主要有两种思路，一种是构造布尔条件利用数据库特有函数延时，另外一种是通过耗时较长的运算来模拟延时。例如mysql中的benchmark函数。<br>  例如 id=1’ or if(mid(database(),1,1)=’a’,sleep(5),0)– </p>
-<h3 id="布尔注入"><a href="#布尔注入" class="headerlink" title="布尔注入"></a>布尔注入</h3><p>  布尔注入主要是页面回显受限的时候的一种做法，构造布尔条件，但条件不同时页面回显不同，这说明存在布尔注入<br>  例如 id=1’ or if(mid(database(),1,1)=’a’,1,0)–<br>  如果条件成立页面返回id=1的查询结果，但不成立时页面无回显</p>
-<h3 id="堆叠注入"><a href="#堆叠注入" class="headerlink" title="堆叠注入"></a>堆叠注入</h3><p>  堆叠注入我碰到的不是特别多，印象比较深刻的就是强网杯的那道注入题（经验不足，看到select被过滤了还在傻傻地想办法绕过）。主要的问题是允许执行多条sql语句的，例如php的pdo。那么可以将sql截断后附上想要执行的sql语句，在无回显的情况下考虑update或者insert，有回显的情况下考虑使用procedure执行编码后的sql语句来绕过过滤<br>  例如 id=1’;show tables;<br>  回显tables的信息</p>
-<h3 id="宽字节注入"><a href="#宽字节注入" class="headerlink" title="宽字节注入"></a>宽字节注入</h3><h3 id="二次注入"><a href="#二次注入" class="headerlink" title="二次注入"></a>二次注入</h3><h2 id="注入中几个常见的场景"><a href="#注入中几个常见的场景" class="headerlink" title="注入中几个常见的场景"></a>注入中几个常见的场景</h2><h3 id="where-后存在注入"><a href="#where-后存在注入" class="headerlink" title="where 后存在注入"></a>where 后存在注入</h3><p>  多见于查询框，登录表单中，后台语句类似于这样<br>  <code>select * from users where username='$_GET['username']'</code><br>  闭合username后即可利用</p>
-<h3 id="insert和update中存在注入"><a href="#insert和update中存在注入" class="headerlink" title="insert和update中存在注入"></a>insert和update中存在注入</h3><p>  举insert为例<br>  <code>insert into users('username','password')values("$_POST['username']","$_POST['password']");<br>  闭合""和）后构造语句即可利用<br>  </code></p>
-<h3 id="limit后存在注入"><a href="#limit后存在注入" class="headerlink" title="limit后存在注入"></a>limit后存在注入</h3><p>  <code>select * from users where id=1 limit 1,$_GET['max']</code><br>  补齐limit后对应数量，然后可以采用produre analyse()来进行延时注入或者报错注入</p>
-<h2 id="常见的一些思路"><a href="#常见的一些思路" class="headerlink" title="常见的一些思路"></a>常见的一些思路</h2><h3 id="常见的一些保护手段"><a href="#常见的一些保护手段" class="headerlink" title="常见的一些保护手段"></a>常见的一些保护手段</h3><p>  对于数字型参数的保护是用intval()函数转为数字，对于字符型参数的保护主要使用addslash()函数，但这种保护需要注意mysql的连接的编码和网页的编码需要保持一致，不然可能产生宽字节注入的危险。碰到waf的时候根据情况处理即可，碰到常规注入都行不通的情况考虑堆叠注入。</p>
-<h3 id="测试的思路"><a href="#测试的思路" class="headerlink" title="测试的思路"></a>测试的思路</h3><p>  首先上来拿到题目最好先拿源码泄露脚本扫描一遍，看看能不能拿到源码。右键看下源码，能看的东西都看一遍。然后寻找可控制的参数，做一下fuzz。首先考虑闭合语句，再优先考虑报错注入和联合注入，都不可行的情况下考虑盲注，最后可以尝试宽字节注入和堆叠注入。主要常见的闭合语句就是‘和‘），’))几种，都试一试。语句正确的情况下考虑and和or被过滤的情况，建议替换为||和&amp;&amp;。对于空格的过滤可以考虑替换为/**/和%a0。如果存在关键词的黑名单，考虑随机大小写关键词和双写绕过，也可以考虑一些特殊的符号比如1e0，Emoj等等来截断。</p>
-<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>这是本人的第一篇博客，写的比较水，后续打算写几篇最近做题的wp或者更具体的一些分析，比如报错注入的一些点就可以好好讲讲。近期还是优先准备4，6级考试。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wanghuidi.github.io/2019/06/05/sql注入初步/" data-id="cjxbdk4lb0000gg64vy2bx1rf" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web-sql注入/">web,sql注入</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-
 
 </section>
         
