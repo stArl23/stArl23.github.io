@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>简易python模板引擎其一 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言&amp;emsp;&amp;emsp;发现一个叫500lines的项目感觉不错，看着自己动手实现一下，这是模板引擎项目的第一篇文章 项目需求介绍&amp;emsp;&amp;emsp;简单得讲一下，这个模板引擎参考了Django的一些语法，主要实现了以下一些内容   解析并打印变量的值 &amp;lt;!–￼2–&amp;gt;和带有内容提取出来转化为html文本，但实际上手感觉还是有不少问题。尤其是循环语句的处理，需要首先将其转为代码，">
+<meta name="keywords" content="python,500lines">
+<meta property="og:type" content="article">
+<meta property="og:title" content="简易python模板引擎其一">
+<meta property="og:url" content="http://wanghuidi.github.io/2019/08/20/简易python模板引擎其一/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="前言&amp;emsp;&amp;emsp;发现一个叫500lines的项目感觉不错，看着自己动手实现一下，这是模板引擎项目的第一篇文章 项目需求介绍&amp;emsp;&amp;emsp;简单得讲一下，这个模板引擎参考了Django的一些语法，主要实现了以下一些内容   解析并打印变量的值 &amp;lt;!–￼2–&amp;gt;和带有内容提取出来转化为html文本，但实际上手感觉还是有不少问题。尤其是循环语句的处理，需要首先将其转为代码，">
+<meta property="og:locale" content="zh-cn">
+<meta property="og:updated_time" content="2019-08-21T10:20:33.253Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="简易python模板引擎其一">
+<meta name="twitter:description" content="前言&amp;emsp;&amp;emsp;发现一个叫500lines的项目感觉不错，看着自己动手实现一下，这是模板引擎项目的第一篇文章 项目需求介绍&amp;emsp;&amp;emsp;简单得讲一下，这个模板引擎参考了Django的一些语法，主要实现了以下一些内容   解析并打印变量的值 &amp;lt;!–￼2–&amp;gt;和带有内容提取出来转化为html文本，但实际上手感觉还是有不少问题。尤其是循环语句的处理，需要首先将其转为代码，">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://wanghuidi.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-简易python模板引擎其一" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/08/20/简易python模板引擎其一/" class="article-date">
+  <time datetime="2019-08-20T12:03:47.000Z" itemprop="datePublished">2019-08-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      简易python模板引擎其一
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;&emsp;发现一个叫500lines的项目感觉不错，看着自己动手实现一下，这是模板引擎项目的第一篇文章</p>
+<h2 id="项目需求介绍"><a href="#项目需求介绍" class="headerlink" title="项目需求介绍"></a>项目需求介绍</h2><p>&emsp;&emsp;简单得讲一下，这个模板引擎参考了Django的一些语法，主要实现了以下一些内容</p>
+<ul>
+<li> 解析并打印变量的值</li>
+<li>&lt;!–￼2–&gt;和带有内容提取出来转化为html文本，但实际上手感觉还是有不少问题。尤其是循环语句的处理，需要首先将其转为代码，然后再通过程序控制循环内内容的实现。这个项目的核心思路就是找到一种将代码和静态文本混杂的原始文本转化为代码或者纯静态文本。</li>
+</ul>
+<p>&emsp;&emsp;for,if与endfor，endif的闭合可以用栈来处理，参考左右括号的闭合验证。</p>
+<p>&emsp;&emsp;取属性操作可以替换成相应的方法，而过滤器则需要解析成相应方法并逐级嵌套。</p>
+<p>&emsp;&emsp;需要建立一套变量处理机制，尤其是区分局部变量和全局变量，全局变量应该从外部传入。</p>
+<h3 id="python中的一些小窍门"><a href="#python中的一些小窍门" class="headerlink" title="python中的一些小窍门"></a>python中的一些小窍门</h3><ol>
+<li><p>python中有一个类型叫做function对象类型，function对象可以作为参数，返回值和其他对象以相同的方式使用。<br>这里应用500lines说明文档中的原话。</p>
+<p><code>In Python, a method call on an object like result.append(&quot;hello&quot;) is executed in two steps. First, the append attribute is fetched from the result object: result.append. Then the value fetched is invoked as a function, passing it the argument &quot;hello&quot;.</code></p>
+<p>意思是我们调用一个python方法的时候可以将这个python方法保存为一个python对象，然后多次传入参数来执行函数。这个项目中主要用来简化生成代码流程。类似于result_append=result.append，调用时result_append(‘hello’)，将hello添加到结果代码的集合，待后期处理。</p>
+</li>
+<li><p>getattr方法可以用来获取对象中的属性</p>
+</li>
+<li><p>exec方法可以动态执行python代码并可以获取参与运行的全局变量</p>
+</li>
+</ol>
+<h2 id="总结与提高"><a href="#总结与提高" class="headerlink" title="总结与提高"></a>总结与提高</h2><p>&emsp;&emsp;已经完成除了解析注释以外的功能，但觉得还是对python的面向对象理解不充分，尤其是将解析实现全部放在构造器里，对各个类的属性抽取不充分等等。下一版将作出改进。</p>
+<p>&emsp;&emsp;希望能程序能支持，模板继承，自定义标签，还有elif，else等更复杂的逻辑。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wanghuidi.github.io/2019/08/20/简易python模板引擎其一/" data-id="cjzl3t2a70004ow64uc4pzuao" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/500lines/">500lines</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/08/11/xxe注入入门/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">xxe注入入门</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/500lines/">500lines</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql注入/">sql注入</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xss/">xss</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xxe注入/">xxe注入</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文件上传/">文件上传</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/500lines/" style="font-size: 10px;">500lines</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/sql注入/" style="font-size: 10px;">sql注入</a> <a href="/tags/xss/" style="font-size: 10px;">xss</a> <a href="/tags/xxe注入/" style="font-size: 10px;">xxe注入</a> <a href="/tags/文件上传/" style="font-size: 10px;">文件上传</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/08/20/简易python模板引擎其一/">简易python模板引擎其一</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/11/xxe注入入门/">xxe注入入门</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/24/文件上传漏洞/">文件上传漏洞</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/12/xss学习小结/">xss学习小结</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/05/sql注入初步/">sql注入初步</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 star<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
