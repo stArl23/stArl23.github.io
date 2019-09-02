@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>shell编程基础 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言&amp;emsp;&amp;emsp;花了两天看了下shell编程的一些内容，结合以前记得笔记做个小结。linux的shell编程主要是用于维护服务器操作的自动化，从安装软件，到启动服务，都可以使用脚本来完成。 &amp;emsp;&amp;emsp;linux下的shell有很多种，但我们主要用的是bash &amp;emsp;&amp;emsp;感觉下来，shell的一些优势：  不需要额外的环境，linux自带bash。 完成简单的">
+<meta name="keywords" content="linux,shell">
+<meta property="og:type" content="article">
+<meta property="og:title" content="shell编程基础">
+<meta property="og:url" content="http://wanghuidi.github.io/2019/09/02/shell编程基础/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="前言&amp;emsp;&amp;emsp;花了两天看了下shell编程的一些内容，结合以前记得笔记做个小结。linux的shell编程主要是用于维护服务器操作的自动化，从安装软件，到启动服务，都可以使用脚本来完成。 &amp;emsp;&amp;emsp;linux下的shell有很多种，但我们主要用的是bash &amp;emsp;&amp;emsp;感觉下来，shell的一些优势：  不需要额外的环境，linux自带bash。 完成简单的">
+<meta property="og:locale" content="zh-cn">
+<meta property="og:updated_time" content="2019-09-02T23:54:47.325Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="shell编程基础">
+<meta name="twitter:description" content="前言&amp;emsp;&amp;emsp;花了两天看了下shell编程的一些内容，结合以前记得笔记做个小结。linux的shell编程主要是用于维护服务器操作的自动化，从安装软件，到启动服务，都可以使用脚本来完成。 &amp;emsp;&amp;emsp;linux下的shell有很多种，但我们主要用的是bash &amp;emsp;&amp;emsp;感觉下来，shell的一些优势：  不需要额外的环境，linux自带bash。 完成简单的">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://wanghuidi.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-shell编程基础" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/09/02/shell编程基础/" class="article-date">
+  <time datetime="2019-09-02T12:18:55.000Z" itemprop="datePublished">2019-09-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      shell编程基础
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;&emsp;花了两天看了下shell编程的一些内容，结合以前记得笔记做个小结。linux的shell编程主要是用于维护服务器操作的自动化，从安装软件，到启动服务，都可以使用脚本来完成。</p>
+<p>&emsp;&emsp;linux下的shell有很多种，但我们主要用的是bash</p>
+<p>&emsp;&emsp;感觉下来，shell的一些优势：</p>
+<ol>
+<li>不需要额外的环境，linux自带bash。</li>
+<li>完成简单的操作需要的代码量较少。</li>
+<li>和原生程序交互比较方便。比如处理文本的时候需要用到的awk和sed，熟练使用后比较方便。</li>
+</ol>
+<h2 id="语法基础"><a href="#语法基础" class="headerlink" title="语法基础"></a>语法基础</h2><h3 id="1-bash内置变量和常见表达式"><a href="#1-bash内置变量和常见表达式" class="headerlink" title="1. bash内置变量和常见表达式"></a>1. bash内置变量和常见表达式</h3><ul>
+<li>命令行参数（非指定）, 对于脚本参数，和自定义函数参数而言，$0代表脚本本身的名字，$1到$9代表1到9个参数，从第10个参数开始需要用${n}来表示变量。</li>
+<li>常见的符号。$，取变量的值，${}和$()分别代表在在本身的shell中执行命令和在子shell中执行命令。{}还有分割变量与文本的左右例如$varAA就会报错，需要携程${var}AA的形式。</li>
+<li>扩展运算，$[cmd],$((cmd))进行数字运算，`expr x operator y`也可能达到相同的效果。</li>
+<li>&gt;&gt;和&lt;&lt; 重定向，|管道。</li>
+<li>定义数组 var=()，生成a到z的list，var=({a..z})</li>
+<li>更多表达式参考 <a href="https://www.cnblogs.com/farwish/p/4806018.html" target="_blank" rel="noopener">https://www.cnblogs.com/farwish/p/4806018.html</a></li>
+</ul>
+<h3 id="2-bash中的过程控制"><a href="#2-bash中的过程控制" class="headerlink" title="2. bash中的过程控制"></a>2. bash中的过程控制</h3><ul>
+<li><p>分支选择<br>if分支选择语法</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">if [ cond ]; then</span><br><span class="line">  cmd</span><br><span class="line">elif [ cond ];then</span><br><span class="line">  cmd</span><br><span class="line">else</span><br><span class="line">  cmd</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<p>cond 可用test命令<br>例如 test -e /etc/passwd 或者 []代替test [ -e /etc/passwd ]</p>
+</li>
+</ul>
+<p>  选择分支语法<br>  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">case word in</span><br><span class="line">    [ [(] pattern [| pattern]…) command-list ;;]…</span><br><span class="line">esac</span><br></pre></td></tr></table></figure></p>
+<p>  举例<br>  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">echo -n "Enter the name of an animal: "</span><br><span class="line">read ANIMAL</span><br><span class="line">echo -n "The $ANIMAL has "</span><br><span class="line">case $ANIMAL in</span><br><span class="line">    horse | dog | cat) echo -n "four";;</span><br><span class="line">    man | kangaroo ) echo -n "two";;</span><br><span class="line">    *) echo -n "an unknown number of";;</span><br><span class="line">esac</span><br><span class="line">echo " legs."</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><p>循环<br>for循环</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">for var in list;</span><br><span class="line">do</span><br><span class="line">  cmds;</span><br><span class="line">done</span><br><span class="line"></span><br><span class="line">for((exp1;exp2;exp3));</span><br><span class="line">do</span><br><span class="line">  cmds;</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<p>while循环和until循环</p>
+<p>语法</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">while \ until [ test cmd ]; do cmds;done</span><br></pre></td></tr></table></figure>
+
+<p>while和until的唯一区别是until的退出条件是test命令返回1 也就是不成立循环，而while循环则相反</p>
+</li>
+</ul>
+<h3 id="3-处理字符串"><a href="#3-处理字符串" class="headerlink" title="3. 处理字符串"></a>3. 处理字符串</h3><ol>
+<li>shell内置处理字符串，准确说shell中有两种处理字符串的方式。一种是${var:start:length},另外一种则是通过通配符的方式掐头去尾。</li>
+</ol>
+<ul>
+<li>例如 ${var%%$SUBSTR}，最长匹配去尾</li>
+<li>${var##$SUBSTR}，最长匹配去头</li>
+<li>${var\$old\$new} 将旧的字符串替换为新的字符串（第一个） \\全部替换,#匹配开头，%匹配结尾</li>
+</ul>
+<ol start="2">
+<li>cut命令 cut -f 1,7 -d ‘分隔符’ 去第一块和第七块</li>
+<li>awk -F ‘分隔符’ ‘条件{action}’ 文本</li>
+<li>sed</li>
+</ol>
+<h3 id="4-一些实例"><a href="#4-一些实例" class="headerlink" title="4. 一些实例"></a>4. 一些实例</h3><p>1) 随机函数<br>array[@]或者array[*]取数组所有的变量，数组下标从1开始。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">get_random()&#123;</span><br><span class="line">    length=$1</span><br><span class="line">    payload=(&#123;a..z&#125;)</span><br><span class="line">    payload+=(&#123;0..9&#125;)</span><br><span class="line">    l=$&#123;#payload[@]&#125;</span><br><span class="line">    result=''</span><br><span class="line">    for((i=0;$i&lt;$length;i++))</span><br><span class="line">    do</span><br><span class="line">        r=$[$RANDOM%$l]</span><br><span class="line">        result=$result$&#123;payload[$r-1]&#125;</span><br><span class="line">    done</span><br><span class="line">    printf "\n"</span><br><span class="line">    echo $result</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">for i in `seq 1 20`</span><br><span class="line">do</span><br><span class="line">    </span><br><span class="line">    result=$(get_random 6)</span><br><span class="line">    echo $result</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<p>2) 统计每个ip的访问量并按从大到小排序</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>! /bin/bash</span><br><span class="line"></span><br><span class="line">path=$HOME</span><br><span class="line">now=$(date +%Y%m%d)</span><br><span class="line">echo $(ps aux | awk '&#123;if($1 in map)&#123;map[$1]+=1&#125;else&#123;map[$1]=1&#125;&#125; END&#123;for(x in map)&#123;printf("用户名：%-20s\t\t进程数：%d\r",x,map[x]) &#125;&#125;')&gt;&gt;$path/$now.log</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wanghuidi.github.io/2019/09/02/shell编程基础/" data-id="ck032f9kf00000n64m0qo9wx5" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell/">shell</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/08/20/简易python模板引擎其一/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">简易python模板引擎其一</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/500lines/">500lines</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql注入/">sql注入</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xss/">xss</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xxe注入/">xxe注入</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/文件上传/">文件上传</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/500lines/" style="font-size: 10px;">500lines</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/sql注入/" style="font-size: 10px;">sql注入</a> <a href="/tags/xss/" style="font-size: 10px;">xss</a> <a href="/tags/xxe注入/" style="font-size: 10px;">xxe注入</a> <a href="/tags/文件上传/" style="font-size: 10px;">文件上传</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/09/02/shell编程基础/">shell编程基础</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/20/简易python模板引擎其一/">简易python模板引擎其一</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/11/xxe注入入门/">xxe注入入门</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/24/文件上传漏洞/">文件上传漏洞</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/12/xss学习小结/">xss学习小结</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 star<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
