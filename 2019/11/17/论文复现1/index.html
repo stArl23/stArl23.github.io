@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-cn">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="machine learn,paper,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言复现论文，初步了解机器学习，以及一些常见Python包的用法。 NSL-KDD数据集介绍NSL-KDD是一个网络流量数据集，经常用于IDS（入侵检测系统）模型的训练。 NSL-KDD主要有以下几个子集：KDDTest+, KDDTest-21, KDDTrain+, KDDTrain+_20Percent, KDDTest-21 和 KDDTrain+_20Percent。 其中KDDTrai">
+<meta name="keywords" content="machine learn,paper">
+<meta property="og:type" content="article">
+<meta property="og:title" content="论文复现1">
+<meta property="og:url" content="http://www.star123.top/2019/11/17/论文复现1/index.html">
+<meta property="og:site_name" content="star&#39;s blog">
+<meta property="og:description" content="前言复现论文，初步了解机器学习，以及一些常见Python包的用法。 NSL-KDD数据集介绍NSL-KDD是一个网络流量数据集，经常用于IDS（入侵检测系统）模型的训练。 NSL-KDD主要有以下几个子集：KDDTest+, KDDTest-21, KDDTrain+, KDDTrain+_20Percent, KDDTest-21 和 KDDTrain+_20Percent。 其中KDDTrai">
+<meta property="og:locale" content="zh-cn">
+<meta property="og:updated_time" content="2019-11-17T06:45:36.714Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="论文复现1">
+<meta name="twitter:description" content="前言复现论文，初步了解机器学习，以及一些常见Python包的用法。 NSL-KDD数据集介绍NSL-KDD是一个网络流量数据集，经常用于IDS（入侵检测系统）模型的训练。 NSL-KDD主要有以下几个子集：KDDTest+, KDDTest-21, KDDTrain+, KDDTrain+_20Percent, KDDTest-21 和 KDDTrain+_20Percent。 其中KDDTrai">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.star123.top/2019/11/17/论文复现1/">
+
+
+
+
+
+  <title>论文复现1 | star's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-cn">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">star's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.star123.top/2019/11/17/论文复现1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="star">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="star's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">论文复现1</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-11-17T11:07:00+08:00">
+                2019-11-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>复现论文，初步了解机器学习，以及一些常见Python包的用法。</p>
+<h2 id="NSL-KDD数据集介绍"><a href="#NSL-KDD数据集介绍" class="headerlink" title="NSL-KDD数据集介绍"></a>NSL-KDD数据集介绍</h2><p>NSL-KDD是一个网络流量数据集，经常用于IDS（入侵检测系统）模型的训练。</p>
+<p>NSL-KDD主要有以下几个子集：KDDTest+, KDDTest-21, KDDTrain+, KDDTrain+_20Percent, KDDTest-21 和 KDDTrain+_20Percent。</p>
+<p>其中KDDTrain+和KDDTest+是完整的数据集，而KDDTest-21是去除score 21数据的测试数据集。</p>
+<p>NSL-KDD中的数据总共包括了43个特征，其中41个和流量数据本身有关，剩下的两个一个是标签，标记流量类型（普通或者攻击），还有评分。</p>
+<p>NSL-KDD数据中的攻击类型总共有4类，Dos（拒绝服务），Probe（探针），U2R（普通用户越权行为），R2L（远程请求本地）。其中以Dos攻击的流量居多，而U2R和R2L非常少。</p>
+<p>详细的特征描述可以参考这篇文章：<br><a href="https://docs.google.com/spreadsheets/d/1oAx320Vo9Z6HrBrL6BcfLH6sh2zIk9EKCv2OlaMGmwY/edit?usp=sharing" target="_blank" rel="noopener">https://docs.google.com/spreadsheets/d/1oAx320Vo9Z6HrBrL6BcfLH6sh2zIk9EKCv2OlaMGmwY/edit?usp=sharing</a></p>
+<h2 id="论文复现"><a href="#论文复现" class="headerlink" title="论文复现"></a>论文复现</h2><h3 id="论文介绍"><a href="#论文介绍" class="headerlink" title="论文介绍"></a>论文介绍</h3><p>A Subset Feature Elimination Mechanism for Intrusion Detection System</p>
+<p>这是一篇实验性质的文章，文章最大的贡献是改进了训练算法采用了RFE来减少不重要的特征，通过以NSL-KDD数据集为样本的训练，最后将恶意流量识别的准确率从98%提高到了99%。</p>
+<h3 id="实验流程"><a href="#实验流程" class="headerlink" title="实验流程"></a>实验流程</h3><ol>
+<li><p>首先是数据处理</p>
+<ul>
+<li><p>读取csv文件中的数据</p>
+</li>
+<li><p>为了让模型能够更好地进行拟合(模型容易处理数字型数据)，将数据的分类特征转化为二进制表示特征。处理方式是将分类特征先转为数字，然后再用0，1来表示这些数字。</p>
+</li>
+<li><p>最后用生成的84个属性来替换一开始用文字表示的3个属性字段。(flag,protocol_type,service)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">df_categorical_values_enc=df_categorical_values.apply(LabelEncoder().fit_transform)</span><br><span class="line"></span><br><span class="line">enc = OneHotEncoder()</span><br><span class="line">df_categorical_values_encenc = enc.fit_transform(df_categorical_values_enc)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">print(newdf.shape)</span><br><span class="line">print(newdf_test.shape)</span><br><span class="line"></span><br><span class="line">(125973, 123)</span><br><span class="line">(22544, 123)</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+</li>
+</ol>
+<ol start="2">
+<li><p>特征扩展</p>
+<ul>
+<li>将处理好的数据分成标签和标签对应的数据两部分</li>
+<li>对应数据标准化(不是特别理解为啥要这么做)<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">X_U2R = U2R_df.drop(<span class="string">'label'</span>,<span class="number">1</span>)</span><br><span class="line">scaler4 = preprocessing.StandardScaler().fit(X_U2R)</span><br><span class="line">X_U2R.std(axis=<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>特征提取</p>
+<ul>
+<li>这里是这篇文章的重点，文中用了ANOVA F-test算法做特征评分，为后面特征按评分排序做准备。</li>
+<li>使用RFE挑选出需要的特征（这里不明白评分13个特征，再选13个特征有何意义）</li>
+</ul>
+</li>
+<li><p>使用classifyer训练模型</p>
+<p>这里我尝试了XGBClassifier和决策树，不带任何调参的XGB不仅慢而且准确率不高。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">clf=new xxxClassifier()</span><br><span class="line">clf.fix(labels,data)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>评估<br>混淆矩阵，精确度等等</p>
+<ul>
+<li><p>评估标准</p>
+<ol>
+<li><p>准确性 Accuracy，判断成功的概率</p>
+</li>
+<li><p>精确性 precision，判断为真的中有多少确实是真的</p>
+</li>
+<li><p>召回率 recall，确实是真的部分有多少比例是确实被判断出来了</p>
+</li>
+<li><p>F1值  F1-score 综合考虑 精确度和召回率 2<em>precision</em>recall / (precision + recall)</p>
+</li>
+</ol>
+</li>
+<li><p>混淆矩阵的四个角</p>
+<ol>
+<li>TP TN</li>
+<li>FP（假判定真），FN（真判定假）</li>
+</ol>
+</li>
+<li><p>k-fold cross-validation</p>
+<p>将数据集随机分为k份，该份为测试集，其余的部分为训练集，记录错误概率，重复该过程k次，每次采用不同的集合验证，取误差最小的那个模型</p>
+</li>
+<li><p>结果</p>
+<ol>
+<li><p>10 cv (决策树分类器)</p>
+<ul>
+<li><p>Dos 0.99697 (+/- 0.00265)</p>
+</li>
+<li><p>Probe  0.99151 (+/- 0.00595)</p>
+</li>
+<li><p>R2L 0.97451 (+/- 0.00906)</p>
+</li>
+<li><p>U2R Accuracy: 0.99622 (+/- 0.00378)</p>
+</li>
+</ul>
+</li>
+<li><p>10 cv(xboost分类器)</p>
+<ul>
+<li><p>Dos 0.99563 (+/- 0.00404)</p>
+</li>
+<li><p>Probe 0.98978 (+/- 0.00644)</p>
+</li>
+<li><p>L2U 0.97237 (+/- 0.01112)</p>
+</li>
+<li><p>U2R 0.99611 (+/- 0.00271)</p>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>总得来说这篇文章做得比较急，而且之前完全没有了解过机器学习，还是有很多要改进的地方，比如可以试试多个classifier，试试集成学习，自己尝试修改参数等等。</p>
+<p>感觉下来做这样一个实验主要是这样一个流程：首先将数据处理成模型容易跑的格式，（one-Hot encode）,然后再对特征进行处理，可以进行选择，挑选出比较重要的特征，然后再选择一个比较合适的分类器进行建模训练，然后就是根据结果修改参数，直到找到满意的模型。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/machine-learn/" rel="tag"># machine learn</a>
+          
+            <a href="/tags/paper/" rel="tag"># paper</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/11/14/命令注入初步/" rel="next" title="命令注入初步">
+                <i class="fa fa-chevron-left"></i> 命令注入初步
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">star</p>
+              <p class="site-description motion-element" itemprop="description">ctf wp and technologies about security</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NSL-KDD数据集介绍"><span class="nav-number">2.</span> <span class="nav-text">NSL-KDD数据集介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#论文复现"><span class="nav-number">3.</span> <span class="nav-text">论文复现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#论文介绍"><span class="nav-number">3.1.</span> <span class="nav-text">论文介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实验流程"><span class="nav-number">3.2.</span> <span class="nav-text">实验流程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">star</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
