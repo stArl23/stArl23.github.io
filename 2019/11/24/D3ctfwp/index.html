@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="star&#39;s blog">
 <meta property="og:description" content="前言这次和队友们一起打了d3ctf，打的很自闭，不过也很开心。 easyweb两天算是就做了这一题 主要考了两个点，一个是二次注入，另外一个是模板注入执行命令 信息收集 codeInteger 3.1.11  登录，上传文件  登录后进入user/index 有 RCE Bug in this challenge的提示  smarty BC (smarty 3.1.33)  主要有三个文件夹，ap">
 <meta property="og:locale" content="zh-cn">
-<meta property="og:updated_time" content="2019-11-26T14:32:02.610Z">
+<meta property="og:updated_time" content="2019-12-30T03:13:33.133Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="D3ctfwp">
 <meta name="twitter:description" content="前言这次和队友们一起打了d3ctf，打的很自闭，不过也很开心。 easyweb两天算是就做了这一题 主要考了两个点，一个是二次注入，另外一个是模板注入执行命令 信息收集 codeInteger 3.1.11  登录，上传文件  登录后进入user/index 有 RCE Bug in this challenge的提示  smarty BC (smarty 3.1.33)  主要有三个文件夹，ap">
@@ -366,7 +366,7 @@ The {php} tags allow PHP code to be embedded directly into the template. They wi
 <ol>
 <li>这里的auto针对的是.user.ini的主要有两个auto_append_file和auto_prepend_file，这里可以包含任意格式的文件，相当于文件包含漏洞的操作手法。不过值得一提的是这个手段只能针对用fastcgi解析程序的服务端生效</li>
 <li>.htaccess 的AddType 被过滤，setHander 之类的都被过滤，但是AddHandler还可以使用</li>
-<li>&lt;? 被过滤 这里可以用<code>&lt;script&gt;</code> 来绕过，其实这里php脚本是可以直接上传的。</li>
+<li>&lt;? 被过滤 这里可以用<code>&lt;script&gt;</code> 来绕过，其实这里php脚本是可以直接上传的。（仅在php5中有效）</li>
 </ol>
 <p>所以我们就走.htaccess 文件上传的思路，上传改进后的.htaccess 然后修改后缀名的码达到解析的目的。(没有在题目环境试验过，可能有别的限制)</p>
 <p>但这里还有一个点，就是phar协议反序列化，这里是可以通过反序列化爆出路径的，然后可以用destruct的特性（无论是die还是正常退出，只要类销毁都会调用该方法）来列目录。</p>
@@ -390,6 +390,7 @@ The {php} tags allow PHP code to be embedded directly into the template. They wi
 </ul>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这次比赛尽管完完全全靠自己搞出来的题目没一道，但总感觉对一些东西的理解更深入了，一个.htaccess可以玩出这么多花样我也是没想到的。另外一个就是环境的问题，，哎以后赶时间就用docker搞吧，各种东西还是挺麻烦的。</p>
 <p>最后如果有空想去搞搞fast-cgi+ apache + mod_proxy_fcgi模块的.htaccess的利用。</p>
+<h2 id="补充与修正"><a href="#补充与修正" class="headerlink" title="补充与修正"></a>补充与修正</h2><p>题目的环境的php版本是7所以没有办法解析<br>&lt;script language=”php”&gt;<br>这样的标签标签</p>
 <p>reference:</p>
 <ul>
 <li><a href="https://www.freebuf.com/vuls/218495.html" target="_blank" rel="noopener">https://www.freebuf.com/vuls/218495.html</a></li>
@@ -434,6 +435,10 @@ The {php} tags allow PHP code to be embedded directly into the template. They wi
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/01/21/DC2-3wp/" rel="prev" title="DC2-3wp">
+                DC2-3wp <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -510,7 +515,7 @@ The {php} tags allow PHP code to be embedded directly into the template. They wi
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -523,7 +528,7 @@ The {php} tags allow PHP code to be embedded directly into the template. They wi
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">tags</span>
                 
               </div>
@@ -556,7 +561,7 @@ The {php} tags allow PHP code to be embedded directly into the template. They wi
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#easyweb"><span class="nav-number">2.</span> <span class="nav-text">easyweb</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#信息收集"><span class="nav-number">2.1.</span> <span class="nav-text">信息收集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本地环境调试"><span class="nav-number">2.2.</span> <span class="nav-text">本地环境调试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分析"><span class="nav-number">2.3.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ezupload"><span class="nav-number">3.</span> <span class="nav-text">ezupload</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#easyweb"><span class="nav-number">2.</span> <span class="nav-text">easyweb</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#信息收集"><span class="nav-number">2.1.</span> <span class="nav-text">信息收集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本地环境调试"><span class="nav-number">2.2.</span> <span class="nav-text">本地环境调试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分析"><span class="nav-number">2.3.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ezupload"><span class="nav-number">3.</span> <span class="nav-text">ezupload</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#补充与修正"><span class="nav-number">5.</span> <span class="nav-text">补充与修正</span></a></li></ol></div>
             
 
           </div>
@@ -576,7 +581,7 @@ The {php} tags allow PHP code to be embedded directly into the template. They wi
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
