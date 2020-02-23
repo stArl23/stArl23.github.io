@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="xss,ctf,java,js 原型链污染,">
+  <meta name="keywords" content="ctf,xss,java,js 原型链污染,">
 
 
 
@@ -80,7 +80,7 @@
 
 
 <meta name="description" content="前言最近做了下hgame和一些buuoj的题目这里总结下。 xsshgame week 2 聊天室1这题主要的考点是xss过滤的一些绕过，主要用到了以下两个点：  利用浏览器html标签容错的特性，绕过&amp;lt;(.*?)&amp;gt;的过滤 利用html编码绕过对内容转大写限制  经过fuzz发现只要是补全标签里面的东西waf都会统统删除光，而发现输入 1&amp;lt;img xxx/   这样的标签也能被正">
-<meta name="keywords" content="xss,ctf,java,js 原型链污染">
+<meta name="keywords" content="ctf,xss,java,js 原型链污染">
 <meta property="og:type" content="article">
 <meta property="og:title" content="近期一系列题目的总结">
 <meta property="og:url" content="http://www.star123.top/2020/02/17/近期一系列题目的总结/index.html">
@@ -394,9 +394,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/xss/" rel="tag"># xss</a>
-          
             <a href="/tags/ctf/" rel="tag"># ctf</a>
+          
+            <a href="/tags/xss/" rel="tag"># xss</a>
           
             <a href="/tags/java/" rel="tag"># java</a>
           
@@ -422,6 +422,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/02/23/php反序列化逃逸/" rel="prev" title="php反序列化逃逸">
+                php反序列化逃逸 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -498,7 +502,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -511,7 +515,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">tags</span>
                 
               </div>
