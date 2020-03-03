@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="前言前段时间做了下和php session反序列化和原生类利用的题目，现在来总结下 背景知识主要涉及到了php session的存储机制和反序列化中原生类的应用：  php session存储机制php的session默认是存储在文件总中的，存储结构是由session.serialize_handler。session.serialize_handler总共有三种值取值：  第一种是php，存储后">
+<meta name="description" content="前言前段时间做了下和php session反序列化和原生类利用的题目，现在来总结下 背景知识主要涉及到了php session的存储机制和反序列化中原生类的应用：  php session存储机制php的session默认是存储在文件总中的，存储结构是由session.serialize_handler决定。session.serialize_handler总共有三种值取值：  第一种是php，存">
 <meta name="keywords" content="php,反序列化">
 <meta property="og:type" content="article">
 <meta property="og:title" content="phpsession反序列化">
 <meta property="og:url" content="http://www.star123.top/2020/03/01/phpsession反序列化/index.html">
 <meta property="og:site_name" content="star&#39;s blog">
-<meta property="og:description" content="前言前段时间做了下和php session反序列化和原生类利用的题目，现在来总结下 背景知识主要涉及到了php session的存储机制和反序列化中原生类的应用：  php session存储机制php的session默认是存储在文件总中的，存储结构是由session.serialize_handler。session.serialize_handler总共有三种值取值：  第一种是php，存储后">
+<meta property="og:description" content="前言前段时间做了下和php session反序列化和原生类利用的题目，现在来总结下 背景知识主要涉及到了php session的存储机制和反序列化中原生类的应用：  php session存储机制php的session默认是存储在文件总中的，存储结构是由session.serialize_handler决定。session.serialize_handler总共有三种值取值：  第一种是php，存">
 <meta property="og:locale" content="zh-cn">
-<meta property="og:updated_time" content="2020-03-02T09:40:50.689Z">
+<meta property="og:updated_time" content="2020-03-03T05:23:30.631Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="phpsession反序列化">
-<meta name="twitter:description" content="前言前段时间做了下和php session反序列化和原生类利用的题目，现在来总结下 背景知识主要涉及到了php session的存储机制和反序列化中原生类的应用：  php session存储机制php的session默认是存储在文件总中的，存储结构是由session.serialize_handler。session.serialize_handler总共有三种值取值：  第一种是php，存储后">
+<meta name="twitter:description" content="前言前段时间做了下和php session反序列化和原生类利用的题目，现在来总结下 背景知识主要涉及到了php session的存储机制和反序列化中原生类的应用：  php session存储机制php的session默认是存储在文件总中的，存储结构是由session.serialize_handler决定。session.serialize_handler总共有三种值取值：  第一种是php，存">
 
 
 
@@ -303,7 +303,7 @@
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>前段时间做了下和php session反序列化和原生类利用的题目，现在来总结下</p>
 <h2 id="背景知识"><a href="#背景知识" class="headerlink" title="背景知识"></a>背景知识</h2><p>主要涉及到了php session的存储机制和反序列化中原生类的应用：</p>
 <ol>
-<li><p>php session存储机制<br>php的session默认是存储在文件总中的，存储结构是由session.serialize_handler。<br>session.serialize_handler总共有三种值取值：</p>
+<li><p>php session存储机制<br>php的session默认是存储在文件总中的，存储结构是由session.serialize_handler决定。<br>session.serialize_handler总共有三种值取值：</p>
 <ol>
 <li>第一种是php，存储后内容的结构式keyname|反序列化对象的内容。</li>
 <li>第二种是php_serialize，储存内容为序列化后的数组。</li>
