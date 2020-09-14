@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="python,500lines,">
+  <meta name="keywords" content="web,php,">
 
 
 
@@ -79,18 +79,22 @@
 
 
 
-<meta name="description" content="前言&amp;emsp;&amp;emsp;发现一个叫500lines的项目感觉不错，看着自己动手实现一下，这是模板引擎项目的第一篇文章 项目需求介绍&amp;emsp;&amp;emsp;简单得讲一下，这个模板引擎参考了Django的一些语法，主要实现了以下一些内容   解析并打印变量的值 &amp;lt;!–￼2–&amp;gt;和带有内容提取出来转化为html文本，但实际上手感觉还是有不少问题。尤其是循环语句的处理，需要首先将其转为代码，">
-<meta name="keywords" content="python,500lines">
+<meta name="description" content="前言这道题主要是在做南溟师傅出的题时碰到的，后续还做了2019年De1的题中碰到过，所以想要记录下学习的历程。 题目原题长这个样子: 123456789101112131415161718192021&amp;lt;?phpinclude&apos;flag.php&apos;;error_reporting(0);show_source(__FILE__);extract($_GET); if(isset($pass) )">
+<meta name="keywords" content="web,php">
 <meta property="og:type" content="article">
-<meta property="og:title" content="简易python模板引擎其一">
-<meta property="og:url" content="http://www.star123.top/2019/08/20/简易python模板引擎其一/index.html">
+<meta property="og:title" content="php复杂变量的应用">
+<meta property="og:url" content="http://www.star123.top/2020/09/14/php复杂变量的应用/index.html">
 <meta property="og:site_name" content="star&#39;s blog">
-<meta property="og:description" content="前言&amp;emsp;&amp;emsp;发现一个叫500lines的项目感觉不错，看着自己动手实现一下，这是模板引擎项目的第一篇文章 项目需求介绍&amp;emsp;&amp;emsp;简单得讲一下，这个模板引擎参考了Django的一些语法，主要实现了以下一些内容   解析并打印变量的值 &amp;lt;!–￼2–&amp;gt;和带有内容提取出来转化为html文本，但实际上手感觉还是有不少问题。尤其是循环语句的处理，需要首先将其转为代码，">
+<meta property="og:description" content="前言这道题主要是在做南溟师傅出的题时碰到的，后续还做了2019年De1的题中碰到过，所以想要记录下学习的历程。 题目原题长这个样子: 123456789101112131415161718192021&amp;lt;?phpinclude&apos;flag.php&apos;;error_reporting(0);show_source(__FILE__);extract($_GET); if(isset($pass) )">
 <meta property="og:locale" content="zh-cn">
-<meta property="og:updated_time" content="2019-08-21T10:20:33.253Z">
+<meta property="og:image" content="https://i.loli.net/2020/09/14/G8WUnxrk7jDzMPZ.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/14/5CwZEBR4Yc2armO.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/14/LclRhoar1z3bKn5.png">
+<meta property="og:updated_time" content="2020-09-14T15:35:44.961Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="简易python模板引擎其一">
-<meta name="twitter:description" content="前言&amp;emsp;&amp;emsp;发现一个叫500lines的项目感觉不错，看着自己动手实现一下，这是模板引擎项目的第一篇文章 项目需求介绍&amp;emsp;&amp;emsp;简单得讲一下，这个模板引擎参考了Django的一些语法，主要实现了以下一些内容   解析并打印变量的值 &amp;lt;!–￼2–&amp;gt;和带有内容提取出来转化为html文本，但实际上手感觉还是有不少问题。尤其是循环语句的处理，需要首先将其转为代码，">
+<meta name="twitter:title" content="php复杂变量的应用">
+<meta name="twitter:description" content="前言这道题主要是在做南溟师傅出的题时碰到的，后续还做了2019年De1的题中碰到过，所以想要记录下学习的历程。 题目原题长这个样子: 123456789101112131415161718192021&amp;lt;?phpinclude&apos;flag.php&apos;;error_reporting(0);show_source(__FILE__);extract($_GET); if(isset($pass) )">
+<meta name="twitter:image" content="https://i.loli.net/2020/09/14/G8WUnxrk7jDzMPZ.png">
 
 
 
@@ -120,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="http://www.star123.top/2019/08/20/简易python模板引擎其一/">
+  <link rel="canonical" href="http://www.star123.top/2020/09/14/php复杂变量的应用/">
 
 
 
 
 
-  <title>简易python模板引擎其一 | star's blog</title>
+  <title>php复杂变量的应用 | star's blog</title>
   
 
 
@@ -233,7 +237,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.star123.top/2019/08/20/简易python模板引擎其一/">
+    <link itemprop="mainEntityOfPage" href="http://www.star123.top/2020/09/14/php复杂变量的应用/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="star">
@@ -250,7 +254,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">简易python模板引擎其一</h1>
+          <h1 class="post-title" itemprop="name headline">php复杂变量的应用</h1>
         
 
         <div class="post-meta">
@@ -262,8 +266,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-20T20:03:47+08:00">
-                2019-08-20
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-09-14T22:19:11+08:00">
+                2020-09-14
               </time>
             
 
@@ -300,27 +304,32 @@
       
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;&emsp;发现一个叫500lines的项目感觉不错，看着自己动手实现一下，这是模板引擎项目的第一篇文章</p>
-<h2 id="项目需求介绍"><a href="#项目需求介绍" class="headerlink" title="项目需求介绍"></a>项目需求介绍</h2><p>&emsp;&emsp;简单得讲一下，这个模板引擎参考了Django的一些语法，主要实现了以下一些内容</p>
-<ul>
-<li> 解析并打印变量的值</li>
-<li>&lt;!–￼2–&gt;和带有内容提取出来转化为html文本，但实际上手感觉还是有不少问题。尤其是循环语句的处理，需要首先将其转为代码，然后再通过程序控制循环内内容的实现。这个项目的核心思路就是找到一种将代码和静态文本混杂的原始文本转化为代码或者纯静态文本。</li>
-</ul>
-<p>&emsp;&emsp;for,if与endfor，endif的闭合可以用栈来处理，参考左右括号的闭合验证。</p>
-<p>&emsp;&emsp;取属性操作可以替换成相应的方法，而过滤器则需要解析成相应方法并逐级嵌套。</p>
-<p>&emsp;&emsp;需要建立一套变量处理机制，尤其是区分局部变量和全局变量，全局变量应该从外部传入。</p>
-<h3 id="python中的一些小窍门"><a href="#python中的一些小窍门" class="headerlink" title="python中的一些小窍门"></a>python中的一些小窍门</h3><ol>
-<li><p>python中有一个类型叫做function对象类型，function对象可以作为参数，返回值和其他对象以相同的方式使用。<br>这里应用500lines说明文档中的原话。</p>
-<p><code>In Python, a method call on an object like result.append(&quot;hello&quot;) is executed in two steps. First, the append attribute is fetched from the result object: result.append. Then the value fetched is invoked as a function, passing it the argument &quot;hello&quot;.</code></p>
-<p>意思是我们调用一个python方法的时候可以将这个python方法保存为一个python对象，然后多次传入参数来执行函数。这个项目中主要用来简化生成代码流程。类似于result_append=result.append，调用时result_append(‘hello’)，将hello添加到结果代码的集合，待后期处理。</p>
-</li>
-<li><p>getattr方法可以用来获取对象中的属性</p>
-</li>
-<li><p>exec方法可以动态执行python代码并可以获取参与运行的全局变量</p>
-</li>
-</ol>
-<h2 id="总结与提高"><a href="#总结与提高" class="headerlink" title="总结与提高"></a>总结与提高</h2><p>&emsp;&emsp;已经完成除了解析注释以外的功能，但觉得还是对python的面向对象理解不充分，尤其是将解析实现全部放在构造器里，对各个类的属性抽取不充分等等。下一版将作出改进。</p>
-<p>&emsp;&emsp;希望能程序能支持，模板继承，自定义标签，还有elif，else等更复杂的逻辑。</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这道题主要是在做南溟师傅出的题时碰到的，后续还做了2019年De1的题中碰到过，所以想要记录下学习的历程。</p>
+<h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>原题长这个样子:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">include</span><span class="string">'flag.php'</span>;</span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line">show_source(<span class="keyword">__FILE__</span>);</span><br><span class="line">extract($_GET);</span><br><span class="line"> <span class="keyword">if</span>(<span class="keyword">isset</span>($pass) )</span><br><span class="line">  &#123; </span><br><span class="line">    $content=trim(file_get_contents($user));</span><br><span class="line">    <span class="keyword">if</span>(strcmp($pass,$content)==<span class="number">0</span> &amp;&amp; $pass !=<span class="string">'flag'</span>)</span><br><span class="line">    &#123; </span><br><span class="line">       $str = $content;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">eval</span>(<span class="string">'$a="'</span> . $str . <span class="string">'";'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">   <span class="keyword">else</span></span><br><span class="line">   &#123; </span><br><span class="line">    <span class="keyword">echo</span>  <span class="string">'hack~~'</span>;</span><br><span class="line">   &#125; </span><br><span class="line"></span><br><span class="line">   &#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>第一次看到这个题目时，我的理解就是这里$str直接被拼接入eval所以可以直接执行代码，直接”;你的代码;$a1=”即可获取到flag.php的内容。</p>
+<h2 id="一些扩展"><a href="#一些扩展" class="headerlink" title="一些扩展"></a>一些扩展</h2><p>但是有些地方还是值得思索的，例如有没有什么办法能直接回显flag.php中的变量？并且我们可以再加入一个限制，比如禁止使用单引号和双引号，</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">eval</span>(<span class="string">'$a="'</span> .addslashes($str) . <span class="string">'";'</span>);</span><br></pre></td></tr></table></figure>
+
+<p>这个点我以前也在实战中遇到过一回，所以特别记忆犹新，那个利用点是可以写配置的，然后有类似：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">fwrite(<span class="string">'\$m="'</span>.some_filter_function($_global[<span class="string">'m'</span>]).<span class="string">'""'</span>);</span><br><span class="line">fwrite(<span class="string">'\$m1="'</span>.some_filter_function($_global[<span class="string">'m1'</span>]).<span class="string">'""'</span>);</span><br></pre></td></tr></table></figure>
+
+<p>当时没想到解决方法，就找了另外的点getshell，但现在看来还是操作一下的。</p>
+<h2 id="关于复杂变量的理解"><a href="#关于复杂变量的理解" class="headerlink" title="关于复杂变量的理解"></a>关于复杂变量的理解</h2><p>例如这道题给出的预期解就是<code>${system(print_r($flag))}</code>,如何理解呢？</p>
+<p>在此之前，我们先做个直观的实验</p>
+<p><img src="https://i.loli.net/2020/09/14/G8WUnxrk7jDzMPZ.png" alt></p>
+<p>双引号中可以解析带$符号的变量，而像<code>{}</code>也会导致同样的结果，也就是说$紧挨着{可以将字符串解析为变量。并且，在括号中表达式执行的优先级是较高的，所以就有：</p>
+<p><img src="https://i.loli.net/2020/09/14/5CwZEBR4Yc2armO.png" alt></p>
+<p>我们来理解下这个式子，<code>${system(print_r($flag))}</code>，我们反着理解整个过程。</p>
+<p>首先最内层解析$flag，</p>
+<p>然后解析print_r($flag)，</p>
+<p>我们查到print_r实际上是有返回值的，这就好办了，system(print_r($flag))能被解析，实际上这里就是$a=print_r($flag); system($a);这样的式子，</p>
+<p>当然报错还是会报错的。最后${}解析里面的整个表达式，最后作为变量赋值给$a</p>
+<p><img src="https://i.loli.net/2020/09/14/LclRhoar1z3bKn5.png" alt></p>
+<p>这里我们回过头来看看实战中碰到的点，我们的目标是getshell。</p>
+<p>那么整个antsword的shell也是可以的。$m= {$_POST[1]};$m1=${@eval(${m})};，即可getshell。1=phpinfo();</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>php一些性质还是比较有意思的，比如伪协议什么的，做题还是碰到不少的，以后多看看。</p>
 
       
     </div>
@@ -338,9 +347,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/python/" rel="tag"># python</a>
+            <a href="/tags/web/" rel="tag"># web</a>
           
-            <a href="/tags/500lines/" rel="tag"># 500lines</a>
+            <a href="/tags/php/" rel="tag"># php</a>
           
         </div>
       
@@ -353,8 +362,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/08/11/xxe注入入门/" rel="next" title="xxe注入入门">
-                <i class="fa fa-chevron-left"></i> xxe注入入门
+              <a href="/2020/08/02/天翼杯部分webwp/" rel="next" title="天翼杯部分webwp">
+                <i class="fa fa-chevron-left"></i> 天翼杯部分webwp
               </a>
             
           </div>
@@ -362,10 +371,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/09/02/shell编程基础/" rel="prev" title="shell编程基础">
-                shell编程基础 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -488,7 +493,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#项目需求介绍"><span class="nav-number">2.</span> <span class="nav-text">项目需求介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#python中的一些小窍门"><span class="nav-number">2.1.</span> <span class="nav-text">python中的一些小窍门</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结与提高"><span class="nav-number">3.</span> <span class="nav-text">总结与提高</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#题目"><span class="nav-number">2.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一些扩展"><span class="nav-number">3.</span> <span class="nav-text">一些扩展</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于复杂变量的理解"><span class="nav-number">4.</span> <span class="nav-text">关于复杂变量的理解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>
