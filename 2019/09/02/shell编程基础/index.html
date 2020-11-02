@@ -6,10 +6,10 @@
 
 
 <html class="theme-next muse use-motion" lang="zh-cn">
-<head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 <meta name="theme-color" content="#222">
 
 
@@ -20,8 +20,8 @@
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform">
-<meta http-equiv="Cache-Control" content="no-siteapp">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
 
 
@@ -40,7 +40,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -48,9 +48,9 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="linux,shell,">
+  <meta name="keywords" content="linux,shell," />
 
 
 
@@ -80,17 +80,18 @@
 
 
 <meta name="description" content="前言&amp;emsp;&amp;emsp;花了两天看了下shell编程的一些内容，结合以前记得笔记做个小结。linux的shell编程主要是用于维护服务器操作的自动化，从安装软件，到启动服务，都可以使用脚本来完成。 &amp;emsp;&amp;emsp;linux下的shell有很多种，但我们主要用的是bash &amp;emsp;&amp;emsp;感觉下来，shell的一些优势：  不需要额外的环境，linux自带bash。 完成简单的">
-<meta name="keywords" content="linux,shell">
 <meta property="og:type" content="article">
 <meta property="og:title" content="shell编程基础">
-<meta property="og:url" content="http://www.star123.top/2019/09/02/shell编程基础/index.html">
+<meta property="og:url" content="http://www.star123.top/2019/09/02/shell%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/index.html">
 <meta property="og:site_name" content="star&#39;s blog">
 <meta property="og:description" content="前言&amp;emsp;&amp;emsp;花了两天看了下shell编程的一些内容，结合以前记得笔记做个小结。linux的shell编程主要是用于维护服务器操作的自动化，从安装软件，到启动服务，都可以使用脚本来完成。 &amp;emsp;&amp;emsp;linux下的shell有很多种，但我们主要用的是bash &amp;emsp;&amp;emsp;感觉下来，shell的一些优势：  不需要额外的环境，linux自带bash。 完成简单的">
-<meta property="og:locale" content="zh-cn">
-<meta property="og:updated_time" content="2019-09-02T23:54:47.325Z">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-09-02T12:18:55.000Z">
+<meta property="article:modified_time" content="2019-09-02T23:54:47.325Z">
+<meta property="article:author" content="star">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="shell">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="shell编程基础">
-<meta name="twitter:description" content="前言&amp;emsp;&amp;emsp;花了两天看了下shell编程的一些内容，结合以前记得笔记做个小结。linux的shell编程主要是用于维护服务器操作的自动化，从安装软件，到启动服务，都可以使用脚本来完成。 &amp;emsp;&amp;emsp;linux下的shell有很多种，但我们主要用的是bash &amp;emsp;&amp;emsp;感觉下来，shell的一些优势：  不需要额外的环境，linux自带bash。 完成简单的">
 
 
 
@@ -120,7 +121,7 @@
 
 
 
-  <link rel="canonical" href="http://www.star123.top/2019/09/02/shell编程基础/">
+  <link rel="canonical" href="http://www.star123.top/2019/09/02/shell编程基础/"/>
 
 
 
@@ -136,7 +137,7 @@
 
 
 
-</head>
+<meta name="generator" content="Hexo 4.2.1"></head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-cn">
 
@@ -154,7 +155,7 @@
     
 
     <div class="custom-logo-site-title">
-      <a href="/" class="brand" rel="start">
+      <a href="/"  class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">star's blog</span>
         <span class="logo-line-after"><i></i></span>
@@ -182,9 +183,9 @@
       
         
         <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
+          <a href="/%20" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             Home
           </a>
@@ -192,9 +193,9 @@
       
         
         <li class="menu-item menu-item-archives">
-          <a href="/archives/" rel="section">
+          <a href="/archives/%20" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             Archives
           </a>
@@ -233,11 +234,11 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.star123.top/2019/09/02/shell编程基础/">
+    <link itemprop="mainEntityOfPage" href="http://www.star123.top/2019/09/02/shell%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="star">
-      <meta itemprop="description" content>
+      <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -317,14 +318,10 @@
 <li>更多表达式参考 <a href="https://www.cnblogs.com/farwish/p/4806018.html" target="_blank" rel="noopener">https://www.cnblogs.com/farwish/p/4806018.html</a></li>
 </ul>
 <h3 id="2-bash中的过程控制"><a href="#2-bash中的过程控制" class="headerlink" title="2. bash中的过程控制"></a>2. bash中的过程控制</h3><ul>
-<li><p>分支选择<br>if分支选择语法</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">if [ cond ]; then</span><br><span class="line">  cmd</span><br><span class="line">elif [ cond ];then</span><br><span class="line">  cmd</span><br><span class="line">else</span><br><span class="line">  cmd</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
-
-<p>cond 可用test命令<br>例如 test -e /etc/passwd 或者 []代替test [ -e /etc/passwd ]</p>
-</li>
+<li>分支选择<br>if分支选择语法<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">if [ cond ]; then</span><br><span class="line">  cmd</span><br><span class="line">elif [ cond ];then</span><br><span class="line">  cmd</span><br><span class="line">else</span><br><span class="line">  cmd</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+cond 可用test命令<br>例如 test -e /etc/passwd 或者 []代替test [ -e /etc/passwd ]</li>
 </ul>
-<p>  选择分支语法<br>  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">case word in</span><br><span class="line">    [ [(] pattern [| pattern]…) command-list ;;]…</span><br><span class="line">esac</span><br></pre></td></tr></table></figure></p>
-<p>  举例<br>  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">echo -n "Enter the name of an animal: "</span><br><span class="line">read ANIMAL</span><br><span class="line">echo -n "The $ANIMAL has "</span><br><span class="line">case $ANIMAL in</span><br><span class="line">    horse | dog | cat) echo -n "four";;</span><br><span class="line">    man | kangaroo ) echo -n "two";;</span><br><span class="line">    *) echo -n "an unknown number of";;</span><br><span class="line">esac</span><br><span class="line">echo " legs."</span><br></pre></td></tr></table></figure></p>
+<p>  选择分支语法<br>  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">case word in</span><br><span class="line">    [ [(] pattern [| pattern]…) command-list ;;]…</span><br><span class="line">esac</span><br></pre></td></tr></table></figure><br>  举例<br>  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">echo -n "Enter the name of an animal: "</span><br><span class="line">read ANIMAL</span><br><span class="line">echo -n "The $ANIMAL has "</span><br><span class="line">case $ANIMAL in</span><br><span class="line">    horse | dog | cat) echo -n "four";;</span><br><span class="line">    man | kangaroo ) echo -n "two";;</span><br><span class="line">    *) echo -n "an unknown number of";;</span><br><span class="line">esac</span><br><span class="line">echo " legs."</span><br></pre></td></tr></table></figure></p>
 <ul>
 <li><p>循环<br>for循环</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">for var in list;</span><br><span class="line">do</span><br><span class="line">  cmds;</span><br><span class="line">done</span><br><span class="line"></span><br><span class="line">for((exp1;exp2;exp3));</span><br><span class="line">do</span><br><span class="line">  cmds;</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
@@ -332,7 +329,6 @@
 <p>while循环和until循环</p>
 <p>语法</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">while \ until [ test cmd ]; do cmds;done</span><br></pre></td></tr></table></figure>
-
 <p>while和until的唯一区别是until的退出条件是test命令返回1 也就是不成立循环，而while循环则相反</p>
 </li>
 </ul>
@@ -345,15 +341,18 @@
 <li>${var\$old\$new} 将旧的字符串替换为新的字符串（第一个） \\全部替换,#匹配开头，%匹配结尾</li>
 </ul>
 <ol start="2">
-<li>cut命令 cut -f 1,7 -d ‘分隔符’ 去第一块和第七块</li>
-<li>awk -F ‘分隔符’ ‘条件{action}’ 文本</li>
-<li>sed</li>
+<li> cut命令 cut -f 1,7 -d ‘分隔符’ 去第一块和第七块</li>
+<li> awk -F ‘分隔符’ ‘条件{action}’ 文本</li>
+<li> sed</li>
 </ol>
-<h3 id="4-一些实例"><a href="#4-一些实例" class="headerlink" title="4. 一些实例"></a>4. 一些实例</h3><p>1) 随机函数<br>array[@]或者array[*]取数组所有的变量，数组下标从1开始。</p>
+<h3 id="4-一些实例"><a href="#4-一些实例" class="headerlink" title="4. 一些实例"></a>4. 一些实例</h3><ol>
+<li><p>随机函数<br>array[@]或者array[*]取数组所有的变量，数组下标从1开始。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">get_random()&#123;</span><br><span class="line">    length=$1</span><br><span class="line">    payload=(&#123;a..z&#125;)</span><br><span class="line">    payload+=(&#123;0..9&#125;)</span><br><span class="line">    l=$&#123;#payload[@]&#125;</span><br><span class="line">    result=''</span><br><span class="line">    for((i=0;$i&lt;$length;i++))</span><br><span class="line">    do</span><br><span class="line">        r=$[$RANDOM%$l]</span><br><span class="line">        result=$result$&#123;payload[$r-1]&#125;</span><br><span class="line">    done</span><br><span class="line">    printf "\n"</span><br><span class="line">    echo $result</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">for i in `seq 1 20`</span><br><span class="line">do</span><br><span class="line">    </span><br><span class="line">    result=$(get_random 6)</span><br><span class="line">    echo $result</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>统计每个ip的访问量并按从大到小排序</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">! /bin/bash</span></span><br><span class="line"></span><br><span class="line">path=$HOME</span><br><span class="line">now=$(date +%Y%m%d)</span><br><span class="line">echo $(ps aux | awk '&#123;if($1 in map)&#123;map[$1]+=1&#125;else&#123;map[$1]=1&#125;&#125; END&#123;for(x in map)&#123;printf("用户名：%-20s\t\t进程数：%d\r",x,map[x]) &#125;&#125;')&gt;&gt;$path/$now.log</span><br></pre></td></tr></table></figure></li>
+</ol>
 
-<p>2) 统计每个ip的访问量并按从大到小排序</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">! /bin/bash</span></span><br><span class="line"></span><br><span class="line">path=$HOME</span><br><span class="line">now=$(date +%Y%m%d)</span><br><span class="line">echo $(ps aux | awk '&#123;if($1 in map)&#123;map[$1]+=1&#125;else&#123;map[$1]=1&#125;&#125; END&#123;for(x in map)&#123;printf("用户名：%-20s\t\t进程数：%d\r",x,map[x]) &#125;&#125;')&gt;&gt;$path/$now.log</span><br></pre></td></tr></table></figure>
       
     </div>
     
@@ -385,7 +384,7 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/08/20/简易python模板引擎其一/" rel="next" title="简易python模板引擎其一">
+              <a href="/2019/08/20/%E7%AE%80%E6%98%93python%E6%A8%A1%E6%9D%BF%E5%BC%95%E6%93%8E%E5%85%B6%E4%B8%80/" rel="next" title="简易python模板引擎其一">
                 <i class="fa fa-chevron-left"></i> 简易python模板引擎其一
               </a>
             
@@ -395,7 +394,7 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/09/11/Minuv2靶机渗透实战/" rel="prev" title="Minuv2靶机渗透实战">
+              <a href="/2019/09/11/Minuv2%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F%E5%AE%9E%E6%88%98/" rel="prev" title="Minuv2靶机渗透实战">
                 Minuv2靶机渗透实战 <i class="fa fa-chevron-right"></i>
               </a>
             
@@ -472,9 +471,9 @@
             
               <div class="site-state-item site-state-posts">
               
-                <a href="/archives/">
+                <a href="/archives/%20%7C%7C%20archive">
               
-                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -487,7 +486,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">tags</span>
                 
               </div>

