@@ -86,12 +86,14 @@
 <meta property="og:site_name" content="star&#39;s blog">
 <meta property="og:description" content="前言这次安洵杯线下因为没上内存shell吃了亏，现在补一下。 这里需要说明下，因为网络上关于java中间件内存shell的研究已经很多了，个人做的工作主要是复现了通杀spring添加controller的思路，还有tomcat filiter添加的思路，然后自己改了下放在ysomap，并没有很新的东西，仅仅是自己的学习笔记。 环境介绍 Jdk8   Awd.jar 安洵杯线下赛java的题目，可以">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/12/12/5NBHPW43KnzY2v6.png">
 <meta property="article:published_time" content="2020-12-12T04:08:44.000Z">
-<meta property="article:modified_time" content="2020-12-12T09:21:40.708Z">
+<meta property="article:modified_time" content="2020-12-12T12:19:24.487Z">
 <meta property="article:author" content="star">
 <meta property="article:tag" content="web">
 <meta property="article:tag" content="java">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/12/12/5NBHPW43KnzY2v6.png">
 
 
 
@@ -321,7 +323,7 @@
 
 <ol>
 <li><p>首先需要把需要注入的class通过defineClass方法加载到线程的内存中，这里需要注意的可能因为classLoader不同的缘故导致在使用Class.forName的时候找不到已经加载到内存中的类。原因如下：</p>
-<p>![image-20201212152024680](../../../../../Library/Application Support/typora-user-images/image-20201212152024680.png)</p>
+<p><img src="https://i.loli.net/2020/12/12/5NBHPW43KnzY2v6.png"></p>
 <p>查看java8的文档可以发现，Class.forName(String name)其实是Class.forName(String name,true,currentLoader)的简写，如果直接使用雷神众测上的代码，有可能报class not found，我们需要手动指定classLoader或者直接使用方法调用类的ClassLoader，也就是xxxclass.class.getClassLoader()的结果。</p>
 </li>
 <li><p>第二个就是使用registerMapping注册一个Controller，这里首先需要获取当前的上下文，直接使用WebApplicationContextUtils.getWebApplicationContext方法获取即可。然后需要设置RequestMappingInfo，主要是设置可以访问控制器的方法和访问controller的路径，最后调用registerMapping方法即可。</p>
