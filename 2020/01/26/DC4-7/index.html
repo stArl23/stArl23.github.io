@@ -79,12 +79,12 @@
 
 
 
-<meta name="description" content="前言总结一下几个靶机主要是DC4-DC7的一些思路，这一次会在省略一些不必要的细节。 实验环境以及工具 主要虚拟设备同上文。由于我之后给kali加了网卡，重新设置了下网络，使得kali和靶机在同一个网段下，可以直接使用反弹shell到msf上。经过调整后各个虚拟机的网络配置如下：  kali en0 10.211.55.18 en1 192.168.56.10 本机 192.168.56.2 DC">
+<meta name="description" content="DC4-DC7 wp">
 <meta property="og:type" content="article">
 <meta property="og:title" content="DC4-7">
 <meta property="og:url" content="http://www.star123.top/2020/01/26/DC4-7/index.html">
 <meta property="og:site_name" content="star&#39;s blog">
-<meta property="og:description" content="前言总结一下几个靶机主要是DC4-DC7的一些思路，这一次会在省略一些不必要的细节。 实验环境以及工具 主要虚拟设备同上文。由于我之后给kali加了网卡，重新设置了下网络，使得kali和靶机在同一个网段下，可以直接使用反弹shell到msf上。经过调整后各个虚拟机的网络配置如下：  kali en0 10.211.55.18 en1 192.168.56.10 本机 192.168.56.2 DC">
+<meta property="og:description" content="DC4-DC7 wp">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2020/01/26/eNdVKtI7yDfRCg9.png">
 <meta property="og:image" content="https://i.loli.net/2020/01/26/K8hOcDpfMXldYes.png">
@@ -92,7 +92,7 @@
 <meta property="og:image" content="https://i.loli.net/2020/01/27/abCYF5QoJjvx3N6.png">
 <meta property="og:image" content="https://i.loli.net/2020/01/27/TBE3VtFXL89bDHJ.png">
 <meta property="article:published_time" content="2020-01-26T12:40:01.000Z">
-<meta property="article:modified_time" content="2020-01-27T08:21:17.520Z">
+<meta property="article:modified_time" content="2021-01-24T11:57:45.869Z">
 <meta property="article:author" content="star">
 <meta property="article:tag" content="渗透测试">
 <meta property="article:tag" content="靶机攻防">
@@ -307,7 +307,10 @@
       
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>总结一下几个靶机主要是DC4-DC7的一些思路，这一次会在省略一些不必要的细节。</p>
+        <p>DC4-DC7 wp</p>
+<a id="more"></a>
+
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>总结一下几个靶机主要是DC4-DC7的一些思路，这一次会在省略一些不必要的细节。</p>
 <h2 id="实验环境以及工具"><a href="#实验环境以及工具" class="headerlink" title="实验环境以及工具"></a>实验环境以及工具</h2><ul>
 <li><p>主要虚拟设备同上文。由于我之后给kali加了网卡，重新设置了下网络，使得kali和靶机在同一个网段下，可以直接使用反弹shell到msf上。经过调整后各个虚拟机的网络配置如下：</p>
 <ul>

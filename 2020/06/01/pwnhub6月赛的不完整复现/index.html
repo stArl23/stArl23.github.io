@@ -79,19 +79,19 @@
 
 
 
-<meta name="description" content="前言自闭48小时（rctf）之后才知道，pwnhub公开赛已经过了，所以来复现一下，尝试找找自信（暴论）。 知识点 python的urllib漏洞 crlf和通过file协议泄露文件 redis配合python反序列化getshell  挣扎过程 信息收集，先试试功能，注册，登录，爬虫，改用户信息。（后面出了点问题，图就意思下）  抓包查看cookie，Cookie&#x3D;admin1ace05830b">
+<meta name="description" content="Pwnhub 6月赛部分wp">
 <meta property="og:type" content="article">
 <meta property="og:title" content="pwnhub6月赛的不完整复现">
 <meta property="og:url" content="http://www.star123.top/2020/06/01/pwnhub6%E6%9C%88%E8%B5%9B%E7%9A%84%E4%B8%8D%E5%AE%8C%E6%95%B4%E5%A4%8D%E7%8E%B0/index.html">
 <meta property="og:site_name" content="star&#39;s blog">
-<meta property="og:description" content="前言自闭48小时（rctf）之后才知道，pwnhub公开赛已经过了，所以来复现一下，尝试找找自信（暴论）。 知识点 python的urllib漏洞 crlf和通过file协议泄露文件 redis配合python反序列化getshell  挣扎过程 信息收集，先试试功能，注册，登录，爬虫，改用户信息。（后面出了点问题，图就意思下）  抓包查看cookie，Cookie&#x3D;admin1ace05830b">
+<meta property="og:description" content="Pwnhub 6月赛部分wp">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2020/06/01/5H2Yz4wZKsVcIpn.png">
 <meta property="og:image" content="https://i.loli.net/2020/06/01/hCTx97rvpQswIU8.png">
 <meta property="og:image" content="https://i.loli.net/2020/06/01/NB5CaElJy9gwRs1.png">
 <meta property="og:image" content="https://i.loli.net/2020/06/01/3cSpYLdKQh4jErv.png">
 <meta property="article:published_time" content="2020-06-01T14:23:40.000Z">
-<meta property="article:modified_time" content="2020-06-01T15:03:07.577Z">
+<meta property="article:modified_time" content="2021-01-24T12:00:05.883Z">
 <meta property="article:author" content="star">
 <meta property="article:tag" content="ctf">
 <meta property="article:tag" content="web">
@@ -307,7 +307,10 @@
       
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>自闭48小时（rctf）之后才知道，pwnhub公开赛已经过了，所以来复现一下，尝试找找自信（暴论）。</p>
+        <p>Pwnhub 6月赛部分wp</p>
+<a id="more"></a>
+
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>自闭48小时（rctf）之后才知道，pwnhub公开赛已经过了，所以来复现一下，尝试找找自信（暴论）。</p>
 <h2 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h2><ol>
 <li>python的urllib漏洞 crlf和通过file协议泄露文件</li>
 <li>redis配合python反序列化getshell</li>

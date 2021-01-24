@@ -79,12 +79,12 @@
 
 
 
-<meta name="description" content="前言实际上这篇文章难产了很久，反正就是前前后后摸了很久，这个洞感觉下来就是jdk的xmldecoder无限制的反序列化导致的代码执行。值得一提的是jdk的xmldecoder反序列化的处理方式在jdk6以下和6以后是不同的，这点不同导致很多8下可行的绕过方式没法在6下利用，所以分析处理流程时，本文会分版本讨论。 xml decoder反序列化处理流程jdk8下的处理流程8下的xmldecoder的">
+<meta name="description" content="实际上这篇文章难产了很久，反正就是前前后后摸了很久，这个洞感觉下来就是jdk的xmldecoder无限制的反序列化导致的代码执行。值得一提的是jdk的xmldecoder反序列化的处理方式在jdk6以下和6以后是不同的，这点不同导致很多8下可行的绕过方式没法在6下利用，所以分析处理流程时，本文会分版本讨论。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="weblogic_xmldecoder复现">
 <meta property="og:url" content="http://www.star123.top/2021/01/03/weblogic-xmldecoder%E5%A4%8D%E7%8E%B0/index.html">
 <meta property="og:site_name" content="star&#39;s blog">
-<meta property="og:description" content="前言实际上这篇文章难产了很久，反正就是前前后后摸了很久，这个洞感觉下来就是jdk的xmldecoder无限制的反序列化导致的代码执行。值得一提的是jdk的xmldecoder反序列化的处理方式在jdk6以下和6以后是不同的，这点不同导致很多8下可行的绕过方式没法在6下利用，所以分析处理流程时，本文会分版本讨论。 xml decoder反序列化处理流程jdk8下的处理流程8下的xmldecoder的">
+<meta property="og:description" content="实际上这篇文章难产了很久，反正就是前前后后摸了很久，这个洞感觉下来就是jdk的xmldecoder无限制的反序列化导致的代码执行。值得一提的是jdk的xmldecoder反序列化的处理方式在jdk6以下和6以后是不同的，这点不同导致很多8下可行的绕过方式没法在6下利用，所以分析处理流程时，本文会分版本讨论。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2021/01/04/o5SpnbqcW398lkM.png">
 <meta property="og:image" content="https://i.loli.net/2021/01/05/ayLZECMcsfSudm2.png">
@@ -93,7 +93,7 @@
 <meta property="og:image" content="https://i.loli.net/2021/01/05/EKNy8SuXZl6UaQP.png">
 <meta property="og:image" content="https://i.loli.net/2021/01/05/75M9KxlqwgUFyh8.png">
 <meta property="article:published_time" content="2021-01-03T12:37:39.000Z">
-<meta property="article:modified_time" content="2021-01-06T08:26:51.616Z">
+<meta property="article:modified_time" content="2021-01-24T11:53:21.110Z">
 <meta property="article:author" content="star">
 <meta property="article:tag" content="web">
 <meta property="article:tag" content="weblogic">
@@ -308,7 +308,10 @@
       
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>实际上这篇文章难产了很久，反正就是前前后后摸了很久，这个洞感觉下来就是jdk的xmldecoder无限制的反序列化导致的代码执行。值得一提的是jdk的xmldecoder反序列化的处理方式在jdk6以下和6以后是不同的，这点不同导致很多8下可行的绕过方式没法在6下利用，所以分析处理流程时，本文会分版本讨论。</p>
+        <p>实际上这篇文章难产了很久，反正就是前前后后摸了很久，这个洞感觉下来就是jdk的xmldecoder无限制的反序列化导致的代码执行。值得一提的是jdk的xmldecoder反序列化的处理方式在jdk6以下和6以后是不同的，这点不同导致很多8下可行的绕过方式没法在6下利用，所以分析处理流程时，本文会分版本讨论。</p>
+<a id="more"></a>
+
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>实际上这篇文章难产了很久，反正就是前前后后摸了很久，这个洞感觉下来就是jdk的xmldecoder无限制的反序列化导致的代码执行。值得一提的是jdk的xmldecoder反序列化的处理方式在jdk6以下和6以后是不同的，这点不同导致很多8下可行的绕过方式没法在6下利用，所以分析处理流程时，本文会分版本讨论。</p>
 <h2 id="xml-decoder反序列化处理流程"><a href="#xml-decoder反序列化处理流程" class="headerlink" title="xml decoder反序列化处理流程"></a>xml decoder反序列化处理流程</h2><h3 id="jdk8下的处理流程"><a href="#jdk8下的处理流程" class="headerlink" title="jdk8下的处理流程"></a>jdk8下的处理流程</h3><p>8下的xmldecoder的反序列化流程较为清晰，也较为典型。</p>
 <p>基本上就是从<strong>XMLDocumentFragmentScannerImpl</strong>的<strong>scanDocument</strong>方法开始，该方法实现的xml反序列化过程是一套有限自动机。主要关注点是3个状态，<strong>startElement</strong>,<strong>endElement</strong>,还有中间状态。</p>
 <ul>

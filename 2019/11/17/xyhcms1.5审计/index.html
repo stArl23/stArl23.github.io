@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="前言这是我第一次尝试审计cms，这次成功发现了位于xyhai.php页面后台的一个注入漏洞，还顺带找了个验证码绕过。 环境php 5.4.45(php版本可以任意) Nginx 1.14.0 Mysql 5.7.19 xyhcms 1.5 2014年 框架ThinkPHP 3.1.3 漏洞分析验证码绕过先从简单的开始 12345$verify &#x3D; I(&#39;code&#39;,&#39;&#39;,&#39;md5&#39;);if ($_">
+<meta name="description" content="xyhcms1.5代码审计">
 <meta property="og:type" content="article">
 <meta property="og:title" content="xyhcms1_5审计">
 <meta property="og:url" content="http://www.star123.top/2019/11/17/xyhcms1.5%E5%AE%A1%E8%AE%A1/index.html">
 <meta property="og:site_name" content="star&#39;s blog">
-<meta property="og:description" content="前言这是我第一次尝试审计cms，这次成功发现了位于xyhai.php页面后台的一个注入漏洞，还顺带找了个验证码绕过。 环境php 5.4.45(php版本可以任意) Nginx 1.14.0 Mysql 5.7.19 xyhcms 1.5 2014年 框架ThinkPHP 3.1.3 漏洞分析验证码绕过先从简单的开始 12345$verify &#x3D; I(&#39;code&#39;,&#39;&#39;,&#39;md5&#39;);if ($_">
+<meta property="og:description" content="xyhcms1.5代码审计">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2019/11/17/kZpt7AmbGjwyQfV.png">
 <meta property="og:image" content="https://i.loli.net/2019/11/17/agL24wtfRBnvNzG.png">
 <meta property="article:published_time" content="2019-11-17T10:49:57.000Z">
-<meta property="article:modified_time" content="2021-01-03T12:38:59.981Z">
+<meta property="article:modified_time" content="2021-01-24T12:01:01.410Z">
 <meta property="article:author" content="star">
 <meta property="article:tag" content="web">
 <meta property="article:tag" content="代码审计">
@@ -304,7 +304,10 @@
       
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这是我第一次尝试审计cms，这次成功发现了位于xyhai.php页面后台的一个注入漏洞，还顺带找了个验证码绕过。</p>
+        <p>xyhcms1.5代码审计</p>
+<a id="more"></a>
+
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这是我第一次尝试审计cms，这次成功发现了位于xyhai.php页面后台的一个注入漏洞，还顺带找了个验证码绕过。</p>
 <h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p>php 5.4.45(php版本可以任意)</p>
 <p>Nginx 1.14.0</p>
 <p>Mysql 5.7.19</p>

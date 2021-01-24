@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="web,php反序列化," />
+  <meta name="keywords" content="ctf,web,php反序列化," />
 
 
 
@@ -79,12 +79,12 @@
 
 
 
-<meta name="description" content="前言主要是在五度空间的比赛中碰到了laravel的题目，版本是5.7，赛后复现故尝试做一下总结。着实学到了不少关于找pop链的技巧。 环境PHP版本是7.1.7，Nginx 1.14，操作系统osx 14.6 这个基本上不影响。 pop链分析phpggc 链1,41和4链其实都是同一个类型的。理解起来比较简单，主要就是触发Faker\Generator的__call方法。 12345&lt;?ph">
+<meta name="description" content="laravel5_7 pop分析">
 <meta property="og:type" content="article">
 <meta property="og:title" content="laravel5_7反序列化分析学习">
 <meta property="og:url" content="http://www.star123.top/2020/07/02/laravel5-7%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%86%E6%9E%90%E5%AD%A6%E4%B9%A0/index.html">
 <meta property="og:site_name" content="star&#39;s blog">
-<meta property="og:description" content="前言主要是在五度空间的比赛中碰到了laravel的题目，版本是5.7，赛后复现故尝试做一下总结。着实学到了不少关于找pop链的技巧。 环境PHP版本是7.1.7，Nginx 1.14，操作系统osx 14.6 这个基本上不影响。 pop链分析phpggc 链1,41和4链其实都是同一个类型的。理解起来比较简单，主要就是触发Faker\Generator的__call方法。 12345&lt;?ph">
+<meta property="og:description" content="laravel5_7 pop分析">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2020/07/02/zVTPbuHrWYpCO9K.png">
 <meta property="og:image" content="https://i.loli.net/2020/07/03/i3g5b9wM2Qc1F8n.png">
@@ -102,8 +102,9 @@
 <meta property="og:image" content="https://i.loli.net/2020/07/03/qmjwKyS2gnuPz7R.png">
 <meta property="og:image" content="https://i.loli.net/2020/07/03/1xzHL83dIYCMnKs.png">
 <meta property="article:published_time" content="2020-07-02T12:56:20.000Z">
-<meta property="article:modified_time" content="2020-07-02T17:28:18.471Z">
+<meta property="article:modified_time" content="2021-01-24T11:58:07.557Z">
 <meta property="article:author" content="star">
+<meta property="article:tag" content="ctf">
 <meta property="article:tag" content="web">
 <meta property="article:tag" content="php反序列化">
 <meta name="twitter:card" content="summary">
@@ -317,7 +318,10 @@
       
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>主要是在五度空间的比赛中碰到了laravel的题目，版本是5.7，赛后复现故尝试做一下总结。着实学到了不少关于找pop链的技巧。</p>
+        <p>laravel5_7 pop分析</p>
+<a id="more"></a>
+
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>主要是在五度空间的比赛中碰到了laravel的题目，版本是5.7，赛后复现故尝试做一下总结。着实学到了不少关于找pop链的技巧。</p>
 <h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p>PHP版本是7.1.7，Nginx 1.14，操作系统osx 14.6 这个基本上不影响。</p>
 <h2 id="pop链分析"><a href="#pop链分析" class="headerlink" title="pop链分析"></a>pop链分析</h2><h3 id="phpggc-链1-4"><a href="#phpggc-链1-4" class="headerlink" title="phpggc 链1,4"></a>phpggc 链1,4</h3><p>1和4链其实都是同一个类型的。理解起来比较简单，主要就是触发Faker\Generator的__call方法。</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">//简化下就是</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__call</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> call_user_func_array(<span class="keyword">$this</span>-&gt;formatters[$function_key],$paramters);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -394,6 +398,8 @@
     <footer class="post-footer">
       
         <div class="post-tags">
+          
+            <a href="/tags/ctf/" rel="tag"># ctf</a>
           
             <a href="/tags/web/" rel="tag"># web</a>
           

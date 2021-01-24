@@ -79,16 +79,16 @@
 
 
 
-<meta name="description" content="前言&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;这一次萌生去练习xss还是因为打了rwctf，感觉这块自己还是不太熟悉，所以挑出来练一下。下面的题目解析并不是按照顺序，而是按照涉及的不同问题来分类的。 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;练习网站是prompt.ml，整体做下来虽然感觉做">
+<meta name="description" content="xss学习笔记">
 <meta property="og:type" content="article">
 <meta property="og:title" content="xss练习小结">
 <meta property="og:url" content="http://www.star123.top/2019/09/21/xss%E7%BB%83%E4%B9%A0%E5%B0%8F%E7%BB%93/index.html">
 <meta property="og:site_name" content="star&#39;s blog">
-<meta property="og:description" content="前言&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;这一次萌生去练习xss还是因为打了rwctf，感觉这块自己还是不太熟悉，所以挑出来练一下。下面的题目解析并不是按照顺序，而是按照涉及的不同问题来分类的。 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;练习网站是prompt.ml，整体做下来虽然感觉做">
+<meta property="og:description" content="xss学习笔记">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2019/09/21/HtfpXK2sWg7b3Ej.png">
 <meta property="article:published_time" content="2019-09-21T00:42:42.000Z">
-<meta property="article:modified_time" content="2021-01-03T12:39:43.531Z">
+<meta property="article:modified_time" content="2021-01-24T12:00:36.315Z">
 <meta property="article:author" content="star">
 <meta property="article:tag" content="web">
 <meta property="article:tag" content="xss">
@@ -303,7 +303,10 @@
       
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;这一次萌生去练习xss还是因为打了rwctf，感觉这块自己还是不太熟悉，所以挑出来练一下。下面的题目解析并不是按照顺序，而是按照涉及的不同问题来分类的。</p>
+        <p>xss学习笔记</p>
+<a id="more"></a>
+
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;这一次萌生去练习xss还是因为打了rwctf，感觉这块自己还是不太熟悉，所以挑出来练一下。下面的题目解析并不是按照顺序，而是按照涉及的不同问题来分类的。</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;练习网站是<b>prompt.ml</b>，整体做下来虽然感觉做出的题目很少，但确实学到了不少东西。</p>
 <h3 id="关于几种编码"><a href="#关于几种编码" class="headerlink" title="关于几种编码"></a>关于几种编码</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xss的payload中使用的编码无非几种</p>
 <ul>

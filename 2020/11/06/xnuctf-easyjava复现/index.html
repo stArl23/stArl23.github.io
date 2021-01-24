@@ -79,19 +79,19 @@
 
 
 
-<meta name="description" content="前言简单地来说就是被打哭了，我是谁，我在哪，为什么这么菜，，，，不过题的质量绝对一流。 解题流程 download 任意文件下载结合&#x2F;proc&#x2F;self&#x2F;fd&#x2F;x 下载jar包并还原审计。 mybaits反序列化，这里主要通过sql注入提供了一个反序列化的触发点。 Xstream简单的正则绕过。 高版本jndi注入加上spring jndi无参数反序列化链。  学习记录快速还原jar包到代码 没经">
+<meta name="description" content="学习下java反序列化的一些trick。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="xnuctf_easyjava复现">
 <meta property="og:url" content="http://www.star123.top/2020/11/06/xnuctf-easyjava%E5%A4%8D%E7%8E%B0/index.html">
 <meta property="og:site_name" content="star&#39;s blog">
-<meta property="og:description" content="前言简单地来说就是被打哭了，我是谁，我在哪，为什么这么菜，，，，不过题的质量绝对一流。 解题流程 download 任意文件下载结合&#x2F;proc&#x2F;self&#x2F;fd&#x2F;x 下载jar包并还原审计。 mybaits反序列化，这里主要通过sql注入提供了一个反序列化的触发点。 Xstream简单的正则绕过。 高版本jndi注入加上spring jndi无参数反序列化链。  学习记录快速还原jar包到代码 没经">
+<meta property="og:description" content="学习下java反序列化的一些trick。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2020/11/06/5gaO8mhEGSXI74Y.png">
 <meta property="og:image" content="https://i.loli.net/2020/11/07/tNESg9elYanTFkm.png">
 <meta property="og:image" content="https://i.loli.net/2020/11/09/O16cXNVloYzCRBp.png">
 <meta property="og:image" content="https://i.loli.net/2020/11/09/bQ871vLp2mDBK9W.png">
 <meta property="article:published_time" content="2020-11-06T07:56:02.000Z">
-<meta property="article:modified_time" content="2021-01-03T12:40:01.963Z">
+<meta property="article:modified_time" content="2021-01-24T11:54:15.101Z">
 <meta property="article:author" content="star">
 <meta property="article:tag" content="ctf">
 <meta property="article:tag" content="代码审计">
@@ -307,7 +307,10 @@
       
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>简单地来说就是被打哭了，我是谁，我在哪，为什么这么菜，，，，不过题的质量绝对一流。</p>
+        <p>学习下java反序列化的一些trick。</p>
+<a id="more"></a>
+
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>简单地来说就是被打哭了，我是谁，我在哪，为什么这么菜，，，，不过题的质量绝对一流。</p>
 <h2 id="解题流程"><a href="#解题流程" class="headerlink" title="解题流程"></a>解题流程</h2><ol>
 <li>download 任意文件下载结合/proc/self/fd/x 下载jar包并还原审计。</li>
 <li>mybaits反序列化，这里主要通过sql注入提供了一个反序列化的触发点。</li>

@@ -79,12 +79,12 @@
 
 
 
-<meta name="description" content="前言前几天打了下das和pwnhub，审计zend框架的pop链，这里总结一下研究成果。 寻找利用链的一些思路 入口通常是__destruct，或者__wakeup方法。  结尾一般是存在file_put_contents或者call_user_func，call_user_func_array的方法，其中，任意方法调用基本上要在__call方法中去寻找，在找不到合适的call方法时，可以试着找找">
+<meta name="description" content="zend 框架pop挖掘">
 <meta property="og:type" content="article">
 <meta property="og:title" content="zend框架pop链挖掘">
 <meta property="og:url" content="http://www.star123.top/2020/12/31/zend%E6%A1%86%E6%9E%B6pop%E9%93%BE%E6%8C%96%E6%8E%98/index.html">
 <meta property="og:site_name" content="star&#39;s blog">
-<meta property="og:description" content="前言前几天打了下das和pwnhub，审计zend框架的pop链，这里总结一下研究成果。 寻找利用链的一些思路 入口通常是__destruct，或者__wakeup方法。  结尾一般是存在file_put_contents或者call_user_func，call_user_func_array的方法，其中，任意方法调用基本上要在__call方法中去寻找，在找不到合适的call方法时，可以试着找找">
+<meta property="og:description" content="zend 框架pop挖掘">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2020/12/31/RSVlYx3HmgpvtLX.png">
 <meta property="og:image" content="https://i.loli.net/2020/12/28/CMQ6lijd4ckYyrV.png">
@@ -102,7 +102,7 @@
 <meta property="og:image" content="https://i.loli.net/2020/12/31/PAbMUlImTfO3RNL.png">
 <meta property="og:image" content="https://i.loli.net/2020/12/31/oNBrHgT6AjsKq2Q.png">
 <meta property="article:published_time" content="2020-12-31T07:32:21.000Z">
-<meta property="article:modified_time" content="2021-01-03T12:36:53.673Z">
+<meta property="article:modified_time" content="2021-01-24T12:01:22.881Z">
 <meta property="article:author" content="star">
 <meta property="article:tag" content="web">
 <meta property="article:tag" content="php">
@@ -318,7 +318,10 @@
       
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>前几天打了下das和pwnhub，审计zend框架的pop链，这里总结一下研究成果。</p>
+        <p>zend 框架pop挖掘</p>
+<a id="more"></a>
+
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>前几天打了下das和pwnhub，审计zend框架的pop链，这里总结一下研究成果。</p>
 <h2 id="寻找利用链的一些思路"><a href="#寻找利用链的一些思路" class="headerlink" title="寻找利用链的一些思路"></a>寻找利用链的一些思路</h2><ol>
 <li><p>入口通常是<strong>__destruct</strong>，或者<strong>__wakeup</strong>方法。</p>
 </li>

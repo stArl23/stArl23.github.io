@@ -553,9 +553,7 @@
 
       
         
-          
-          前言实际上这篇文章难产了很久，反正就是前前后后摸了很久，这个洞感觉下来就是jdk的xmldecoder无限制的反序列化导致的代码执行。值得一提的是jdk的xmldecoder反序列化的处理方式在jdk
-          ...
+          <p>实际上这篇文章难产了很久，反正就是前前后后摸了很久，这个洞感觉下来就是jdk的xmldecoder无限制的反序列化导致的代码执行。值得一提的是jdk的xmldecoder反序列化的处理方式在jdk6以下和6以后是不同的，这点不同导致很多8下可行的绕过方式没法在6下利用，所以分析处理流程时，本文会分版本讨论。</p>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2021/01/03/weblogic-xmldecoder%E5%A4%8D%E7%8E%B0/#more" rel="contents">
@@ -679,13 +677,7 @@
 
       
         
-          
-          前言前几天打了下das和pwnhub，审计zend框架的pop链，这里总结一下研究成果。
-寻找利用链的一些思路
-入口通常是__destruct，或者__wakeup方法。
-
-结尾一般是存在file_p
-          ...
+          <p>zend 框架pop挖掘</p>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2020/12/31/zend%E6%A1%86%E6%9E%B6pop%E9%93%BE%E6%8C%96%E6%8E%98/#more" rel="contents">
@@ -935,9 +927,7 @@
 
       
         
-          
-          前言s2-061的漏洞复现，s2-061主要是绕s2-059的修复（com.opensymphony.xwork2.ognl 这整个包相当于都没法直接访问了即类似于#attr[‘struts.valu
-          ...
+          <p>s2-061的漏洞复现，s2-061主要是绕s2-059的修复（com.opensymphony.xwork2.ognl 这整个包相当于都没法直接访问了即类似于#attr[‘struts.valueStack’].context是没法用了），这里的思路主要是用到了cc3.2.2中的BeanMap做中转，来解决不能直接访问被禁止包的问题。</p>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2020/12/13/s2061%E5%A4%8D%E7%8E%B0/#more" rel="contents">
@@ -1061,11 +1051,7 @@
 
       
         
-          
-          前言s2-059的漏洞复现
-背景介绍
-这篇文章归纳了s2 ongl漏洞的历史绕过方式 浅析OGNL的攻防史,s2059的沙盒绕过方式实际上是通过第一个请求重置OgnlUtil对象的excludedPa
-          ...
+          <p>s2-059的漏洞复现</p>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2020/12/12/s2059%E5%A4%8D%E7%8E%B0/#more" rel="contents">
@@ -1189,10 +1175,7 @@
 
       
         
-          
-          前言这次安洵杯线下因为没上内存shell吃了亏，现在补一下。
-这里需要说明下，因为网络上关于java中间件内存shell的研究已经很多了，个人做的工作主要是复现了通杀spring添加controlle
-          ...
+          <p>java内存shell的学习。</p>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2020/12/12/java%E5%86%85%E5%AD%98shell%E5%AD%A6%E4%B9%A0/#more" rel="contents">
@@ -1445,10 +1428,7 @@ wp webbash一道改编题，参考了
 
       
         
-          
-          前言本次是作为ctf选手生涯中第一次出题，学到了不少东西，也出了不少差错，这里简单地总结下。
-easyphp这道题是结合我校每日一题和日常透站中碰到的一些东西搞出来的一道奇奇怪怪的题目，考点主要是一些
-          ...
+          <p>unctf2020背锅笔记</p>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2020/11/19/unctf%E8%83%8C%E9%94%85%E7%AC%94%E8%AE%B0/#more" rel="contents">

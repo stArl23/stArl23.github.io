@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="前言这道题主要是在做南溟师傅出的题时碰到的，后续还做了2019年De1的题中碰到过，所以想要记录下学习的历程。 题目原题长这个样子: 123456789101112131415161718192021&lt;?phpinclude&#39;flag.php&#39;;error_reporting(0);show_source(__FILE__);extract($_GET); if(isset($pass) )">
+<meta name="description" content="php复杂变量的应用">
 <meta property="og:type" content="article">
 <meta property="og:title" content="php复杂变量的应用">
 <meta property="og:url" content="http://www.star123.top/2020/09/14/php%E5%A4%8D%E6%9D%82%E5%8F%98%E9%87%8F%E7%9A%84%E5%BA%94%E7%94%A8/index.html">
 <meta property="og:site_name" content="star&#39;s blog">
-<meta property="og:description" content="前言这道题主要是在做南溟师傅出的题时碰到的，后续还做了2019年De1的题中碰到过，所以想要记录下学习的历程。 题目原题长这个样子: 123456789101112131415161718192021&lt;?phpinclude&#39;flag.php&#39;;error_reporting(0);show_source(__FILE__);extract($_GET); if(isset($pass) )">
+<meta property="og:description" content="php复杂变量的应用">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2020/09/14/G8WUnxrk7jDzMPZ.png">
 <meta property="og:image" content="https://i.loli.net/2020/09/14/5CwZEBR4Yc2armO.png">
 <meta property="og:image" content="https://i.loli.net/2020/09/14/LclRhoar1z3bKn5.png">
 <meta property="article:published_time" content="2020-09-14T14:19:11.000Z">
-<meta property="article:modified_time" content="2020-09-14T15:35:44.961Z">
+<meta property="article:modified_time" content="2021-01-24T11:59:27.361Z">
 <meta property="article:author" content="star">
 <meta property="article:tag" content="web">
 <meta property="article:tag" content="php">
@@ -305,7 +305,10 @@
       
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这道题主要是在做南溟师傅出的题时碰到的，后续还做了2019年De1的题中碰到过，所以想要记录下学习的历程。</p>
+        <p>php复杂变量的应用</p>
+<a id="more"></a>
+
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这道题主要是在做南溟师傅的学弟出的题时碰到的，后续还做了2019年De1的题中碰到过，所以想要记录下学习的历程。</p>
 <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>原题长这个样子:</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">include</span><span class="string">'flag.php'</span>;</span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line">show_source(<span class="keyword">__FILE__</span>);</span><br><span class="line">extract($_GET);</span><br><span class="line"> <span class="keyword">if</span>(<span class="keyword">isset</span>($pass) )</span><br><span class="line">  &#123; </span><br><span class="line">    $content=trim(file_get_contents($user));</span><br><span class="line">    <span class="keyword">if</span>(strcmp($pass,$content)==<span class="number">0</span> &amp;&amp; $pass !=<span class="string">'flag'</span>)</span><br><span class="line">    &#123; </span><br><span class="line">       $str = $content;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">eval</span>(<span class="string">'$a="'</span> . $str . <span class="string">'";'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">   <span class="keyword">else</span></span><br><span class="line">   &#123; </span><br><span class="line">    <span class="keyword">echo</span>  <span class="string">'hack~~'</span>;</span><br><span class="line">   &#125; </span><br><span class="line"></span><br><span class="line">   &#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
 
