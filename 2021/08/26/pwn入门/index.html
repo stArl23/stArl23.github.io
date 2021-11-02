@@ -95,7 +95,7 @@
 <meta property="og:image" content="https://i.loli.net/2021/08/27/nCNLDEihlKz2u4v.png">
 <meta property="og:image" content="https://i.loli.net/2021/10/08/xRSIw5bWPghXOaF.png">
 <meta property="article:published_time" content="2021-08-26T13:54:11.000Z">
-<meta property="article:modified_time" content="2021-10-15T14:18:24.565Z">
+<meta property="article:modified_time" content="2021-11-02T07:04:03.216Z">
 <meta property="article:author" content="star">
 <meta property="article:tag" content="pwn">
 <meta property="article:tag" content="stack">
@@ -317,7 +317,9 @@
 <ol>
 <li><p>将pwntools升级为最新版，4.5版本运行exp可能报错。</p>
 </li>
-<li><p>pwntools配合gdb在tmux中调试可能会遇到卡死的问题，因此需要修改源码。参考这篇文章<a href="https://blog.csdn.net/weixin_43483799/article/details/118885208%EF%BC%8C%E4%B8%BB%E8%A6%81%E9%97%AE%E9%A2%98%E6%98%AF%E5%9C%A8dist-packages/pwnlib/util/proc.py%E7%9A%84" target="_blank" rel="noopener">https://blog.csdn.net/weixin_43483799/article/details/118885208，主要问题是在dist-packages/pwnlib/util/proc.py的</a> wait_for_debugger函数在</p>
+<li><p>pwntools配合gdb在tmux中调试可能会遇到卡死的问题，因此需要修改源码。参考这篇文章:</p>
+<p><a href="https://blog.csdn.net/weixin_43483799/article/details/118885208%EF%BC%8C" target="_blank" rel="noopener">https://blog.csdn.net/weixin_43483799/article/details/118885208，</a></p>
+<p>主要问题是在dist-packages/pwnlib/util/proc.py的 wait_for_debugger函数在</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> t.timeout <span class="keyword">and</span> tracer(pid) <span class="keyword">is</span> <span class="literal">None</span></span><br></pre></td></tr></table></figure>
 
 <p>无限循环执行，最后修改为，解决问题</p>
